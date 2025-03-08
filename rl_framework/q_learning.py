@@ -113,21 +113,37 @@ actions = [action_1,
 q_learning_agent = QLearning(actions)
 
 # Simulate a scenario where we have some states
-state = State(Confidence.HIGH, PromptNecessity.NO, ResponseLength.LONG, 5, EngagementLevel.HIGH, EmotionalState.HAPPY)
-next_state = State(Confidence.MEDIUM, PromptNecessity.YES, ResponseLength.MEDIUM, 4, EngagementLevel.MEDIUM, EmotionalState.SAD)
+# Child is responding after a prompt (Interaction Mode)
+state = State(
+    mode=Mode.INTERACTION,
+    engagement_level=EngagementLevel.HIGH,
+    emotional_state=EmotionalState.HAPPY,
+    response_quality=ResponseQuality.STRONG,
+    prompt_necessity=PromptNecessity.NO,
+    response_length=ResponseLength.LONG,
+    vocabulary_usage=VocabularyUsage.HIGH
+)
+
+# Child is listening to the robot's narration (Narration Mode)
+next_state = State(
+    mode=Mode.NARRATION,
+    engagement_level=EngagementLevel.MEDIUM,
+    emotional_state=EmotionalState.SAD
+)
+
 
 # Choose an action
 action = q_learning_agent.choose_action(state)
-print("\n")
-print(f"Chosen Action: {action}")
-print("\n")
+# print("\n")
+# print(f"Chosen Action: {action}")
+# print("\n")
 
-# Simulate reward and update Q-value
-reward = 1.0  # Example reward
-q_learning_agent.update_q_value(state, action, reward, next_state)
+# # Simulate reward and update Q-value
+# reward = 1.0  # Example reward
+# q_learning_agent.update_q_value(state, action, reward, next_state)
 
-# Get the best action after the update
-best_action = q_learning_agent.get_best_action(state)
-print(f"Best Action after Update: {best_action}")
-print("\n")
+# # Get the best action after the update
+# best_action = q_learning_agent.get_best_action(state)
+# print(f"Best Action after Update: {best_action}")
+# print("\n")
 

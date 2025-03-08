@@ -110,22 +110,22 @@ class State:
 
 
 # Child is listening during narration
-state_narration = State(
-    mode=Mode.NARRATION,
-    engagement_level=EngagementLevel.HIGH,
-    emotional_state=EmotionalState.HAPPY
-)
+# state_narration = State(
+#     mode=Mode.NARRATION,
+#     engagement_level=EngagementLevel.HIGH,
+#     emotional_state=EmotionalState.HAPPY
+# )
 
 # Child is responding after a prompt
-state_interaction = State(
-    mode=Mode.INTERACTION,
-    engagement_level=EngagementLevel.MEDIUM,
-    emotional_state=EmotionalState.CONFUSED,
-    response_quality=ResponseQuality.WEAK,
-    prompt_necessity=PromptNecessity.YES,
-    response_length=ResponseLength.SHORT,
-    vocabulary_usage=VocabularyUsage.LOW
-)
+# state_interaction = State(
+#     mode=Mode.INTERACTION,
+#     engagement_level=EngagementLevel.MEDIUM,
+#     emotional_state=EmotionalState.CONFUSED,
+#     response_quality=ResponseQuality.WEAK,
+#     prompt_necessity=PromptNecessity.YES,
+#     response_length=ResponseLength.SHORT,
+#     vocabulary_usage=VocabularyUsage.LOW
+# )
 
-print(state_narration.to_tuple())
-print(state_interaction.to_tuple())
+# print(state_narration.to_tuple())
+# print(state_interaction.to_tuple())

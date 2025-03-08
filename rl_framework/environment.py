@@ -23,7 +23,12 @@ class Environment:
             EngagementLevel.LOW: 0.0
         }[state.engagement_level]
 
-        learning_score = min(state.vocabulary_usage / 5, 1.0)  # Normalize usage (assuming 5 is a good usage level)
+        # Learning score based on vocabulary usage level
+        learning_score = {
+            VocabularyUsage.LOW: 0.0,
+            VocabularyUsage.MEDIUM: 0.5,
+            VocabularyUsage.HIGH: 1.0
+        }[state.vocabulary_usage] if state.mode == Mode.INTERACTION else 0  # Only applies in INTERACTION mode
 
         return 0.5 * engagement_score + 0.5 * learning_score
 
@@ -34,15 +39,37 @@ class Environment:
         :param action: The action taken.
         :return: The next state.
         """
-        new_confidence = random.choice(list(Confidence))
-        new_prompt_necessity = random.choice(list(PromptNecessity))
-        new_response_length = random.choice(list(ResponseLength))
-        new_vocabulary_usage = max(0, state.vocabulary_usage + (1 if action.lexical_type == LexicalType.KNOWN else -1))
         new_engagement_level = random.choice(list(EngagementLevel))
         new_emotional_state = random.choice(list(EmotionalState))
 
-        return State(new_confidence, new_prompt_necessity, new_response_length,
-                     new_vocabulary_usage, new_engagement_level, new_emotional_state)
+        if state.mode == Mode.NARRATION:
+            # No speech-related changes in narration mode
+            return State(
+                mode=Mode.NARRATION,
+                engagement_level=new_engagement_level,
+                emotional_state=new_emotional_state
+            )
+
+        else:  # Mode.INTERACTION
+            new_response_quality = random.choice(list(ResponseQuality))
+            new_prompt_necessity = random.choice(list(PromptNecessity))
+            new_response_length = random.choice(list(ResponseLength))
+
+            # Adjust vocabulary usage based on action
+            if action.lexical_type == LexicalType.KNOWN:
+                new_vocab_usage = VocabularyUsage.HIGH if state.vocabulary_usage == VocabularyUsage.MEDIUM else VocabularyUsage.MEDIUM
+            else:
+                new_vocab_usage = VocabularyUsage.LOW if state.vocabulary_usage == VocabularyUsage.MEDIUM else VocabularyUsage.MEDIUM
+
+            return State(
+                mode=Mode.INTERACTION,
+                engagement_level=new_engagement_level,
+                emotional_state=new_emotional_state,
+                response_quality=new_response_quality,
+                prompt_necessity=new_prompt_necessity,
+                response_length=new_response_length,
+                vocabulary_usage=new_vocab_usage
+            )
 
     def run_episode(self, initial_state: State, num_steps: int = 10):
         """
@@ -60,11 +87,32 @@ class Environment:
             state = next_state
 
             print(f"Action: {action}, Reward: {reward}, New State: {state}")
+            print()
 
 # Example Usage:
 q_learning_agent = QLearning(actions)
 env = Environment(q_learning_agent)
 
-# Define an initial state
-initial_state = State(Confidence.MEDIUM, PromptNecessity.NO, ResponseLength.MEDIUM, 3, EngagementLevel.MEDIUM, EmotionalState.NEUTRAL)
-env.run_episode(initial_state)
+# Define an initial state for narration (listening mode)
+initial_state_narration = State(
+    mode=Mode.NARRATION,
+    engagement_level=EngagementLevel.HIGH,
+    emotional_state=EmotionalState.HAPPY
+)
+
+# Define an initial state for interaction (responding mode)
+initial_state_interaction = State(
+    mode=Mode.INTERACTION,
+    engagement_level=EngagementLevel.MEDIUM,
+    emotional_state=EmotionalState.NEUTRAL,
+    response_quality=ResponseQuality.AVERAGE,
+    prompt_necessity=PromptNecessity.NO,
+    response_length=ResponseLength.MEDIUM,
+    vocabulary_usage=VocabularyUsage.MEDIUM
+)
+
+print("\n--- Running Narration Mode Episode ---\n")
+env.run_episode(initial_state_narration)
+
+print("\n--- Running Interaction Mode Episode ---\n")
+env.run_episode(initial_state_interaction)
