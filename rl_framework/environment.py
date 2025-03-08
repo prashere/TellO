@@ -90,29 +90,29 @@ class Environment:
             print()
 
 # Example Usage:
-q_learning_agent = QLearning(actions)
-env = Environment(q_learning_agent)
+# q_learning_agent = QLearning(actions)
+# env = Environment(q_learning_agent)
 
-# Define an initial state for narration (listening mode)
-initial_state_narration = State(
-    mode=Mode.NARRATION,
-    engagement_level=EngagementLevel.HIGH,
-    emotional_state=EmotionalState.HAPPY
-)
+# # Define an initial state for narration (listening mode)
+# initial_state_narration = State(
+#     mode=Mode.NARRATION,
+#     engagement_level=EngagementLevel.HIGH,
+#     emotional_state=EmotionalState.HAPPY
+# )
 
-# Define an initial state for interaction (responding mode)
-initial_state_interaction = State(
-    mode=Mode.INTERACTION,
-    engagement_level=EngagementLevel.MEDIUM,
-    emotional_state=EmotionalState.NEUTRAL,
-    response_quality=ResponseQuality.AVERAGE,
-    prompt_necessity=PromptNecessity.NO,
-    response_length=ResponseLength.MEDIUM,
-    vocabulary_usage=VocabularyUsage.MEDIUM
-)
+# # Define an initial state for interaction (responding mode)
+# initial_state_interaction = State(
+#     mode=Mode.INTERACTION,
+#     engagement_level=EngagementLevel.MEDIUM,
+#     emotional_state=EmotionalState.NEUTRAL,
+#     response_quality=ResponseQuality.AVERAGE,
+#     prompt_necessity=PromptNecessity.NO,
+#     response_length=ResponseLength.MEDIUM,
+#     vocabulary_usage=VocabularyUsage.MEDIUM
+# )
 
-print("\n--- Running Narration Mode Episode ---\n")
-env.run_episode(initial_state_narration)
+# print("\n--- Running Narration Mode Episode ---\n")
+# env.run_episode(initial_state_narration)
 
-print("\n--- Running Interaction Mode Episode ---\n")
-env.run_episode(initial_state_interaction)
+# print("\n--- Running Interaction Mode Episode ---\n")
+# env.run_episode(initial_state_interaction)
