@@ -28,9 +28,11 @@ class EngagementLevel(Enum):
 class EmotionalState(Enum):
     HAPPY = "Happy"
     SAD = "Sad"
-    EXCITED = "Excited"
+    SURPRISE = "Surprise"
     NEUTRAL = "Neutral"
-    CONFUSED = "Confused"
+    FEAR = "Fear"
+    DISGUST = "Disgust"
+    ANGER = "Anger"
 
 class VocabularyUsage(Enum):
     LOW = "Low"
