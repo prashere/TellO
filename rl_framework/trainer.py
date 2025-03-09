@@ -135,6 +135,10 @@ if __name__ == "__main__":
 
     # Create and train the trainer
     trainer = Trainer(q_learning_agent, env)
+
+    # trainer.load_q_table()
+    # If I want to use the previous training knowledge I need to activate the above line
+
     trainer.train()
 
     # Evaluate trained model
