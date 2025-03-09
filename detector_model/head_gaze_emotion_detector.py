@@ -5,8 +5,11 @@ import math
 from fer import FER
 from gaze_tracking import GazeTracking
 import os
-print(os.path.exists("./detector_model/assets/shape_predictor_68_face_landmarks.dat"))
+from state_updater import StateUpdater
 
+
+updater = StateUpdater(update_interval=60)
+print(os.path.exists("./detector_model/assets/shape_predictor_68_face_landmarks.dat"))
 
 
 # Loading Dlib's face detector and 68-point landmark predictor
@@ -87,7 +90,6 @@ while True:
     gray = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2GRAY)
     faces = detector(gray)
 
-
     for face in faces:
         gaze.refresh(frame_resized)
 
@@ -145,16 +147,21 @@ while True:
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
         cv2.putText(frame_resized, f"Vertical: {last_vertical_label}", (10, 60),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-        
-         # Draw cross at the center of the eyes (gaze tracking)
-        left_eye_center = (landmarks.part(36).x + landmarks.part(39).x) // 2, (landmarks.part(36).y + landmarks.part(39).y) // 2
-        right_eye_center = (landmarks.part(42).x + landmarks.part(45).x) // 2, (landmarks.part(42).y + landmarks.part(45).y) // 2
 
-        cv2.drawMarker(frame_resized, left_eye_center, (0, 0, 255), markerType=cv2.MARKER_CROSS, markerSize=20, thickness=2)
-        cv2.drawMarker(frame_resized, right_eye_center, (0, 0, 255), markerType=cv2.MARKER_CROSS, markerSize=20, thickness=2)
+        # Draw cross at the center of the eyes (gaze tracking)
+        left_eye_center = (landmarks.part(
+            36).x + landmarks.part(39).x) // 2, (landmarks.part(36).y + landmarks.part(39).y) // 2
+        right_eye_center = (landmarks.part(
+            42).x + landmarks.part(45).x) // 2, (landmarks.part(42).y + landmarks.part(45).y) // 2
+
+        cv2.drawMarker(frame_resized, left_eye_center, (0, 0, 255),
+                       markerType=cv2.MARKER_CROSS, markerSize=20, thickness=2)
+        cv2.drawMarker(frame_resized, right_eye_center, (0, 0, 255),
+                       markerType=cv2.MARKER_CROSS, markerSize=20, thickness=2)
         # print(f"Gaze: {gaze_text}")
         cv2.putText(frame_resized, f"Gaze: {gaze_text}", (10, 120),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+        
 
     # Run emotion detection every `emotion_update_interval` frames
     if frame_count % emotion_update_interval == 0:
