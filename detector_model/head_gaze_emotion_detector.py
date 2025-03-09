@@ -4,16 +4,20 @@ import numpy as np
 import math
 from fer import FER
 from gaze_tracking import GazeTracking
+import os
+print(os.path.exists("./detector_model/assets/shape_predictor_68_face_landmarks.dat"))
 
 
-# Load Dlib's face detector and 68-point landmark predictor
+
+# Loading Dlib's face detector and 68-point landmark predictor
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(
-    "./assets/shape_predictor_68_face_landmarks.dat")  # Ensure this file is correct
+    "./detector_model/assets/shape_predictor_68_face_landmarks.dat")  # Ensure this file is correct
 
 # Initialize emotion detector
 emotion_detector = FER()
 
+# Initialize gaze tracker
 gaze = GazeTracking()
 
 # 3D model points for head pose estimation
@@ -68,9 +72,8 @@ def get_vertical_movement_label(pitch):
 last_horizontal_label = "Front"
 last_vertical_label = "Front"
 last_emotion = "Neutral"
-gaze_text = ""
+gaze_text = "Front"
 last_emotion_score = 0.00
-
 frame_count = 0
 emotion_update_interval = 15  # Run emotion detection every 15 frames
 
@@ -81,20 +84,13 @@ while True:
 
     frame_count += 1
     frame_resized = cv2.resize(frame, (640, 480))
-    gaze.refresh(frame_resized)
     gray = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2GRAY)
     faces = detector(gray)
 
-    if gaze.is_blinking():
-        gaze_text = "Blinking"
-    elif gaze.is_right():
-        gaze_text = "Looking right"
-    elif gaze.is_left():
-        gaze_text = "Looking left"
-    elif gaze.is_center():
-        gaze_text = "Looking center"
 
     for face in faces:
+        gaze.refresh(frame_resized)
+
         landmarks = predictor(gray, face)
 
         # 2D image points for face landmarks
@@ -134,6 +130,15 @@ while True:
             last_horizontal_label = horizontal_movement_label
         if vertical_movement_label != last_vertical_label:
             last_vertical_label = vertical_movement_label
+
+        if gaze.is_blinking():
+            gaze_text = "Blinking"
+        elif gaze.is_right():
+            gaze_text = "Looking right"
+        elif gaze.is_left():
+            gaze_text = "Looking left"
+        elif gaze.is_center():
+            gaze_text = "Looking center"
 
         # Display movement labels
         cv2.putText(frame_resized, f"Horizontal: {last_horizontal_label}", (10, 30),
