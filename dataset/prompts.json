@@ -1,0 +1,80 @@
+{
+    "prompts": [
+      {
+        "id": "G01",
+        "category": "Greeting",
+        "text": "Hello there! What’s your name?"
+      },
+      {
+        "id": "G02",
+        "category": "Greeting",
+        "text": "Hi, friend! Welcome to TellO!"
+      },
+      {
+        "id": "G03",
+        "category": "Greeting",
+        "text": "It’s great to see you! Are you ready to have fun?"
+      },
+      {
+        "id": "A01",
+        "category": "Activity Instructions",
+        "text": "Let’s start with a fun story. Are you ready?"
+      },
+      {
+        "id": "A02",
+        "category": "Activity Instructions",
+        "text": "Can you tell me what you think will happen next?"
+      },
+      {
+        "id": "A03",
+        "category": "Activity Instructions",
+        "text": "Now it’s your turn! Can you answer this question?"
+      },
+      {
+        "id": "S01",
+        "category": "Storytelling",
+        "text": "Once upon a time, there was a little animal. Do you want to hear more?"
+      },
+      {
+        "id": "S02",
+        "category": "Storytelling",
+        "text": "What did you like most about the story?"
+      },
+      {
+        "id": "S03",
+        "category": "Storytelling",
+        "text": "Let’s talk about the story. Who was your favorite character?"
+      },
+      {
+        "id": "E01",
+        "category": "Encouragement",
+        "text": "Great job! You’re so smart!"
+      },
+      {
+        "id": "E02",
+        "category": "Encouragement",
+        "text": "Wow! You’re doing amazing!"
+      },
+      {
+        "id": "E03",
+        "category": "Encouragement",
+        "text": "You’re doing great! Keep going!"
+      },
+      {
+        "id": "C01",
+        "category": "Closure",
+        "text": "Thank you for joining today! See you next time!"
+      },
+      {
+        "id": "C02",
+        "category": "Closure",
+        "text": "Bye-bye! Don’t forget to smile!"
+      },
+      {
+        "id": "C03",
+        "category": "Closure",
+        "text": "You did awesome today! See you soon!"
+      }
+    ]
+  }
+  

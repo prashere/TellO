@@ -1,0 +1,139 @@
+{
+    "StoryID": "ST008",
+    "Title": "The Lion and the Fox",
+    "Theme": "Wisdom and Caution",
+    "StoryComplexity": "Medium",
+    "WordCount": 129,
+    "TargetAgeGroup": "6-8 years",
+    "NarrativeArc": {
+      "Introduction": ["S001", "S002"],
+      "RisingAction": ["S003", "S004", "S005"],
+      "Climax": ["S006", "S007"],
+      "Resolution": ["S008", "S009"]
+    },
+    "Vocabulary": {
+      "Weak": "Lacking strength.",
+      "Trick": "An action meant to deceive.",
+      "Ate": "Consumed food."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "An old Lion was too weak to hunt for food.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Sad",
+        "InteractionPrompt": "Why do you think the Lion became weak?",
+        "FunQuestions": ["Have you ever seen a lion?", "What do lions eat?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["lion", "weak", "food"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "He had an idea to trick the other animals.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Sneaky",
+        "InteractionPrompt": "What do you think the Lion’s trick might be?",
+        "FunQuestions": ["What is a trick?", "Have you ever played a trick on someone?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["lion", "trick", "idea"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "The Lion lay in his den and pretended to be very sick.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Deceptive",
+        "InteractionPrompt": "Why do you think the Lion pretended to be sick?",
+        "FunQuestions": ["What does it mean to pretend?", "Why do animals live in dens?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["lion", "sick", "pretend"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "He told everyone he was unwell.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Convincing",
+        "InteractionPrompt": "How might the other animals feel about the Lion being unwell?",
+        "FunQuestions": ["What do you do when someone is sick?", "How do animals help each other?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["lion", "unwell", "sick"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "One by one, animals came to visit him.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Innocent",
+        "InteractionPrompt": "Why do you think the animals visited the Lion?",
+        "FunQuestions": ["What would you do to cheer someone up?", "Why is it important to visit friends?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["lion", "animals", "visit"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "But when they went inside the den, the Lion ate them!",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Shocking",
+        "InteractionPrompt": "Why do you think the Lion did this?",
+        "FunQuestions": ["What would you say to warn the animals?", "What do lions usually eat?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["lion", "ate", "den"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "A clever Fox came to the Lion’s den.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Curious",
+        "InteractionPrompt": "What do you think the Fox will do?",
+        "FunQuestions": ["What does it mean to be clever?", "What other animals might visit the Lion?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["fox", "lion", "clever"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S008",
+        "Text": "The Fox looked at the ground and said, 'I see many footprints going in, but none coming out.'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Cautious",
+        "InteractionPrompt": "What does the Fox mean by this?",
+        "FunQuestions": ["Why are footprints important?", "How can the Fox stay safe?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["fox", "footprints", "caution"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S009",
+        "Text": "The Fox stayed safe because he was careful.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Wise",
+        "InteractionPrompt": "What lesson can we learn from the Fox?",
+        "FunQuestions": ["Can you share a time when you were careful?", "Why is it good to think before acting?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["fox", "careful", "safe"],
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  

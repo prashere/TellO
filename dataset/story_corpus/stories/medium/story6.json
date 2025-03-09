@@ -1,0 +1,151 @@
+{
+    "StoryID": "ST006",
+    "Title": "The Two Friends and the Bear",
+    "Theme": "Friendship and Trust",
+    "StoryComplexity": "Medium",
+    "WordCount": 127,
+    "TargetAgeGroup": "6-8 years",
+    "NarrativeArc": {
+      "Introduction": [
+        "S001",
+        "S002"
+      ],
+      "RisingAction": [
+        "S003",
+        "S004",
+        "S005"
+      ],
+      "Climax": [
+        "S006"
+      ],
+      "Resolution": [
+        "S007",
+        "S008"
+      ]
+    },
+    "Vocabulary": {
+      "Climbed": "To move upward or go up something like a tree or ladder.",
+      "Smelled": "To use the nose to sense odors.",
+      "Danger": "The possibility of harm or injury."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "Two friends were walking in the forest.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "What do you think the friends will see in the forest?",
+        "FunQuestions": ["Have you walked in a forest?", "What animals live in forests?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["friends", "forest", "walk"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "Suddenly, a big Bear appeared.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Surprised",
+        "InteractionPrompt": "What would you do if you saw a Bear?",
+        "FunQuestions": ["Why do Bears live in forests?", "What do Bears eat?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["bear", "forest", "surprise"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "One friend quickly climbed a tree to hide.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Anxious",
+        "InteractionPrompt": "Why do you think the friend climbed the tree?",
+        "FunQuestions": ["Can you climb a tree?", "Why is climbing useful?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["friend", "climbed", "hide"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "The other friend fell to the ground and lay still.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Worried",
+        "InteractionPrompt": "Why do you think the friend lay still?",
+        "FunQuestions": ["Have you pretended to be still before?", "What animals stay still to avoid danger?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["friend", "ground", "still"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "The Bear came up to him and smelled him.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Tense",
+        "InteractionPrompt": "What do you think the Bear is going to do next?",
+        "FunQuestions": ["Why do animals smell things?", "What do you think the Bear smells?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["bear", "smelled", "friend"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "The Bear went away because it does not eat dead things.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Relieved",
+        "InteractionPrompt": "Why do you think the Bear left?",
+        "FunQuestions": ["What do Bears eat?", "Why do some animals pretend to be dead?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["bear", "left", "safe"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "The friend in the tree climbed down.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Curious",
+        "InteractionPrompt": "Why do you think the friend climbed down now?",
+        "FunQuestions": ["What would you say to your friend?", "Why do people feel safe after danger is gone?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["friend", "climbed", "safe"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S008",
+        "Text": "He asked, 'What did the Bear say to you?'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Inquisitive",
+        "InteractionPrompt": "What do you think the Bear might have said?",
+        "FunQuestions": ["Have you learned a lesson from someone before?", "What makes you curious about animals?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["friend", "ask", "curious"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S009",
+        "Text": "The other friend answered, 'The Bear told me not to trust a friend who leaves you when danger comes.'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Serious",
+        "InteractionPrompt": "Why do you think the friend said this?",
+        "FunQuestions": ["What makes a good friend?", "Have you been in a tricky situation with a friend?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["trust", "friend", "danger"],
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  

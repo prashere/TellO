@@ -1,0 +1,121 @@
+{
+    "StoryID": "ST010",
+    "Title": "The Wolf and the Little Goat",
+    "Theme": "Cleverness Saves the Day",
+    "StoryComplexity": "Hard",
+    "WordCount": 152,
+    "TargetAgeGroup": "8-12 years",
+    "NarrativeArc": {
+      "Introduction": ["S001", "S002"],
+      "RisingAction": ["S003", "S004", "S005"],
+      "Climax": ["S006", "S007"],
+      "Resolution": ["S008", "S009"]
+    },
+    "Vocabulary": {
+      "Wolf": "A wild carnivorous animal known for hunting in packs.",
+      "Flute": "A musical instrument played by blowing air into it.",
+      "Scared": "Feeling fear or alarm."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "One day, a hungry Wolf saw a little Goat eating grass with a group of goats.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "Why do you think the Wolf was watching the goats?",
+        "FunQuestions": ["What do goats eat?", "What would you do if you saw a Wolf?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["wolf", "goat", "grass"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "When the goats weren’t looking, the Wolf jumped and caught the little Goat.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Tense",
+        "InteractionPrompt": "What do you think will happen to the little Goat?",
+        "FunQuestions": ["How do wolves catch their prey?", "What does it mean to be sneaky?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["wolf", "goat", "caught"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "The Wolf was ready to eat the Goat.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Threatening",
+        "InteractionPrompt": "What do you think the Goat will do now?",
+        "FunQuestions": ["What do wolves eat?", "What would you do if you were the Goat?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["wolf", "goat", "eat"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "But the Goat had a clever idea.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Hopeful",
+        "InteractionPrompt": "What clever idea might the Goat have?",
+        "FunQuestions": ["What does it mean to be clever?", "Have you ever had a clever idea?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["goat", "idea", "clever"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "“Wait!” said the Goat. “I know you will eat me, but I heard you play music very well.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Cunning",
+        "InteractionPrompt": "Do you think the Goat is telling the truth?",
+        "FunQuestions": ["Have you heard a wolf play music?", "Why might the Goat say this?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["goat", "music", "wolf"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "The Wolf liked the idea. He found a flute nearby and started to play.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Playful",
+        "InteractionPrompt": "What do you think the goats will do when they hear the flute?",
+        "FunQuestions": ["Can wolves play music?", "What songs do you think a Wolf might play?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["wolf", "flute", "play"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "The music was loud, and the other goats heard it.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Exciting",
+        "InteractionPrompt": "What do you think the goats will do now?",
+        "FunQuestions": ["Can goats hear music?", "What sounds do you think goats like?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["music", "goats", "heard"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S008",
+        "Text": "They came running together and scared the Wolf away.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Triumphant",
+        "InteractionPrompt": "Why did the goats scare the Wolf?",
+        "FunQuestions": ["How do animals show they are scared?", "What other animals scare wolves?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["goats", "scared", "wolf"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S009",
+        "Text": "As the Wolf ran, he said, “I should have just eaten my dinner instead of playing music!”",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Regretful",
+        "InteractionPrompt": "What lesson did the Wolf learn?",
+        "FunQuestions": ["What would you have done if you were the Wolf?", "Why is it important to focus on what you know?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["wolf", "dinner", "music"],
+        "ExpectedEngagementLevel": "Medium"
+      }
+    ]
+  }
+  

@@ -1,0 +1,112 @@
+{
+    "StoryID": "ST007",
+    "Title": "The Thirsty Pigeon",
+    "Theme": "Caution and Awareness",
+    "StoryComplexity": "Easy",
+    "WordCount": 82,
+    "TargetAgeGroup": "5-7 years",
+    "NarrativeArc": {
+      "Introduction": ["S001", "S002"],
+      "RisingAction": ["S003", "S004"],
+      "Climax": ["S005"],
+      "Resolution": ["S006", "S007"]
+    },
+    "Vocabulary": {
+      "Flew": "To move through the air using wings.",
+      "Careful": "Being cautious to avoid harm or mistakes.",
+      "Sign": "A symbol or picture that gives information."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "One hot day, a Pigeon was very thirsty.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Concerned",
+        "InteractionPrompt": "What do you think the Pigeon will do to find water?",
+        "FunQuestions": ["Why do birds get thirsty?", "How do birds find water?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "Keywords": ["pigeon", "thirsty", "hot day"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "She saw a picture of a cup of water on a sign.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Hopeful",
+        "InteractionPrompt": "Why do you think the Pigeon thought the picture was real?",
+        "FunQuestions": ["Have you ever seen something that looked real but wasn’t?", "Why do birds look for water?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "thirsty_pigeon.jpg",
+        "RelatedAudio": null,
+        "Keywords": ["pigeon", "water", "sign"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "The Pigeon thought it was real water.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Optimistic",
+        "InteractionPrompt": "What might happen when the Pigeon flies toward the picture?",
+        "FunQuestions": ["What would you tell the Pigeon?", "Why is it important to look closely at things?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["pigeon", "water", "mistake"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "She flew quickly toward it.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Rushed",
+        "InteractionPrompt": "Do you think the Pigeon will get the water?",
+        "FunQuestions": ["What happens when you rush?", "What do birds look like when they fly fast?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "running_pigeon.jpg",
+        "RelatedAudio": null,
+        "Keywords": ["fly", "pigeon", "quickly"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "But she crashed into the sign and hurt her wings.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Sad",
+        "InteractionPrompt": "What do you think the Pigeon felt when she hit the sign?",
+        "FunQuestions": ["Have you ever bumped into something by mistake?", "Why do you think the Pigeon didn’t see the sign?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "hurt_pigeon.jpg",
+        "RelatedAudio": null,
+        "Keywords": ["crashed", "sign", "hurt"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "She fell to the ground, and someone picked her up.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Relieved",
+        "InteractionPrompt": "Who do you think helped the Pigeon?",
+        "FunQuestions": ["What would you do if you found a hurt bird?", "Why is it good to help animals?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": "helping_pigeon.jpg",
+        "RelatedAudio": null,
+        "Keywords": ["fell", "help", "ground"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "The Pigeon learned that sometimes, it’s better to be careful than to rush.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Reflective",
+        "InteractionPrompt": "What lesson did the Pigeon learn?",
+        "FunQuestions": ["Can you share a time when you learned to be careful?", "Why is it important to think before acting?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["lesson", "careful", "rush"],
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  

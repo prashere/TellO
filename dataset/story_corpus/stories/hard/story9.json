@@ -1,0 +1,130 @@
+{
+    "StoryID": "ST009",
+    "Title": "The Mouse, the Frog, and the Eagle",
+    "Theme": "Consequences of Bad Actions",
+    "StoryComplexity": "Hard",
+    "WordCount": 156,
+    "TargetAgeGroup": "8-12 years",
+    "NarrativeArc": {
+      "Introduction": ["S001", "S002"],
+      "RisingAction": ["S003", "S004", "S005"],
+      "Climax": ["S006", "S007"],
+      "Resolution": ["S008", "S009"]
+    },
+    "Vocabulary": {
+      "Trouble": "A difficult or problematic situation.",
+      "Mean": "Unkind or cruel.",
+      "Saw": "The act of perceiving with the eyes."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "A little Mouse lived on land.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "Where do mice usually live?",
+        "FunQuestions": ["Have you ever seen a mouse?", "What do you think mice eat?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["mouse", "land", "live"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "One day, he met a Frog who lived in water.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Friendly",
+        "InteractionPrompt": "How might the Mouse and the Frog become friends?",
+        "FunQuestions": ["What makes frogs special?", "Do you think frogs and mice can be friends?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["frog", "mouse", "water"],
+        "RelatedImage": "mouseandfrog_meet.jpg",
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "The Frog had a mean idea.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Unkind",
+        "InteractionPrompt": "What do you think the Frog’s idea might be?",
+        "FunQuestions": ["What does it mean to be mean?", "How would you stop a mean plan?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["frog", "mean", "idea"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "He tied his foot to the Mouse’s foot with a rope.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Troubling",
+        "InteractionPrompt": "Why do you think the Frog tied himself to the Mouse?",
+        "FunQuestions": ["What is a rope used for?", "How would you untie a knot?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["frog", "mouse", "rope"],
+        "RelatedImage": "m&f_tied.jpg",
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "The poor Mouse was pulled into the water too.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Sad",
+        "InteractionPrompt": "What do you think will happen to the Mouse in the water?",
+        "FunQuestions": ["Can mice swim?", "Why do you think the Mouse didn’t want to go into the water?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["mouse", "water", "pulled"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "The Mouse’s body came up to the top of the water.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Grim",
+        "InteractionPrompt": "What does it mean when something floats to the top?",
+        "FunQuestions": ["What floats in water?", "Can you name animals that live in water?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["mouse", "water", "float"],
+        "RelatedImage": "eaglesees_m&f.jpg",
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "An Eagle flying in the sky saw it.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "What do you think the Eagle will do?",
+        "FunQuestions": ["What do eagles eat?", "How do eagles see things from so far away?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["eagle", "saw", "mouse"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S008",
+        "Text": "The Eagle came down and picked up the Mouse.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Action-Oriented",
+        "InteractionPrompt": "What do you think will happen next?",
+        "FunQuestions": ["Why do eagles pick up small animals?", "How strong do you think an eagle’s claws are?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["eagle", "mouse", "picked"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S009",
+        "Text": "The Eagle ate both the Mouse and the Frog.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Conclusive",
+        "InteractionPrompt": "What is the lesson of this story?",
+        "FunQuestions": ["What other animals do eagles eat?", "What would you do if you were the Mouse?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["eagle", "ate", "frog"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  

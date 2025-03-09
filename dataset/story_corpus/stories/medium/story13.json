@@ -1,0 +1,88 @@
+{
+    "StoryID": "ST013",
+    "Title": "The Man and the Dog",
+    "Theme": "Wisdom in Responding to Hurt",
+    "StoryComplexity": "Medium",
+    "WordCount": 125,
+    "TargetAgeGroup": "7-10 years",
+    "NarrativeArc": {
+      "Introduction": ["S001", "S002"],
+      "RisingAction": ["S003", "S004"],
+      "Climax": ["S005"],
+      "Resolution": ["S006"]
+    },
+    "Vocabulary": {
+      "Bite": "To use teeth to cut into something or someone.",
+      "Bread": "A type of food made from flour and baked in an oven.",
+      "Kind": "Being nice or thoughtful towards others."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "One day, a man was bitten by a dog.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Painful",
+        "InteractionPrompt": "How do you think the man felt after being bitten?",
+        "FunQuestions": ["Why do dogs bite sometimes?", "How can you avoid being bitten by an animal?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["man", "bitten", "dog"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "The bite hurt a lot, and the man wanted to find someone to help him feel better.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Urgent",
+        "InteractionPrompt": "What do you think the man will do next?",
+        "FunQuestions": ["What would you do if you were hurt?", "Who do you ask for help when you’re injured?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["bite", "help", "feel better"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "A friend saw him and said, 'I have an idea! Take some bread, dip it in the blood from your wound, and give it to the dog that bit you.'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Suggestive",
+        "InteractionPrompt": "Why do you think the friend gave this idea?",
+        "FunQuestions": ["What would you do if a friend suggested something strange?", "Do you think the dog's behavior will change?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["friend", "idea", "bread"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "The man laughed and said, 'Why would I do that? If I feed the dog, it will think biting me is good.'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Skeptical",
+        "InteractionPrompt": "What do you think the man is worried about?",
+        "FunQuestions": ["What would you say to someone who hurt you?", "Is the man right to think this way?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["man", "laugh", "feed"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "He added, 'Then, maybe all the dogs in town will bite me too!'",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Worried",
+        "InteractionPrompt": "Why is the man afraid of all the dogs?",
+        "FunQuestions": ["What would you do to stop all the dogs from biting?", "Do you think dogs learn from each other?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["dogs", "town", "bite"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "The man learned that being kind to someone who hurts you might not always be a good idea.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Reflective",
+        "InteractionPrompt": "What lesson did the man learn?",
+        "FunQuestions": ["Can kindness sometimes backfire?", "What would you do in the man's place?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["man", "kind", "learned"],
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  

@@ -1,0 +1,116 @@
+{
+    "StoryID": "ST002",
+    "Title": "The Lion’s Peaceful Kingdom",
+    "Theme": "Friendship and Peace",
+    "StoryComplexity": "Easy",
+    "WordCount": 128,
+    "TargetAgeGroup": "4-6 years",
+    "NarrativeArc": {
+      "Introduction": [
+        "S001",
+        "S002"
+      ],
+      "RisingAction": [
+        "S003",
+        "S004"
+      ],
+      "Climax": [
+        "S005"
+      ],
+      "Resolution": [
+        "S006"
+      ]
+    },
+    "Vocabulary": {
+      "Bunny": "A small, fluffy animal with long ears.",
+      "Kind": "Being nice and thoughtful.",
+      "Scared": "Feeling afraid or frightened."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "Once upon a time, a Lion was the king of all the animals.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Regal",
+        "InteractionPrompt": "Why do you think the Lion was chosen as king?",
+        "FunQuestions": ["What sound does a lion make?", "Do you know any other animals that live in the jungle?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": "lion_king.jpg",
+        "Keywords": ["lion", "king", "animals"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "He was kind, fair, and gentle, and wanted everyone to live happily together.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Kind",
+        "InteractionPrompt": "What does it mean to be fair and gentle?",
+        "FunQuestions": ["Can you think of someone who is kind?", "Why is it important to be gentle?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "kind_lion.jpg",
+        "Keywords": ["kind", "fair", "gentle"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "One day, he called all the animals to a big meeting.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Excited",
+        "InteractionPrompt": "What do you think the Lion will say in the meeting?",
+        "FunQuestions": ["Have you been to a big meeting?", "What do animals talk about in meetings?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": "animal_meeting.jpg",
+        "Keywords": ["meeting", "animals", "gathering"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "The Lion said, 'Let’s make a promise to be friends and live in peace.'",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Hopeful",
+        "InteractionPrompt": "Why is it important for the animals to live in peace?",
+        "FunQuestions": ["What does 'peace' mean?", "Can you think of a time when you made a promise?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": "lion_speech.jpg",
+        "Keywords": ["peace", "promise", "friends"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "The Bunny said, 'I have always wanted this day when small animals like me can live safely.'",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Happy",
+        "InteractionPrompt": "Why do you think the Bunny is happy about the Lion's promise?",
+        "FunQuestions": ["What animals are small like the Bunny?", "How can we make others feel safe?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "happy_bunny.jpg",
+        "Keywords": ["bunny", "safe", "happy"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "But after speaking, the Bunny got scared and ran away as fast as he could.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Scared",
+        "InteractionPrompt": "Why do you think the Bunny got scared?",
+        "FunQuestions": ["Have you ever felt scared?", "What makes you feel safe?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "scared_bunny.jpg",
+        "Keywords": ["bunny", "scared", "run"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "And so, the animals tried their best to live in peace, but some things are hard to change.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Reflective",
+        "InteractionPrompt": "What can you do to make your friends feel happy and safe?",
+        "FunQuestions": ["What does it mean to try your best?", "How can we help others be kind?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": "peaceful_animals.jpg",
+        "Keywords": ["peace", "try", "animals"],
+        "ExpectedEngagementLevel": "Medium"
+      }
+    ]
+  }
+  

@@ -1,0 +1,103 @@
+{
+    "StoryID": "ST003",
+    "Title": "The Fisherman and the Fish",
+    "Theme": "Effort and Perseverance",
+    "StoryComplexity": "Easy",
+    "WordCount": 104,
+    "TargetAgeGroup": "4-6 years",
+    "NarrativeArc": {
+      "Introduction": [
+        "S001",
+        "S002"
+      ],
+      "RisingAction": [
+        "S003",
+        "S004"
+      ],
+      "Climax": [
+        "S005"
+      ],
+      "Resolution": [
+        "S006"
+      ]
+    },
+    "Vocabulary": {
+      "Caught": "To capture or take hold of something.",
+      "Fisherman": "A person who catches fish as a job or hobby.",
+      "Flute": "A musical instrument played by blowing across a hole."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "Once, there was a Fisherman who loved music.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Calm",
+        "InteractionPrompt": "What do you think the Fisherman will do with his love for music?",
+        "FunQuestions": ["Do you like music?", "What kind of music do you enjoy?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "fisherman_music.jpg",
+        "Keywords": ["fisherman", "music"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "He had a flute and a fishing net.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Simple",
+        "InteractionPrompt": "What do you think the Fisherman will do with his flute and net?",
+        "FunQuestions": ["Have you seen a flute before?", "What do people use fishing nets for?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "flute_net.jpg",
+        "Keywords": ["flute", "net"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "One day, he went to the sea and played his flute, hoping the fish would hear his music.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Hopeful",
+        "InteractionPrompt": "Why do you think the Fisherman is using music to catch fish?",
+        "FunQuestions": ["Can fish hear sounds?", "What kind of sounds might attract fish?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "sea_flute.jpg",
+        "Keywords": ["sea", "flute", "fish"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "But the fish did not come and stayed in the water.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Disappointed",
+        "InteractionPrompt": "Why do you think the fish didn’t come?",
+        "FunQuestions": ["Do you think music can attract animals?", "What other ways can fish be caught?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": "fish_water.jpg",
+        "Keywords": ["fish", "water"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "The Fisherman stopped playing, threw his net into the sea, and soon caught many fish.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Productive",
+        "InteractionPrompt": "Why did the Fisherman stop playing his flute?",
+        "FunQuestions": ["What does it mean to persevere?", "Have you ever tried something new to solve a problem?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "catch_fish.jpg",
+        "Keywords": ["fisherman", "caught", "fish"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "As the fish jumped in the net, the Fisherman said, 'When I played music, you didn’t come. Now, you jump so happily!'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Amused",
+        "InteractionPrompt": "What do you think the Fisherman learned from this?",
+        "FunQuestions": ["Why do you think the fish jumped happily now?", "What other lessons can we learn from the Fisherman?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "happy_catch.jpg",
+        "Keywords": ["fisherman", "caught", "fish"],
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+}  

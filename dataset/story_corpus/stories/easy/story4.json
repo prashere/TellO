@@ -1,0 +1,104 @@
+{
+    "StoryID": "ST004",
+    "Title": "The Dog and the Shadow",
+    "Theme": "Greed and Consequences",
+    "StoryComplexity": "Easy",
+    "WordCount": 100,
+    "TargetAgeGroup": "4-6 years",
+    "NarrativeArc": {
+      "Introduction": [
+        "S001",
+        "S002"
+      ],
+      "RisingAction": [
+        "S003",
+        "S004"
+      ],
+      "Climax": [
+        "S005"
+      ],
+      "Resolution": [
+        "S006"
+      ]
+    },
+    "Vocabulary": {
+      "Meat": "The flesh of an animal used as food.",
+      "Shadow": "A dark shape made by something blocking light.",
+      "Lost": "No longer in possession of something."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "One day, a Dog was walking across a bridge.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "Where do you think the Dog is going?",
+        "FunQuestions": ["Have you seen a dog on a bridge?", "What do dogs like to carry?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": "dog_bridge.jpg",
+        "Keywords": ["dog", "bridge", "walking"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "He had a big piece of meat in his mouth.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Happy",
+        "InteractionPrompt": "What do you think the Dog will do with the meat?",
+        "FunQuestions": ["What do dogs like to eat?", "Have you seen a dog carrying something?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "dog_meat.jpg",
+        "Keywords": ["meat", "dog", "carrying"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "When he looked down at the water, he saw his shadow.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Curious",
+        "InteractionPrompt": "What do you think the Dog saw in the water?",
+        "FunQuestions": ["What happens when you look at water?", "Have you seen your shadow?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "dog_shadow.jpg",
+        "Keywords": ["shadow", "water", "reflection"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "The Dog thought it was another dog with a bigger piece of meat.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Greedy",
+        "InteractionPrompt": "Why do you think the Dog wanted the other piece of meat?",
+        "FunQuestions": ["Have you wanted something bigger?", "Why do you think shadows look real?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "dog_shadow_meat.jpg",
+        "Keywords": ["dog", "greedy", "meat"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "He opened his mouth to grab it, and his own meat fell into the water.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Surprised",
+        "InteractionPrompt": "What do you think the Dog felt when his meat fell?",
+        "FunQuestions": ["Why did the meat fall?", "What would you do if you were the Dog?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "meat_fall.jpg",
+        "Keywords": ["meat", "fall", "water"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "The Dog was sad. He lost the meat he had because he wanted more.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Sad",
+        "InteractionPrompt": "What lesson do you think the Dog learned?",
+        "FunQuestions": ["What does it mean to want too much?", "Have you lost something before?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": "sad_dog.jpg",
+        "Keywords": ["dog", "lost", "sad"],
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  

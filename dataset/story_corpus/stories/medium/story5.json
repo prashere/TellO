@@ -1,0 +1,124 @@
+{
+    "StoryID": "ST005",
+    "Title": "The Farmer and the Snake",
+    "Theme": "Caution and Betrayal",
+    "StoryComplexity": "Medium",
+    "WordCount": 138,
+    "TargetAgeGroup": "6-8 years",
+    "NarrativeArc": {
+      "Introduction": [
+        "S001",
+        "S002"
+      ],
+      "RisingAction": [
+        "S003",
+        "S004"
+      ],
+      "Climax": [
+        "S005"
+      ],
+      "Resolution": [
+        "S006",
+        "S007"
+      ]
+    },
+    "Vocabulary": {
+      "Farmer": "A person who grows crops or raises animals for food.",
+      "Snake": "A long, legless reptile.",
+      "Bit": "To use teeth to cut into something."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "One cold winter day, a kind Farmer was walking outside.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "What do you think the Farmer might find outside?",
+        "FunQuestions": ["What do Farmers do in the winter?", "Have you been outside on a cold day?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["winter", "farmer", "outside"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "He saw a Snake lying in the snow.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Curious",
+        "InteractionPrompt": "Why do you think the Snake is lying in the snow?",
+        "FunQuestions": ["What do snakes do when it’s cold?", "Have you seen snow?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["snake", "snow"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "The Snake was very cold and could not move.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Sympathetic",
+        "InteractionPrompt": "What would you do if you saw a cold animal?",
+        "FunQuestions": ["How do you keep warm in winter?", "Why do cold animals stop moving?"],
+        "IsVocabularyPresent": false,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["snake", "cold"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "The Farmer felt sorry for it. 'Poor Snake,' he said. 'I will help you.'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Kind",
+        "InteractionPrompt": "Why do you think the Farmer wanted to help the Snake?",
+        "FunQuestions": ["What would you do to help someone?", "Have you ever helped an animal?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["farmer", "help", "snake"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "The Farmer picked up the Snake and held it close to keep it warm.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Kind",
+        "InteractionPrompt": "What do you think will happen now that the Snake is warm?",
+        "FunQuestions": ["How do people keep warm in cold weather?", "Why is it important to think before helping?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["farmer", "help", "warm"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "But as soon as the Snake felt better, it bit the Farmer!",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Shocked",
+        "InteractionPrompt": "Why do you think the Snake bit the Farmer?",
+        "FunQuestions": ["What does it mean to be thankful?", "What would you do if you were the Farmer?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["snake", "bit", "farmer"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "The Farmer sat down sadly and said, 'I should not have helped a mean Snake.'",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Sad",
+        "InteractionPrompt": "What lesson do you think the Farmer learned?",
+        "FunQuestions": ["Why should we think carefully about who we help?", "What would you do differently?"],
+        "IsVocabularyPresent": true,
+        "RelatedImage": null,
+        "RelatedAudio": null,
+        "Keywords": ["farmer", "sad", "lesson"],
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  

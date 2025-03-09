@@ -1,0 +1,130 @@
+{
+    "StoryID": "ST012",
+    "Title": "The Ants and the Grasshopper",
+    "Theme": "Hard Work and Preparation",
+    "StoryComplexity": "Medium",
+    "WordCount": 165,
+    "TargetAgeGroup": "6-9 years",
+    "NarrativeArc": {
+      "Introduction": ["S001", "S002"],
+      "RisingAction": ["S003", "S004"],
+      "Climax": ["S005", "S006"],
+      "Resolution": ["S007", "S008"]
+    },
+    "Vocabulary": {
+      "Work": "To do tasks or activities to achieve a result.",
+      "Food": "What people or animals eat to live and grow.",
+      "Winter": "The coldest season of the year, often with snow and cold weather."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "It was summer. The ants were busy gathering food like seeds and nuts.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "Why were the ants gathering food?",
+        "FunQuestions": ["What do ants eat?", "Why do you think they save food?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["ants", "gathering", "food"],
+        "ExpectedEngagementLevel": "High",
+        "RelatedImage": "ants_gathering_food.jpg"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "They worked hard to save food for the cold winter.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Practical",
+        "InteractionPrompt": "What is the importance of saving food?",
+        "FunQuestions": ["Can you think of animals that save food for winter?", "Why is it important to prepare for the future?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["work", "save", "winter"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "The grasshopper, however, did not work.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Lazy",
+        "InteractionPrompt": "Why do you think the grasshopper didn’t work?",
+        "FunQuestions": ["What does being lazy mean?", "Can you think of a time you didn’t feel like working?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["grasshopper", "work", "summer"],
+        "RelatedImage": "lazy_grasshopper.jpg",
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "He jumped around, sang songs, and enjoyed the sunny days.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Happy",
+        "InteractionPrompt": "Do you think the grasshopper should have done something else?",
+        "FunQuestions": ["What would you do if you were the grasshopper?", "Why is it fun to sing in the summer?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["grasshopper", "sang", "summer"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "But summer didn’t last forever. Winter came, and it was very cold.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "What do you think will happen to the grasshopper in winter?",
+        "FunQuestions": ["Why do seasons change?", "What do you do during winter?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["winter", "cold", "grasshopper"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "The grasshopper was hungry. He couldn’t find any food anywhere.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Sad",
+        "InteractionPrompt": "Why couldn’t the grasshopper find food?",
+        "FunQuestions": ["How does it feel to be hungry?", "What do animals eat during winter?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["grasshopper", "hungry", "food"],
+        "RelatedImage": "miserable_grasshopper.jpeg",
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "The grasshopper went to the ants and begged, 'Please give me some food. I am starving.'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Desperate",
+        "InteractionPrompt": "Do you think the ants will help the grasshopper?",
+        "FunQuestions": ["Why do you think the grasshopper is begging now?", "What do you think the ants will say?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["grasshopper", "ants", "food"],
+        "RelatedImage": "begging_grasshopper.jpg",
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S008",
+        "Text": "The ants shook their heads and said, 'If you sang in the summer, you can dance in the winter.'",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Strict",
+        "InteractionPrompt": "What do you think the ants mean by this?",
+        "FunQuestions": ["Do you agree with the ants' response?", "What would you do if you were the grasshopper?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["ants", "summer", "winter"],
+        "RelatedImage": null,
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S009",
+        "Text": "The grasshopper learned that it’s important to work hard and save for the future.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Reflective",
+        "InteractionPrompt": "What lesson did the grasshopper learn?",
+        "FunQuestions": ["Why is working hard important?", "Can you think of a time you prepared for something?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["grasshopper", "learned", "work"],
+        "RelatedImage": "crying_grasshopper.jpg",
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  

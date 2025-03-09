@@ -1,0 +1,99 @@
+{
+    "StoryID": "ST011",
+    "Title": "The Goose and the Golden Eggs",
+    "Theme": "Greed Leads to Loss",
+    "StoryComplexity": "Hard",
+    "WordCount": 120,
+    "TargetAgeGroup": "8-10 years",
+    "NarrativeArc": {
+      "Introduction": ["S001", "S002"],
+      "RisingAction": ["S003", "S004"],
+      "Climax": ["S005"],
+      "Resolution": ["S006", "S007"]
+    },
+    "Vocabulary": {
+      "Goose": "A large water bird with a long neck, often kept for eggs or meat.",
+      "Golden": "Made of or resembling gold, shiny and valuable.",
+      "Greedy": "Wanting more than one needs or deserves."
+    },
+    "Sentences": [
+      {
+        "SentenceID": "S001",
+        "Text": "Once, a man had a very special goose.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Neutral",
+        "InteractionPrompt": "What makes the goose special?",
+        "FunQuestions": ["Have you seen a goose before?", "What makes a goose different from a duck?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["goose", "special", "man"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S002",
+        "Text": "Every day, the goose laid a shiny, golden egg.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Happy",
+        "InteractionPrompt": "Why is the golden egg important?",
+        "FunQuestions": ["What would you do with a golden egg?", "Why do you think the egg is golden?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["goose", "golden", "egg"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S003",
+        "Text": "The man was happy at first.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Content",
+        "InteractionPrompt": "How would you feel if you had a golden egg?",
+        "FunQuestions": ["What makes people happy?", "What would you do if you had something valuable?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["man", "happy", "golden"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S004",
+        "Text": "But soon, he wanted more golden eggs.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Greedy",
+        "InteractionPrompt": "Why did the man want more eggs?",
+        "FunQuestions": ["What does it mean to be greedy?", "Can you think of a time when wanting more caused a problem?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["golden", "eggs", "greedy"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S005",
+        "Text": "He killed the goose and looked inside.",
+        "SemanticComplexity": "Medium",
+        "EmotionalTone": "Tense",
+        "InteractionPrompt": "What do you think the man will find inside the goose?",
+        "FunQuestions": ["Why do you think he made this choice?", "What would you have done differently?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["goose", "killed", "inside"],
+        "ExpectedEngagementLevel": "High"
+      },
+      {
+        "SentenceID": "S006",
+        "Text": "But there was no gold. It was just like any other goose inside.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Disappointing",
+        "InteractionPrompt": "Why didn’t the man find gold?",
+        "FunQuestions": ["What lesson can you learn from this?", "What does it mean to be realistic?"],
+        "IsVocabularyPresent": false,
+        "Keywords": ["gold", "goose", "inside"],
+        "ExpectedEngagementLevel": "Medium"
+      },
+      {
+        "SentenceID": "S007",
+        "Text": "The man felt very sad. Now he had no golden eggs and no goose.",
+        "SemanticComplexity": "Easy",
+        "EmotionalTone": "Sad",
+        "InteractionPrompt": "What could the man have done differently?",
+        "FunQuestions": ["What do you think will happen next?", "Why is patience important?"],
+        "IsVocabularyPresent": true,
+        "Keywords": ["man", "sad", "golden"],
+        "ExpectedEngagementLevel": "High"
+      }
+    ]
+  }
+  
