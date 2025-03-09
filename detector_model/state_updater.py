@@ -80,37 +80,45 @@ class StateUpdater:
         return EMOTION_MAPPING.get(most_common_emotion, 4), avg_conf 
 
     def update_state(self):
-        # Aggregate sensor data
+        """Aggregates sensor data and updates the state based on predefined logic."""
+    
+        # Aggregate head pose, gaze, and emotion
         horizontal, vertical = self.aggregate_head_pose()
         gaze = self.aggregate_gaze()
-        emotion, emotion_conf = self.aggregate_emotion()
-
-        # Here, you can decide how to set engagement level, response quality, etc.
-        # For now, let's assume some defaults. You can refine these rules based on testing.
-        engagement = EngagementLevel.MEDIUM
-        mode = Mode.NARRATION  # or Mode.INTERACTION based on context
-        # For INTERACTION mode, you might need more logic to set these:
+        emotion_idx, emotion_conf = self.aggregate_emotion()  # Returns numeric emotion index and confidence
+    
+        # **Map emotion index to EmotionalState enum**
+        emotion_list = list(EMOTION_MAPPING.keys())  # Get emotion names in order
+        emotion_name = emotion_list[emotion_idx] if emotion_idx in range(len(emotion_list)) else "Neutral"
+        emotional_state = getattr(EmotionalState, emotion_name.upper(), EmotionalState.NEUTRAL)
+    
+        # **Determine Engagement Level**
+        if emotion_conf > 0.6:  # High confidence in emotion
+            engagement = EngagementLevel.HIGH
+        elif horizontal in [HEAD_POSE_MAPPING["Left"], HEAD_POSE_MAPPING["Right"], HEAD_POSE_MAPPING["Down"]]:
+            engagement = EngagementLevel.LOW  # Looking away decreases engagement
+        else:
+            engagement = EngagementLevel.MEDIUM
+    
+        # **Determine Mode**
+        mode = Mode.INTERACTION if gaze != GAZE_MAPPING["Looking center"] else Mode.NARRATION
+    
+        # **Set Default Interaction Values**
         response_quality = ResponseQuality.AVERAGE
         prompt_necessity = PromptNecessity.NO
         response_length = ResponseLength.MEDIUM
         vocabulary_usage = VocabularyUsage.MEDIUM
-
-        # Convert aggregated emotion (string) to your EmotionalState enum.
-        # Ensure that the string matches one of the enum names, e.g., "happy" -> EmotionalState.HAPPY
-        try:
-            emotional_state = EmotionalState[emotion.upper()]
-        except KeyError:
-            emotional_state = EmotionalState.NEUTRAL
-
-        # Create a new state based on aggregated values.
+    
+        # **Create State Object**
         if mode == Mode.NARRATION:
             new_state = State(mode, engagement, emotional_state)
         else:
             new_state = State(mode, engagement, emotional_state, response_quality,
                               prompt_necessity, response_length, vocabulary_usage)
-        # Optionally, you can also include aggregated head pose or gaze in your state logic.
+    
         print("Updated State:", new_state)
         return new_state
+
 
     def maybe_update(self):
         # Check if it's time to update the state based on the interval
