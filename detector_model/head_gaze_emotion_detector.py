@@ -5,97 +5,35 @@ import math
 from fer import FER
 from gaze_tracking import GazeTracking
 import os
-from state_updater import StateUpdater
+# from state_updater import StateUpdater
 
 
-updater = StateUpdater(update_interval=60)
-print(os.path.exists("./detector_model/assets/shape_predictor_68_face_landmarks.dat"))
+class FaceAnalyzer:
+    """Handles face detection, gaze tracking, and head pose estimation."""
 
+    def __init__(self, predictor_path):
+        self.detector = dlib.get_frontal_face_detector()
+        self.predictor = dlib.shape_predictor(predictor_path)
+        self.gaze = GazeTracking()
+        self.model_points = np.array([
+            (0.0, 0.0, 0.0),             # Nose tip
+            (0.0, -330.0, -65.0),        # Chin
+            (-225.0, 170.0, -135.0),     # Left eye left corner
+            (225.0, 170.0, -135.0),      # Right eye right corner
+            (-150.0, -150.0, -125.0),    # Left mouth corner
+            (150.0, -150.0, -125.0)      # Right mouth corner
+        ])
 
-# Loading Dlib's face detector and 68-point landmark predictor
-detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor(
-    "./detector_model/assets/shape_predictor_68_face_landmarks.dat")  # Ensure this file is correct
+    def detect_faces(self, gray_frame):
+        """Detect faces in a grayscale image."""
+        return self.detector(gray_frame)
 
-# Initialize emotion detector
-emotion_detector = FER()
+    def get_landmarks(self, gray_frame, face):
+        """Return face landmarks for a given face."""
+        return self.predictor(gray_frame, face)
 
-# Initialize gaze tracker
-gaze = GazeTracking()
-
-# 3D model points for head pose estimation
-model_points = np.array([
-    (0.0, 0.0, 0.0),             # Nose tip
-    (0.0, -330.0, -65.0),        # Chin
-    (-225.0, 170.0, -135.0),     # Left eye left corner
-    (225.0, 170.0, -135.0),      # Right eye right corner
-    (-150.0, -150.0, -125.0),    # Left mouth corner
-    (150.0, -150.0, -125.0)      # Right mouth corner
-])
-
-# Start video capture
-cap = cv2.VideoCapture(0)
-
-
-def rotation_vector_to_euler_angles(rotation_vector):
-    """Converts the rotation vector to Euler angles."""
-    rotation_matrix, _ = cv2.Rodrigues(rotation_vector)
-    pitch = math.atan2(rotation_matrix[2, 1], rotation_matrix[2, 2])
-    yaw = math.atan2(-rotation_matrix[2, 0], np.sqrt(
-        rotation_matrix[2, 1]**2 + rotation_matrix[2, 2]**2))
-    roll = math.atan2(rotation_matrix[1, 0], rotation_matrix[0, 0])
-    return math.degrees(yaw), math.degrees(pitch), math.degrees(roll)
-
-
-def get_horizontal_movement_label(yaw):
-    """Estimate horizontal head position based on yaw."""
-    if yaw < -15:
-        return "Left"
-    elif -15 <= yaw < -5:
-        return "Slight Left"
-    elif -5 <= yaw <= 5:
-        return "Front"
-    elif 5 < yaw <= 15:
-        return "Slight Right"
-    elif yaw > 15:
-        return "Right"
-    return "Front"
-
-
-def get_vertical_movement_label(pitch):
-    """Estimate vertical head position based on pitch."""
-    if pitch < -10:
-        return "Down"
-    elif pitch > 0 and pitch <= 160:
-        return "Up"
-    return "Front"
-
-
-# Variables for smoothing
-last_horizontal_label = "Front"
-last_vertical_label = "Front"
-last_emotion = "Neutral"
-gaze_text = "Front"
-last_emotion_score = 0.00
-frame_count = 0
-emotion_update_interval = 15  # Run emotion detection every 15 frames
-
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-
-    frame_count += 1
-    frame_resized = cv2.resize(frame, (640, 480))
-    gray = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2GRAY)
-    faces = detector(gray)
-
-    for face in faces:
-        gaze.refresh(frame_resized)
-
-        landmarks = predictor(gray, face)
-
-        # 2D image points for face landmarks
+    def get_head_pose(self, landmarks, frame_size):
+        """Estimate head pose based on facial landmarks."""
         image_points = np.array([
             (landmarks.part(30).x, landmarks.part(30).y),  # Nose tip
             (landmarks.part(8).x, landmarks.part(8).y),    # Chin
@@ -105,79 +43,146 @@ while True:
             (landmarks.part(54).x, landmarks.part(54).y)   # Right mouth corner
         ], dtype="double")
 
-        # Camera matrix
-        size = frame_resized.shape
-        focal_length = size[1]
-        center = (size[1] // 2, size[0] // 2)
+        focal_length = frame_size[1]
+        center = (frame_size[1] // 2, frame_size[0] // 2)
         camera_matrix = np.array([
             [focal_length, 0, center[0]],
             [0, focal_length, center[1]],
             [0, 0, 1]
         ], dtype="double")
 
-        # Solve PnP
         dist_coeffs = np.zeros((4, 1))  # Assuming no lens distortion
-        success, rotation_vector, translation_vector = cv2.solvePnP(
-            model_points, image_points, camera_matrix, dist_coeffs)
+        success, rotation_vector, _ = cv2.solvePnP(
+            self.model_points, image_points, camera_matrix, dist_coeffs)
 
-        # Convert rotation vector to Euler angles
-        yaw, pitch, roll = rotation_vector_to_euler_angles(rotation_vector)
+        return rotation_vector if success else None
+    
+    def get_gaze_direction(self, frame):
+        """Detects gaze direction using GazeTracking library."""
+        self.gaze.refresh(frame)
 
-        # Get movement labels
-        horizontal_movement_label = get_horizontal_movement_label(yaw)
-        vertical_movement_label = get_vertical_movement_label(pitch)
+        if self.gaze.is_right():
+            return "Looking Right"
+        elif self.gaze.is_left():
+            return "Looking Left"
+        elif self.gaze.is_center():
+            return "Looking Center"
+        return "Unknown"
 
-        # Smooth movement updates
-        if horizontal_movement_label != last_horizontal_label:
-            last_horizontal_label = horizontal_movement_label
-        if vertical_movement_label != last_vertical_label:
-            last_vertical_label = vertical_movement_label
+    @staticmethod
+    def rotation_vector_to_euler_angles(rotation_vector):
+        """Convert rotation vector to yaw, pitch, roll angles."""
+        rotation_matrix, _ = cv2.Rodrigues(rotation_vector)
+        pitch = math.atan2(rotation_matrix[2, 1], rotation_matrix[2, 2])
+        yaw = math.atan2(-rotation_matrix[2, 0], np.sqrt(
+            rotation_matrix[2, 1]**2 + rotation_matrix[2, 2]**2))
+        roll = math.atan2(rotation_matrix[1, 0], rotation_matrix[0, 0])
+        return math.degrees(yaw), math.degrees(pitch), math.degrees(roll)
 
-        if gaze.is_blinking():
-            gaze_text = "Blinking"
-        elif gaze.is_right():
-            gaze_text = "Looking right"
-        elif gaze.is_left():
-            gaze_text = "Looking left"
-        elif gaze.is_center():
-            gaze_text = "Looking center"
+    @staticmethod
+    def get_horizontal_movement_label(yaw):
+        """Determine head movement direction based on yaw."""
+        if yaw < -15:
+            return "Left"
+        elif -15 <= yaw < -5:
+            return "Slight Left"
+        elif -5 <= yaw <= 5:
+            return "Front"
+        elif 5 < yaw <= 15:
+            return "Slight Right"
+        elif yaw > 15:
+            return "Right"
+        return "Front"
 
-        # Display movement labels
-        cv2.putText(frame_resized, f"Horizontal: {last_horizontal_label}", (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-        cv2.putText(frame_resized, f"Vertical: {last_vertical_label}", (10, 60),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+    @staticmethod
+    def get_vertical_movement_label(pitch):
+        """Determine head movement direction based on pitch."""
+        if pitch < -10:
+            return "Down"
+        elif pitch > 0 and pitch <= 160:
+            return "Up"
+        return "Front"
 
-        # Draw cross at the center of the eyes (gaze tracking)
-        left_eye_center = (landmarks.part(
-            36).x + landmarks.part(39).x) // 2, (landmarks.part(36).y + landmarks.part(39).y) // 2
-        right_eye_center = (landmarks.part(
-            42).x + landmarks.part(45).x) // 2, (landmarks.part(42).y + landmarks.part(45).y) // 2
 
-        cv2.drawMarker(frame_resized, left_eye_center, (0, 0, 255),
-                       markerType=cv2.MARKER_CROSS, markerSize=20, thickness=2)
-        cv2.drawMarker(frame_resized, right_eye_center, (0, 0, 255),
-                       markerType=cv2.MARKER_CROSS, markerSize=20, thickness=2)
-        # print(f"Gaze: {gaze_text}")
-        cv2.putText(frame_resized, f"Gaze: {gaze_text}", (10, 120),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-        
+class EmotionAnalyzer:
+    """Handles emotion detection from facial expressions."""
 
-    # Run emotion detection every `emotion_update_interval` frames
-    if frame_count % emotion_update_interval == 0:
-        result = emotion_detector.detect_emotions(frame_resized)
+    def __init__(self):
+        self.detector = FER()
+        self.last_emotion = "Neutral"
+        self.last_score = 0.0
+
+    def detect_emotion(self, frame):
+        """Run emotion detection and return the most likely emotion."""
+        result = self.detector.detect_emotions(frame)
         if result:
-            emotion, score = emotion_detector.top_emotion(frame_resized)
-            last_emotion = emotion if emotion else last_emotion
-            last_emotion_score = round(score, 2)
+            emotion, score = self.detector.top_emotion(frame)
+            if emotion:
+                self.last_emotion = emotion
+                self.last_score = round(score, 2)
+        return self.last_emotion, self.last_score
 
-    # Display emotion label (persists until updated)
-    cv2.putText(frame_resized, f"Emotion: {last_emotion} ({last_emotion_score})", (10, 90),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-    cv2.imshow("Head Pose and Emotion Detection", frame_resized)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+class VideoProcessor:
+    """Handles video processing and state updates."""
 
-cap.release()
-cv2.destroyAllWindows()
+    def __init__(self, predictor_path, update_interval=60):
+        self.face_analyzer = FaceAnalyzer(predictor_path)
+        self.emotion_analyzer = EmotionAnalyzer()
+        # self.updater = StateUpdater(update_interval=update_interval)
+        self.cap = cv2.VideoCapture(0)
+        self.frame_count = 0
+        self.emotion_update_interval = 15  # Run emotion detection every 15 frames
+
+    def process_video(self):
+        """Process the video frame-by-frame for head pose and emotions."""
+        while True:
+            ret, frame = self.cap.read()
+            if not ret:
+                break
+
+            self.frame_count += 1
+            frame_resized = cv2.resize(frame, (640, 480))
+            gray = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2GRAY)
+            faces = self.face_analyzer.detect_faces(gray)
+
+            for face in faces:
+                landmarks = self.face_analyzer.get_landmarks(gray, face)
+
+                rotation_vector = self.face_analyzer.get_head_pose(landmarks, frame_resized.shape)
+                if rotation_vector is not None:
+                    yaw, pitch, _ = self.face_analyzer.rotation_vector_to_euler_angles(rotation_vector)
+                    horizontal_label = self.face_analyzer.get_horizontal_movement_label(yaw)
+                    vertical_label = self.face_analyzer.get_vertical_movement_label(pitch)
+                    gaze_direction = self.face_analyzer.get_gaze_direction(frame_resized)
+
+                    cv2.putText(frame_resized, f"Horizontal: {horizontal_label}", (10, 30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                    cv2.putText(frame_resized, f"Vertical: {vertical_label}", (10, 60),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                    cv2.putText(frame_resized, f"Gaze: {gaze_direction}", (10, 120),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
+            if self.frame_count % self.emotion_update_interval == 0:
+                emotion, score = self.emotion_analyzer.detect_emotion(frame_resized)
+
+            cv2.putText(frame_resized, f"Emotion: {self.emotion_analyzer.last_emotion} ({self.emotion_analyzer.last_score})",
+                        (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+
+            cv2.imshow("Head Pose and Emotion Detection", frame_resized)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        self.cap.release()
+        cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    predictor_path = "./detector_model/assets/shape_predictor_68_face_landmarks.dat"
+    
+    if not os.path.exists(predictor_path):
+        raise FileNotFoundError(f"Model file not found: {predictor_path}")
+
+    processor = VideoProcessor(predictor_path)
+    processor.process_video()
