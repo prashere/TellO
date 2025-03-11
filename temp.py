@@ -42,28 +42,46 @@ stream = sd.RawInputStream(samplerate=samplerate, blocksize=8000, dtype='int16',
                            channels=1, callback=stt_callback)
 stream.start()
 
-def listen_for_child_response(timeout=30):
+def listen_for_child_response(timeout=60):
     """
-    Listen for the child's response using Vosk for a given timeout period.
-    :param timeout: Time to wait (in seconds) for a response.
-    :return: Transcribed text from the child's speech.
+    Listen for the child's response using Vosk for the full timeout period.
+    :param timeout: Time in seconds to continuously listen.
+    :return: The full transcribed text from the child's speech.
     """
+    # Clear any existing data in the queue
+    while not q.empty():
+        q.get()
+    
     rec = vosk.KaldiRecognizer(model, samplerate)
     start_time = time.time()
     transcript = ""
+
+    print("\n🎤 Speak now... (Listening for", timeout, "seconds)")
+
     while time.time() - start_time < timeout:
-        if not q.empty():
-            data = q.get()
-            if rec.AcceptWaveform(data):
-                result = json.loads(rec.Result())
-                transcript = result.get("text", "")
-                if transcript.strip():
-                    break
+        try:
+            data = q.get(timeout=0.5)
+        except queue.Empty:
+            continue
+        
+        # Feed the data to the recognizer
+        rec.AcceptWaveform(data)
+        # Append partial result if available (optional: can also use PartialResult() for debugging)
+        # We don't break early; we just accumulate the text from final results.
+    
+    # After timeout, get any final pending result
+    final_result = json.loads(rec.FinalResult())
+    transcript += " " + final_result.get("text", "")
+    transcript = transcript.strip()
+    
+    print(f"📝 You said: {transcript}")
     return transcript
+
+
 
 # -----------------------------------
 # Load Story and Prompts
-story_file = 'dataset/story_corpus/stories/easy/story2.json'  # Adjust path as needed
+story_file = 'dataset/story_corpus/stories/easy/story3.json'  # Adjust path as needed
 with open(story_file, "r", encoding="utf-8") as f:
     story_data = json.load(f)
 story = Story(story_data)
@@ -102,7 +120,7 @@ def run_storytelling():
                 cv2.imshow("Current Image", img)
                 # Ask: "What do you see?" and wait for 30 seconds
                 speak_text("What do you see?")
-                child_image_response = listen_for_child_response(timeout=30)
+                child_image_response = listen_for_child_response(timeout=2)
                 print("Child's image response:", child_image_response)
                 speak_text("Nice work.")
                 # Close image window after 30 seconds
@@ -121,7 +139,7 @@ def run_storytelling():
         if sentence_count % 2 == 0:
             interaction_prompt = sentence.get("InteractionPrompt", "What do you think?")
             speak_text(interaction_prompt)
-            child_response = listen_for_child_response(timeout=10)
+            child_response = listen_for_child_response(timeout=2)
             print("Child's interaction response:", child_response)
             speak_text("Alright, that's good.")
             time.sleep(1)

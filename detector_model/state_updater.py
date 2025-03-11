@@ -11,25 +11,25 @@ HEAD_POSE_MAPPING = {
     "Down": 4
 }
 GAZE_MAPPING = {
-        "Looking left": 1,
-        "Looking right": 2,
-        "Looking center": 0,
-        "Blinking": 3
+    "Looking left": 1,
+    "Looking right": 2,
+    "Looking center": 0,
+    "Blinking": 3
 }
 EMOTION_MAPPING = {
-        "Angry": 0,
-        "Disgust": 1,
-        "Fear": 2,
-        "Happy": 3,
-        "Neutral": 4,
-        "Sad": 5,
-        "Surprise": 6
+    "Angry": 0,
+    "Disgust": 1,
+    "Fear": 2,
+    "Happy": 3,
+    "Neutral": 4,
+    "Sad": 5,
+    "Surprise": 6
 }
 
 class StateUpdater:
     def __init__(self, update_interval=60):
         # Buffers to store sensor outputs during the window
-        self.head_horizontal_buffer = deque(maxlen=100)  # adjust maxlen as needed
+        self.head_horizontal_buffer = deque(maxlen=100)
         self.head_vertical_buffer = deque(maxlen=100)
         self.gaze_buffer = deque(maxlen=100)
         self.emotion_buffer = deque(maxlen=100)
@@ -39,89 +39,108 @@ class StateUpdater:
         self.update_interval = update_interval  # seconds
         
     def add_reading(self, horizontal, vertical, gaze, emotion, emotion_conf):
-        self.head_horizontal_buffer.append(horizontal)
-        self.head_vertical_buffer.append(vertical)
-        self.gaze_buffer.append(gaze)
-        self.emotion_buffer.append(emotion)
-        self.emotion_conf_buffer.append(emotion_conf)
+        try:
+            self.head_horizontal_buffer.append(horizontal)
+            self.head_vertical_buffer.append(vertical)
+            self.gaze_buffer.append(gaze)
+            self.emotion_buffer.append(emotion)
+            self.emotion_conf_buffer.append(emotion_conf)
+        except Exception as e:
+            print("Error in add_reading:", e)
     
     def aggregate_head_pose(self):
-        # Convert stored labels to numeric values
-        horizontal_values = [HEAD_POSE_MAPPING[pose] for pose in self.head_horizontal_buffer if pose in HEAD_POSE_MAPPING]
-        vertical_values = [HEAD_POSE_MAPPING[pose] for pose in self.head_vertical_buffer if pose in HEAD_POSE_MAPPING]
-
-        # Find the most common (mode) for stability
-        horizontal_mode = Counter(horizontal_values).most_common(1)[0][0] if horizontal_values else HEAD_POSE_MAPPING["Front"]
-        vertical_mode = Counter(vertical_values).most_common(1)[0][0] if vertical_values else HEAD_POSE_MAPPING["Front"]
-
-        return horizontal_mode, vertical_mode
+        try:
+            horizontal_values = [HEAD_POSE_MAPPING[pose] for pose in self.head_horizontal_buffer if pose in HEAD_POSE_MAPPING]
+            vertical_values = [HEAD_POSE_MAPPING[pose] for pose in self.head_vertical_buffer if pose in HEAD_POSE_MAPPING]
+            horizontal_mode = Counter(horizontal_values).most_common(1)[0][0] if horizontal_values else HEAD_POSE_MAPPING["Front"]
+            vertical_mode = Counter(vertical_values).most_common(1)[0][0] if vertical_values else HEAD_POSE_MAPPING["Front"]
+            return horizontal_mode, vertical_mode
+        except Exception as e:
+            print("Error in aggregate_head_pose:", e)
+            return HEAD_POSE_MAPPING["Front"], HEAD_POSE_MAPPING["Front"]
 
     def aggregate_gaze(self):
-        if self.gaze_buffer:
-            gaze_mode = Counter(self.gaze_buffer).most_common(1)[0][0]
-            return GAZE_MAPPING.get(gaze_mode, 0)  # Default to center (0) if unknown
-        else:
-            return 0  # Default to center (0) if buffer is empty
+        try:
+            if self.gaze_buffer:
+                gaze_mode = Counter(self.gaze_buffer).most_common(1)[0][0]
+                return GAZE_MAPPING.get(gaze_mode, 0)
+            else:
+                return 0
+        except Exception as e:
+            print("Error in aggregate_gaze:", e)
+            return 0
 
     def aggregate_emotion(self):
-        # If no emotions are recorded, return Neutral with 0.0 confidence
-        if not self.emotion_buffer:
-            return 4, 0.0  # Neutral (4) and 0.0 confidence
-
-        # Find the most common emotion
-        counts = Counter(self.emotion_buffer)
-        most_common_emotion, count = counts.most_common(1)[0]
-
-        # Compute average confidence for occurrences of that emotion
-        confs = [conf for emo, conf in zip(self.emotion_buffer, self.emotion_conf_buffer) if emo == most_common_emotion]
-        avg_conf = statistics.mean(confs) if confs else 0.0
-
-        # Return the mapped numeric value and average confidence
-        return EMOTION_MAPPING.get(most_common_emotion, 4), avg_conf 
+        try:
+            if not self.emotion_buffer:
+                return 4, 0.0  # Neutral and 0.0 confidence
+            counts = Counter(self.emotion_buffer)
+            most_common_emotion, _ = counts.most_common(1)[0]
+            # Filter out any None values from confidence
+            confs = [conf for emo, conf in zip(self.emotion_buffer, self.emotion_conf_buffer) if emo == most_common_emotion and conf is not None]
+            avg_conf = statistics.mean(confs) if confs else 0.0
+            return EMOTION_MAPPING.get(most_common_emotion, 4), avg_conf 
+        except Exception as e:
+            print("Error in aggregate_emotion:", e)
+            return 4, 0.0
 
     def update_state(self):
-        """Aggregates sensor data and updates the state based on predefined logic."""
-    
-        # Aggregate head pose, gaze, and emotion
-        horizontal, vertical = self.aggregate_head_pose()
-        gaze = self.aggregate_gaze()
-        emotion_idx, emotion_conf = self.aggregate_emotion()  # Returns numeric emotion index and confidence
-    
-        # **Map emotion index to EmotionalState enum**
-        emotion_list = list(EMOTION_MAPPING.keys())  # Get emotion names in order
-        emotion_name = emotion_list[emotion_idx] if emotion_idx in range(len(emotion_list)) else "Neutral"
-        emotional_state = getattr(EmotionalState, emotion_name.upper(), EmotionalState.NEUTRAL)
-    
-        # **Determine Engagement Level**
-        if emotion_conf > 0.6:  # High confidence in emotion
-            engagement = EngagementLevel.HIGH
-        elif horizontal in [HEAD_POSE_MAPPING["Left"], HEAD_POSE_MAPPING["Right"], HEAD_POSE_MAPPING["Down"]]:
-            engagement = EngagementLevel.LOW  # Looking away decreases engagement
-        else:
+        try:
+            horizontal, vertical = self.aggregate_head_pose()
+            gaze = self.aggregate_gaze()
+            emotion_idx, emotion_conf = self.aggregate_emotion()  # Returns numeric emotion index and confidence
+        except Exception as e:
+            print("Error during state aggregation:", e)
+            horizontal, vertical, gaze, emotion_idx, emotion_conf = HEAD_POSE_MAPPING["Front"], HEAD_POSE_MAPPING["Front"], 0, 4, 0.0
+
+        try:
+            # Map emotion index to EmotionalState enum
+            emotion_list = list(EMOTION_MAPPING.keys())
+            emotion_name = emotion_list[emotion_idx] if emotion_idx in range(len(emotion_list)) else "Neutral"
+            emotional_state = getattr(EmotionalState, emotion_name.upper(), EmotionalState.NEUTRAL)
+        except Exception as e:
+            print("Error mapping emotion:", e)
+            emotional_state = EmotionalState.NEUTRAL
+
+        try:
+            # Determine Engagement Level
+            if emotion_conf > 0.6:
+                engagement = EngagementLevel.HIGH
+            elif horizontal in [HEAD_POSE_MAPPING.get("Left"), HEAD_POSE_MAPPING.get("Right"), HEAD_POSE_MAPPING.get("Down")]:
+                engagement = EngagementLevel.LOW
+            else:
+                engagement = EngagementLevel.MEDIUM
+        except Exception as e:
+            print("Error determining engagement level:", e)
             engagement = EngagementLevel.MEDIUM
-    
-        # **Determine Mode**
-        mode = Mode.INTERACTION if gaze != GAZE_MAPPING["Looking center"] else Mode.NARRATION
-    
-        # **Set Default Interaction Values**
+
+        try:
+            # Determine Mode based on gaze
+            mode = Mode.INTERACTION if gaze != GAZE_MAPPING.get("Looking center", 0) else Mode.NARRATION
+        except Exception as e:
+            print("Error determining mode:", e)
+            mode = Mode.NARRATION
+
+        # Set default interaction values if needed
         response_quality = ResponseQuality.AVERAGE
         prompt_necessity = PromptNecessity.NO
         response_length = ResponseLength.MEDIUM
         vocabulary_usage = VocabularyUsage.MEDIUM
-    
-        # **Create State Object**
-        if mode == Mode.NARRATION:
-            new_state = State(mode, engagement, emotional_state)
-        else:
-            new_state = State(mode, engagement, emotional_state, response_quality,
-                              prompt_necessity, response_length, vocabulary_usage)
-    
+
+        try:
+            if mode == Mode.NARRATION:
+                new_state = State(mode, engagement, emotional_state)
+            else:
+                new_state = State(mode, engagement, emotional_state, response_quality,
+                                  prompt_necessity, response_length, vocabulary_usage)
+        except Exception as e:
+            print("Error creating state object:", e)
+            new_state = State(Mode.NARRATION, EngagementLevel.MEDIUM, EmotionalState.NEUTRAL)
+        
         print("Updated State:", new_state)
         return new_state
 
-
     def maybe_update(self):
-        # Check if it's time to update the state based on the interval
         current_time = time.time()
         if current_time - self.last_update_time >= self.update_interval:
             new_state = self.update_state()
@@ -134,6 +153,7 @@ class StateUpdater:
             self.emotion_conf_buffer.clear()
             return new_state
         return None
+
 
 
 if __name__ == "__main__":
