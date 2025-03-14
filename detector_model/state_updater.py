@@ -140,6 +140,79 @@ class StateUpdater:
         print("Updated State:", new_state)
         return new_state
 
+#----------------------------------------------------------
+# NEW FUNCTION
+#----------------------------------------------------------
+
+    def update_state_from_story(mode, child_response):
+        """
+        Update the state based on the storytelling context.
+
+        Parameters:
+          mode (Mode): The current mode (e.g., Mode.NARRATION or Mode.INTERACTION).
+          child_response (str): The child's spoken response.
+
+        Returns:
+          State: An updated state object reflecting the current interaction.
+        """
+        # Determine Engagement Level based on the response length when in interaction mode.
+        if mode == Mode.INTERACTION:
+            words = child_response.split()
+            if len(words) >= 10:
+                engagement = EngagementLevel.HIGH
+            elif 1 <= len(words) < 10:
+                engagement = EngagementLevel.MEDIUM
+            else:
+                engagement = EngagementLevel.LOW
+        else:
+            # For narration, assume a medium engagement by default.
+            engagement = EngagementLevel.MEDIUM
+
+        # For now, we set the emotional state to NEUTRAL.
+        # Later, you might integrate sentiment analysis on child_response to adjust this.
+        emotional_state = EmotionalState.NEUTRAL
+
+        if mode == Mode.INTERACTION:
+            # Evaluate Response Quality based on the number of words.
+            num_words = len(child_response.split())
+            if num_words >= 15:
+                response_quality = ResponseQuality.HIGH
+            elif num_words >= 5:
+                response_quality = ResponseQuality.AVERAGE
+            else:
+                response_quality = ResponseQuality.LOW
+
+            # Determine if a prompt is necessary (e.g., if response is too short).
+            prompt_necessity = PromptNecessity.YES if num_words < 5 else PromptNecessity.NO
+
+            # Categorize Response Length.
+            if num_words < 5:
+                response_length = ResponseLength.SHORT
+            elif num_words <= 15:
+                response_length = ResponseLength.MEDIUM
+            else:
+                response_length = ResponseLength.LONG
+
+            # Evaluate Vocabulary Usage using a simple unique/total words ratio.
+            words = child_response.split()
+            unique_ratio = len(set(words)) / len(words) if words else 0.0
+            # A higher ratio indicates a more varied vocabulary.
+            vocabulary_usage = VocabularyUsage.HIGH if unique_ratio > 0.5 else VocabularyUsage.MEDIUM
+
+            # Create the full state for INTERACTION mode.
+            new_state = State(mode, engagement, emotional_state,
+                              response_quality, prompt_necessity,
+                              response_length, vocabulary_usage)
+        else:
+            # For narration mode, fewer attributes are needed.
+            new_state = State(mode, engagement, emotional_state)
+
+        return new_state
+
+#----------------------------------------------------------
+#----------------------------------------------------------
+
+
     def maybe_update(self):
         current_time = time.time()
         if current_time - self.last_update_time >= self.update_interval:
