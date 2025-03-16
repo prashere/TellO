@@ -27,9 +27,9 @@ a {
   width: 90%;
   max-width: 800px;
   background: white;
-  padding: 20px 30px;
+  padding: 25px 35px; /* More padding for better spacing */
   border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -39,7 +39,7 @@ header {
 }
 
 header h1 {
-  font-size: 2rem;
+  font-size: 2.2rem;
 }
 
 /* Student List Section */
@@ -48,97 +48,102 @@ header h1 {
 }
 
 .student-list h2 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
 }
 
 .student-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f6f8fa;
-  border: 1px solid #ddd;
-  padding: 10px 15px;
-  margin-bottom: 10px;
+  background: #f0f4f8;
+  border: 1px solid #ccc;
+  padding: 12px 18px;
+  margin-bottom: 12px;
   border-radius: 10px;
-}
-
-.student-card:hover {
-  background: #e3f4f1;
-  transform: scale(1.01);
   transition: all 0.3s;
 }
 
+.student-card:hover {
+  background: #d7ece8;
+  transform: scale(1.02);
+}
+
 .student-name {
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: 700;
 }
 
 .actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 /* Buttons */
 button {
   font-family: "Comic Neue", sans-serif;
-  font-size: 1rem;
+  font-size: 1.3rem; /* Larger text */
+  font-weight: 700;
   border: none;
-  border-radius: 5px;
-  padding: 8px 15px;
+  border-radius: 6px;
+  padding: 12px 20px; /* Bigger buttons */
   cursor: pointer;
   transition: all 0.3s;
 }
 
+/* View Button */
 .view-btn {
-  background: #a2d2ff;
+  background: #74b5e3; /* Darker blue */
   color: white;
 }
 
 .view-btn:hover {
-  background: #74c0e3;
+  background: #4a9dd1; /* Even darker blue */
 }
 
+/* Edit Button */
 .edit-btn {
-  background: #fad6a5;
+  background: #f5b577; /* Darker orange */
   color: white;
 }
 
 .edit-btn:hover {
-  background: #f9c49a;
+  background: #e39d5d; /* More contrast */
 }
 
 /* Actions Panel */
 .actions-panel h2 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
 }
 
 .add-student-btn {
   display: block;
-  background: #f8bbd0;
+  background: #e87b9c; /* Darker pink */
   color: white;
-  font-size: 1rem;
-  padding: 10px 20px;
-  margin-bottom: 10px;
-  transition: all 0.3s;
+  font-size: 1.4rem;
+  padding: 12px 22px;
+  border-radius: 6px;
+  margin-bottom: 12px;
 }
 
 .add-student-btn:hover {
-  background: #f48fb1;
+  background: #d86587; /* Even darker pink */
 }
 
 .report-link {
   display: block;
-  background: #b8e0d2;
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: #6bb197; /* Darker green */
   color: white;
   text-align: center;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 22px;
+  border-radius: 6px;
 }
 
 .report-link:hover {
-  background: #96c7b3;
+  background: #67ad97; /* More contrast */
 }
 
 /* Animation */

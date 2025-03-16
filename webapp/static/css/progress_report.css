@@ -46,10 +46,12 @@ header p {
 .student-info {
   text-align: left;
   color: #4a4a4a;
+  font-size: 1.3rem;
 }
 
 .chart-card {
   height: 300px;
+
 }
 
 .details-card ul {
@@ -59,13 +61,13 @@ header p {
 
 .details-card ul li {
   margin: 10px 0;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 .sessions-list table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1rem;
+  font-size: 1.3rem;
   margin-top: 15px;
 }
 

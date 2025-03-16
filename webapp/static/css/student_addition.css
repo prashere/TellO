@@ -25,7 +25,7 @@ p {
 /* Form Container */
 .form-container {
   width: 90%;
-  max-width: 500px;
+  max-width: 650px;
   background: white;
   padding: 30px;
   border-radius: 15px;
@@ -39,11 +39,11 @@ header {
 }
 
 header h1 {
-  font-size: 2rem;
+  font-size: 2.2rem;
 }
 
 header p {
-  font-size: 1rem;
+  font-size: 1.4rem;
   margin-top: 5px;
 }
 
@@ -61,15 +61,15 @@ form {
 
 label {
   margin-bottom: 5px;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
 }
 
 input,
 select,
 textarea {
   font-family: "Comic Neue", sans-serif;
-  font-size: 1rem;
-  padding: 10px;
+  font-size: 1.4rem;
+  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #f9fafb;
@@ -91,10 +91,10 @@ textarea {
 /* Save Button */
 .save-btn {
   font-family: "Comic Neue", sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: white;
-  background: #f8bbd0;
+  background: #f88db2;
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
@@ -103,7 +103,7 @@ textarea {
 }
 
 .save-btn:hover {
-  background: #f48fb1;
+  background: #f584aa;
   transform: translateY(-3px);
 }
 

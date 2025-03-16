@@ -76,7 +76,7 @@
       </main>
     </div>
 
-    <script>
+    <!-- <script>
       // ChartJS Script for Session Overview
       const ctx = document.getElementById("sessionsChart").getContext("2d");
       const sessionsChart = new Chart(ctx, {
@@ -102,6 +102,52 @@
             y: {
               beginAtZero: true,
               max: 100,
+            },
+          },
+        },
+      });
+    </script> -->
+
+    <script>
+      // ChartJS Script for Session Overview
+      const ctx = document.getElementById("sessionsChart").getContext("2d");
+      const sessionsChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Storytelling", "Vocabulary", "Reading", "Math", "Science"],
+          datasets: [
+            {
+              label: "Performance Score",
+              data: [90, 85, 80, 75, 88],
+              backgroundColor: "#F8BBD0",
+              borderColor: "#F48FB1",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false, // Hide legend (set to true if needed)
+            },
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 16, // Increase X-axis font size
+                },
+              },
+            },
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                font: {
+                  size: 16, // Increase Y-axis font size
+                },
+              },
             },
           },
         },
