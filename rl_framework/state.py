@@ -9,8 +9,8 @@ class Confidence(Enum):
     MEDIUM = "Medium"
     LOW = "Low"
 
-# Prompt necessity means does the child need a prompt again because 
-# To the existing one it didn't respond or the engagement wasn't satisfactory
+# Prompt necessity means whether the child needs a prompt again 
+# because the existing one didn't yield a satisfactory response.
 class PromptNecessity(Enum):
     YES = "Yes"
     NO = "No"
@@ -53,7 +53,8 @@ class State:
         response_quality: ResponseQuality = None, 
         prompt_necessity: PromptNecessity = None, 
         response_length: ResponseLength = None, 
-        vocabulary_usage: VocabularyUsage = None
+        vocabulary_usage: VocabularyUsage = None,
+        wh_question_detected: bool = False  # New attribute to indicate if a WH-question is detected
     ):
         """
         Initializes the state with attributes that depend on the mode.
@@ -67,6 +68,7 @@ class State:
         :param prompt_necessity: Whether the child required a prompt.
         :param response_length: The length of the child's response.
         :param vocabulary_usage: Categorized count of known words used by the child.
+        :param wh_question_detected: True if the child's response includes a WH-question, triggering clarification.
         """
         self.mode = mode
         self.engagement_level = engagement_level
@@ -77,13 +79,17 @@ class State:
         self.prompt_necessity = prompt_necessity if mode == Mode.INTERACTION else None
         self.response_length = response_length if mode == Mode.INTERACTION else None
         self.vocabulary_usage = vocabulary_usage if mode == Mode.INTERACTION else None
+        self.wh_question_detected = wh_question_detected if mode == Mode.INTERACTION else False
 
     def __repr__(self):
         base = f"State(mode={self.mode.value}, engagement_level={self.engagement_level.value}, emotional_state={self.emotional_state.value}"
         if self.mode == Mode.INTERACTION:
             base += (f", response_quality={self.response_quality.value}, prompt_necessity={self.prompt_necessity.value}, "
-                     f"response_length={self.response_length.value}, vocabulary_usage={self.vocabulary_usage.value}")
-        return base + ")"
+                     f"response_length={self.response_length.value}, vocabulary_usage={self.vocabulary_usage.value}, "
+                     f"wh_question_detected={self.wh_question_detected})")
+        else:
+            base += ")"
+        return base
 
     def __eq__(self, other):
         if not isinstance(other, State):
@@ -94,11 +100,13 @@ class State:
                 self.response_quality == other.response_quality and
                 self.prompt_necessity == other.prompt_necessity and
                 self.response_length == other.response_length and
-                self.vocabulary_usage == other.vocabulary_usage)
+                self.vocabulary_usage == other.vocabulary_usage and
+                self.wh_question_detected == other.wh_question_detected)
 
     def __hash__(self):
         return hash((self.mode, self.engagement_level, self.emotional_state, 
-                     self.response_quality, self.prompt_necessity, self.response_length, self.vocabulary_usage))
+                     self.response_quality, self.prompt_necessity, self.response_length, 
+                     self.vocabulary_usage, self.wh_question_detected))
 
     def to_tuple(self):
         """
@@ -107,27 +115,6 @@ class State:
         base = (self.mode.value, self.engagement_level.value, self.emotional_state.value)
         if self.mode == Mode.INTERACTION:
             return base + (self.response_quality.value, self.prompt_necessity.value, 
-                           self.response_length.value, self.vocabulary_usage.value)
+                           self.response_length.value, self.vocabulary_usage.value, 
+                           self.wh_question_detected)
         return base
-
-
-# Child is listening during narration
-# state_narration = State(
-#     mode=Mode.NARRATION,
-#     engagement_level=EngagementLevel.HIGH,
-#     emotional_state=EmotionalState.HAPPY
-# )
-
-# Child is responding after a prompt
-# state_interaction = State(
-#     mode=Mode.INTERACTION,
-#     engagement_level=EngagementLevel.MEDIUM,
-#     emotional_state=EmotionalState.CONFUSED,
-#     response_quality=ResponseQuality.WEAK,
-#     prompt_necessity=PromptNecessity.YES,
-#     response_length=ResponseLength.SHORT,
-#     vocabulary_usage=VocabularyUsage.LOW
-# )
-
-# print(state_narration.to_tuple())
-# print(state_interaction.to_tuple())

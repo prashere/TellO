@@ -1,149 +1,140 @@
 import random
 from typing import List
-from actions import *
-from state import *
+from state import State, Mode, EngagementLevel, EmotionalState, ResponseQuality, PromptNecessity, ResponseLength, VocabularyUsage
+from actions import Action, SentenceComplexity, LexicalType, ClarificationType
 
 
 class QLearning:
     def __init__(self, actions: List[Action], alpha: float = 0.1, gamma: float = 0.9, epsilon: float = 0.2):
         """
         Initializes the Q-learning agent.
+        
         :param actions: List of all possible actions.
         :param alpha: Learning rate.
         :param gamma: Discount factor.
-        :param epsilon: Exploration rate for ϵ-greedy strategy.
+        :param epsilon: Exploration rate (ϵ-greedy strategy).
         """
         self.actions = actions
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
-        self.q_table = {}  # Q-table to store Q-values (state -> [Q-values for actions])
+        self.q_table = {}  # Q-table mapping from state tuple to list of Q-values
 
-    def _get_q_values(self, state: State):
-        """Returns the Q-values for the given state. Initializes if not yet encountered."""
-        state_tuple = state.to_tuple()
-        if state_tuple not in self.q_table:
-            # Initialize Q-values for all actions to 0
-            self.q_table[state_tuple] = [0.0] * len(self.actions)
-        return self.q_table[state_tuple]
-
-    def choose_action(self, state: State):
+    def _get_q_values(self, state: State) -> List[float]:
         """
-        Chooses an action using the ϵ-greedy policy.
-        :param state: The current state of the system.
-        :return: The selected action.
+        Returns the list of Q-values for the given state.
+        If the state is not yet in the Q-table, initializes Q-values to 0.
+        
+        :param state: Current state.
+        :return: List of Q-values for each action.
+        """
+        state_key = state.to_tuple()
+        if state_key not in self.q_table:
+            self.q_table[state_key] = [0.0 for _ in self.actions]
+        return self.q_table[state_key]
+
+    def choose_action(self, state: State) -> Action:
+        """
+        Chooses an action using an epsilon-greedy strategy.
+        
+        :param state: The current state.
+        :return: The selected Action.
         """
         q_values = self._get_q_values(state)
-        
-        # Exploration vs. Exploitation
         if random.random() < self.epsilon:
-            # Exploration: Choose a random action
-            action = random.choice(self.actions)
+            # Exploration: Choose a random action.
+            return random.choice(self.actions)
         else:
-            # Exploitation: Choose the action with the highest Q-value
-            max_q_value = max(q_values)
-            best_actions = [a for a, q in zip(self.actions, q_values) if q == max_q_value]
-            action = random.choice(best_actions)  # In case of ties, pick randomly
-        
-        return action
+            # Exploitation: Choose the action with the highest Q-value.
+            max_q = max(q_values)
+            best_actions = [action for action, q in zip(self.actions, q_values) if q == max_q]
+            return random.choice(best_actions)
 
-    def update_q_value(self, state: State, action: Action, reward: float, next_state: State):
+    def update_q_value(self, state: State, action: Action, reward: float, next_state: State) -> None:
         """
-        Updates the Q-value for a given state-action pair using the Q-learning update rule.
+        Updates the Q-value for a state-action pair using the Q-learning update rule.
+        
         :param state: The current state.
         :param action: The action taken.
         :param reward: The reward received after taking the action.
-        :param next_state: The next state after taking the action.
+        :param next_state: The next state resulting from the action.
         """
-        state_tuple = state.to_tuple()
+        state_key = state.to_tuple()
         action_index = self.actions.index(action)
         
-        # Get the current Q-value for the state-action pair
-        current_q_value = self._get_q_values(state)[action_index]
+        current_q = self._get_q_values(state)[action_index]
+        max_next_q = max(self._get_q_values(next_state))
+        
+        # Q-learning update rule:
+        new_q = current_q + self.alpha * (reward + self.gamma * max_next_q - current_q)
+        self.q_table[state_key][action_index] = new_q
 
-        # Get the maximum Q-value for the next state
-        next_q_values = self._get_q_values(next_state)
-        max_next_q_value = max(next_q_values)
-
-        # Q-learning formula: Update the Q-value
-        updated_q_value = current_q_value + self.alpha * (reward + self.gamma * max_next_q_value - current_q_value)
-
-        # Update the Q-table
-        self.q_table[state_tuple][action_index] = updated_q_value
-
-    def get_best_action(self, state: State):
+    def get_best_action(self, state: State) -> Action:
         """
-        Get the action with the highest Q-value for a given state.
+        Retrieves the best action (the one with the highest Q-value) for a given state.
+        
         :param state: The current state.
-        :return: The best action for the state.
+        :return: The best Action.
         """
         q_values = self._get_q_values(state)
-        max_q_value = max(q_values)
-        best_actions = [a for a, q in zip(self.actions, q_values) if q == max_q_value]
-        return random.choice(best_actions)  # In case of ties, pick randomly
+        max_q = max(q_values)
+        best_actions = [action for action, q in zip(self.actions, q_values) if q == max_q]
+        return random.choice(best_actions)
 
-# Example Usage:
-# Define some actions for the robot (as you defined before)
-# Lexical-Syntactic Actions:
-action_1 = Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.SIMPLE, lexical_type=LexicalType.KNOWN)
-action_2 = Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.SIMPLE, lexical_type=LexicalType.UNKNOWN)
-action_3 = Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.MODERATE, lexical_type=LexicalType.KNOWN)
-action_4 = Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.MODERATE, lexical_type=LexicalType.UNKNOWN)
-action_5 = Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.COMPLEX, lexical_type=LexicalType.KNOWN)
-action_6 = Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.COMPLEX, lexical_type=LexicalType.UNKNOWN)
+# # Define possible actions
+# actions = [
+#     Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.SIMPLE, lexical_type=LexicalType.KNOWN),
+#     Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.MODERATE, lexical_type=LexicalType.UNKNOWN),
+#     Action(action_type="Clarification", clarification_type=ClarificationType.VOCABULARY_EXPLANATION),
+#     Action(action_type="Clarification", clarification_type=ClarificationType.SENTENCE_REPETITION),
+# ]
 
-# Clarification Actions:
-action_7 = Action(action_type="Clarification", clarification_type=ClarificationType.VOCABULARY_EXPLANATION)
-action_8 = Action(action_type="Clarification", clarification_type=ClarificationType.SENTENCE_REPETITION)
-action_9 = Action(action_type="Clarification", clarification_type=ClarificationType.CONFIRM_CONFUSION)
+# # Initialize Q-learning agent with the action space
+# agent = QLearning(actions=actions, alpha=0.1, gamma=0.9, epsilon=0.2)
 
-# Actions list
-actions = [action_1, 
-           action_2, 
-           action_3, 
-           action_4, 
-           action_5, 
-           action_6, 
-           action_7, 
-           action_8, 
-           action_9]
+# # Define an initial state in Narration Mode
+# state_narration = State(
+#     mode=Mode.NARRATION,
+#     engagement_level=EngagementLevel.MEDIUM,
+#     emotional_state=EmotionalState.HAPPY
+# )
 
+# # Define an interaction state (after a prompt)
+# state_interaction = State(
+#     mode=Mode.INTERACTION,
+#     engagement_level=EngagementLevel.LOW,
+#     emotional_state=EmotionalState.SAD,
+#     response_quality=ResponseQuality.WEAK,
+#     prompt_necessity=PromptNecessity.YES,
+#     response_length=ResponseLength.SHORT,
+#     vocabulary_usage=VocabularyUsage.LOW
+# )
 
-# Create the Q-learning agent
-q_learning_agent = QLearning(actions)
+# # Step 1: Choose an action based on the initial state
+# chosen_action = agent.choose_action(state_interaction)
+# print(f"Chosen Action: {chosen_action}")
 
-# Simulate a scenario where we have some states
-# Child is responding after a prompt (Interaction Mode)
-state = State(
-    mode=Mode.INTERACTION,
-    engagement_level=EngagementLevel.HIGH,
-    emotional_state=EmotionalState.HAPPY,
-    response_quality=ResponseQuality.STRONG,
-    prompt_necessity=PromptNecessity.NO,
-    response_length=ResponseLength.LONG,
-    vocabulary_usage=VocabularyUsage.HIGH
-)
+# # Step 2: Simulate receiving a reward for this action
+# simulated_reward = 1.0  # Example reward
 
-# Child is listening to the robot's narration (Narration Mode)
-next_state = State(
-    mode=Mode.NARRATION,
-    engagement_level=EngagementLevel.MEDIUM,
-    emotional_state=EmotionalState.SAD
-)
+# # Step 3: Transition to a new state after applying the action
+# next_state = State(
+#     mode=Mode.INTERACTION,
+#     engagement_level=EngagementLevel.MEDIUM,  # Engagement improved
+#     emotional_state=EmotionalState.NEUTRAL,  # Child became neutral after interaction
+#     response_quality=ResponseQuality.AVERAGE,
+#     prompt_necessity=PromptNecessity.NO,  # No further prompt needed
+#     response_length=ResponseLength.MEDIUM,
+#     vocabulary_usage=VocabularyUsage.MEDIUM
+# )
 
+# # Step 4: Update Q-value based on experience
+# agent.update_q_value(state_interaction, chosen_action, simulated_reward, next_state)
 
-# Choose an action
-action = q_learning_agent.choose_action(state)
-# print("\n")
-# print(f"Chosen Action: {action}")
-# print("\n")
+# # Step 5: Retrieve updated Q-values for verification
+# updated_q_values = agent._get_q_values(state_interaction)
+# print(f"Updated Q-Values: {updated_q_values}")
 
-# # Simulate reward and update Q-value
-# reward = 1.0  # Example reward
-# q_learning_agent.update_q_value(state, action, reward, next_state)
-
-# # Get the best action after the update
-# best_action = q_learning_agent.get_best_action(state)
-# print(f"Best Action after Update: {best_action}")
-# print("\n")
-
+# # Step 6: Retrieve the best action for the next state
+# best_action = agent.get_best_action(next_state)
+# print(f"Best action for next state: {best_action}")
