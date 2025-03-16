@@ -1,0 +1,120 @@
+/* General Styling */
+body {
+  font-family: "Comic Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #ffe5d9, #bee3db);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #4a4a4a;
+}
+
+h1,
+label {
+  font-weight: 700;
+  color: #4a4a4a;
+}
+
+p {
+  font-weight: 400;
+  color: #6b7280;
+}
+
+/* Form Container */
+.form-container {
+  width: 90%;
+  max-width: 500px;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in-out;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 2rem;
+}
+
+header p {
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+/* Form Styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+}
+
+input,
+select,
+textarea {
+  font-family: "Comic Neue", sans-serif;
+  font-size: 1rem;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9fafb;
+  transition: border 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border: 1px solid #a2d2ff;
+  outline: none;
+  background: #eff6ff;
+}
+
+textarea {
+  resize: none;
+}
+
+/* Save Button */
+.save-btn {
+  font-family: "Comic Neue", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  background: #f8bbd0;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.save-btn:hover {
+  background: #f48fb1;
+  transform: translateY(-3px);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

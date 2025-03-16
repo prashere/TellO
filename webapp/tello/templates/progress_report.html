@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Progress Report</title>
+    <link rel="stylesheet" href="/static/css/progress_report.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Progress Report</h1>
+        <p>Insights into student performance and session outcomes</p>
+      </header>
+
+      <main>
+        <!-- Student Info Card -->
+        <div class="card student-info">
+          <h2>Student Information</h2>
+          <p><strong>Name:</strong> Alice Johnson</p>
+          <p><strong>Grade:</strong> 3</p>
+          <p><strong>Sessions Completed:</strong> 15</p>
+        </div>
+
+        <!-- Session Summary Chart -->
+        <div class="card chart-card">
+          <h2>Session Overview</h2>
+          <canvas id="sessionsChart"></canvas>
+        </div>
+
+        <!-- Detailed Progress -->
+        <div class="card details-card">
+          <h2>Detailed Progress</h2>
+          <ul>
+            <li><strong>Vocabulary Learned:</strong> 50 new words</li>
+            <li><strong>Engagement Score:</strong> 85%</li>
+            <li><strong>Reading Fluency:</strong> 78 words/minute</li>
+          </ul>
+        </div>
+
+        <!-- Recent Sessions -->
+        <div class="card sessions-list">
+          <h2>Recent Sessions</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Topic</th>
+                <th>Outcome</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Dec 10, 2024</td>
+                <td>Storytelling</td>
+                <td>Excellent</td>
+              </tr>
+              <tr>
+                <td>Dec 12, 2024</td>
+                <td>Vocabulary Building</td>
+                <td>Good</td>
+              </tr>
+              <tr>
+                <td>Dec 14, 2024</td>
+                <td>Comprehension</td>
+                <td>Very Good</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ChartJS Script for Session Overview
+      const ctx = document.getElementById("sessionsChart").getContext("2d");
+      const sessionsChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Storytelling", "Vocabulary", "Reading", "Math", "Science"],
+          datasets: [
+            {
+              label: "Performance Score",
+              data: [90, 85, 80, 75, 88],
+              backgroundColor: "#F8BBD0",
+              borderColor: "#F48FB1",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

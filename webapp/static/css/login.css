@@ -1,0 +1,92 @@
+/* General Styling */
+body {
+  font-family: "Comic Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #fad6a5, #fccb90);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Login Container */
+.login-container {
+  text-align: center;
+}
+
+.login-box {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.login-box h1 {
+  font-size: 2rem;
+  color: #4a4a4a;
+  margin-bottom: 10px;
+}
+
+.login-box p {
+  font-size: 1rem;
+  color: #7a7a7a;
+  margin-bottom: 20px;
+}
+
+/* Input Fields */
+label {
+  display: block;
+  font-weight: 700;
+  color: #4a4a4a;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  background: #fafafa;
+  transition: border 0.3s;
+}
+
+input:focus {
+  border: 1px solid #fccb90;
+  outline: none;
+}
+
+/* Button */
+.login-btn {
+  background: #fad6a5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-btn:hover {
+  background: #fccb90;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
