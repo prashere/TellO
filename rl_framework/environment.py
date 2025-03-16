@@ -3,6 +3,7 @@ from state import *
 from q_learning import *
 from actions import *
 
+
 class Environment:
     def __init__(self, q_learning: QLearning):
         """
@@ -10,6 +11,20 @@ class Environment:
         :param q_learning: The Q-learning agent managing action selection and learning.
         """
         self.q_learning = q_learning
+
+    def reset(self):
+        """Reset the environment and return an initial state for a new episode."""
+        initial_state = State(
+            mode=Mode.NARRATION,  # Start in narration mode
+            engagement_level=EngagementLevel.MEDIUM,  # Neutral starting point
+            emotional_state=EmotionalState.NEUTRAL,  # Assume no strong emotion initially
+            response_quality=ResponseQuality.AVERAGE,
+            prompt_necessity=PromptNecessity.NO,
+            response_length=ResponseLength.MEDIUM,
+            vocabulary_usage=VocabularyUsage.MEDIUM,
+            wh_question_detected=False
+        )
+        return initial_state
 
     def get_reward(self, state: State, action: Action) -> float:
         """
@@ -35,9 +50,11 @@ class Environment:
         # Emotional state consideration
         emotional_penalty = 0
         if state.emotional_state == EmotionalState.ANGER:
-            emotional_penalty = -0.2  # Penalty if the child is angry (because frustration may rise with complexity)
+            # Penalty if the child is angry (because frustration may rise with complexity)
+            emotional_penalty = -0.2
         elif state.emotional_state == EmotionalState.SURPRISE:
-            emotional_penalty = -0.1  # Mild penalty for surprise (suggests confusion)
+            # Mild penalty for surprise (suggests confusion)
+            emotional_penalty = -0.1
 
         # Penalty if a prompt is needed too frequently when engagement is low
         prompt_penalty = -0.2 if state.prompt_necessity == PromptNecessity.YES and state.engagement_level == EngagementLevel.LOW else 0
@@ -48,10 +65,12 @@ class Environment:
             if state.engagement_level == EngagementLevel.LOW:
                 clarification_bonus = 0.5  # Reward if clarification helps in low engagement situations
             else:
-                clarification_bonus = -0.3  # Penalize if clarification is used when engagement is high (over-prompting)
+                # Penalize if clarification is used when engagement is high (over-prompting)
+                clarification_bonus = -0.3
 
         # Combining all factors: Engagement + Learning + Emotional + Clarification + Prompt
-        total_reward = 0.5 * engagement_score + 0.5 * learning_score + emotional_penalty + clarification_bonus + prompt_penalty
+        total_reward = 0.5 * engagement_score + 0.5 * learning_score + \
+            emotional_penalty + clarification_bonus + prompt_penalty
 
         # Ensure rewards stay within reasonable bounds
         total_reward = max(-1.0, min(1.0, total_reward))
@@ -93,11 +112,11 @@ class Environment:
                 elif state.vocabulary_usage == VocabularyUsage.MEDIUM:
                     if rand < 0.4:
                         new_vocab_usage = VocabularyUsage.MEDIUM
-                    elif 0.4 < rand < 0.7 :
+                    elif 0.4 < rand < 0.7:
                         new_vocab_usage = VocabularyUsage.LOW
                     else:
                         new_vocab_usage = VocabularyUsage.HIGH
-                    
+
                 else:  # HIGH vocabulary usage
                     if rand < 0.7:
                         new_vocab_usage = VocabularyUsage.HIGH
@@ -118,8 +137,7 @@ class Environment:
                 response_length=new_response_length,
                 vocabulary_usage=new_vocab_usage,
                 wh_question_detected=new_wh_question
-        )
-
+            )
 
     def run_episode(self, initial_state: State, num_steps: int = 10):
         """
@@ -153,13 +171,15 @@ initial_state = State(
     engagement_level=EngagementLevel.MEDIUM,
     emotional_state=EmotionalState.HAPPY,
     response_quality=ResponseQuality.AVERAGE,
-    prompt_necessity=PromptNecessity.YES,  # Example scenario where a prompt is needed
+    # Example scenario where a prompt is needed
+    prompt_necessity=PromptNecessity.YES,
     response_length=ResponseLength.MEDIUM,
     vocabulary_usage=VocabularyUsage.MEDIUM
 )
 
 # Run an episode of interaction in the environment
 print("\n--- Running Interaction Mode Episode ---\n")
-env.run_episode(initial_state, num_steps=5)  # You can adjust num_steps as needed
+# You can adjust num_steps as needed
+env.run_episode(initial_state, num_steps=5)
 
 # Running multiple episodes could help observe how the system adapts over time with rewards and state transitions
