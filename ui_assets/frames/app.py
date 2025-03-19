@@ -9,17 +9,21 @@ from .teacher_verification import TeacherVerificationFrame
 from .student_selection import StudentSelectionFrame
 from .storytelling_emotion import StorytellingEmotionFrame
 from .end_session import EndSessionFrame
+from .guidelines import GuidelinesFrame
+from .loading import LoadingFrame
 
 # Import Story and Prompts
 from story_handler.story import Story
 from story_handler.prompt import PromptManager
 
 # Import TTS & STT Functions
-from .speech_text import speak_text, listen_for_child_response  # Assuming modularized functions
+# Assuming modularized functions
+from .speech_text import speak_text, listen_for_child_response
 
 # Colors and Fonts
 SOFT_BLUE = "#add8e6"
 WHITE = "#ffffff"
+
 
 class App(tk.Tk):
     def __init__(self):
@@ -57,10 +61,14 @@ class App(tk.Tk):
         container = tk.Frame(self, bg=WHITE)
         container.pack(fill="both", expand=True)
 
-        self.frames["TeacherVerification"] = TeacherVerificationFrame(container, self)
-        self.frames["StudentSelection"] = StudentSelectionFrame(container, self)
+        self.frames["TeacherVerification"] = TeacherVerificationFrame(
+            container, self)
+        self.frames["StudentSelection"] = StudentSelectionFrame(
+            container, self)
         self.frames["Storytelling"] = StorytellingEmotionFrame(container, self)
         self.frames["EndSession"] = EndSessionFrame(container, self)
+        self.frames["Guidelines"] = GuidelinesFrame(container, self)
+        self.frames["Loading"] = LoadingFrame(container, self)
 
     def show_frame(self, frame_name):
         """Switch between frames and call on_show if available."""
@@ -75,7 +83,9 @@ class App(tk.Tk):
         """Navigate to the next frame."""
         next_frames = {
             "TeacherVerification": "StudentSelection",
-            "StudentSelection": "Storytelling",
+            "StudentSelection": "Guidelines",
+            "Guidelines": "Loading",
+            "Loading": "Storytelling",
             "Storytelling": "EndSession",
             "EndSession": "TeacherVerification",
         }
@@ -87,7 +97,8 @@ class App(tk.Tk):
         greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
         greeting_text = greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!"
         speak_text(greeting_text)
-        storytelling_frame.load_story_image("ui_assets/Images/py_img/teacher.png")  # Default start image
+        storytelling_frame.load_story_image(
+            "ui_assets/Images/py_img/teacher.png")  # Default start image
         time.sleep(1)
 
         # 2. Inform about the story
@@ -104,7 +115,8 @@ class App(tk.Tk):
             # Update Image in UI
             image_file = self.story.get_current_image()
             if image_file:
-                storytelling_frame.load_story_image("dataset/story_corpus/img/" + image_file)
+                storytelling_frame.load_story_image(
+                    "dataset/story_corpus/img/" + image_file)
 
             # Speak the sentence
             speak_text(sentence["Text"])
@@ -112,7 +124,8 @@ class App(tk.Tk):
 
             # Interaction every 2 sentences
             if sentence_count % 2 == 0:
-                interaction_prompt = sentence.get("InteractionPrompt", "What do you think?")
+                interaction_prompt = sentence.get(
+                    "InteractionPrompt", "What do you think?")
                 speak_text(interaction_prompt)
                 child_response = listen_for_child_response(timeout=2)
                 print("Child's response:", child_response)
