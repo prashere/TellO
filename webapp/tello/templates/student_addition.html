@@ -18,7 +18,8 @@
       </header>
 
       <main>
-        <form action="#" method="POST">
+        <form action="{% url 'add' %}" method="POST">
+          {% csrf_token %}
           <div class="form-group">
             <label for="student-name">Student Name</label>
             <input
@@ -42,14 +43,25 @@
           </div>
 
           <div class="form-group">
+            <label for="student-code">Student Code</label>
+            <input
+              type="string"
+              id="student-code"
+              name="student_code"
+              placeholder="Enter student code"
+              required
+            />
+          </div>
+
+          <div class="form-group">
             <label for="student-grade">Grade</label>
             <select id="student-grade" name="student_grade" required>
               <option value="" disabled selected>Select grade</option>
               <option value="Kindergarten">Kindergarten</option>
+              <option value="JKG">JKG</option>
+              <option value="SKG">SKG</option>
               <option value="1">1</option>
               <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
             </select>
           </div>
 

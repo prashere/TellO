@@ -110,6 +110,15 @@ button {
 .edit-btn:hover {
   background: #e39d5d; /* More contrast */
 }
+/* Delete Button */
+.delete-btn {
+  background: #f57777; /* Darker orange */
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #f96f6f; /* More contrast */
+}
 
 /* Actions Panel */
 .actions-panel h2 {
@@ -144,6 +153,33 @@ button {
 
 .report-link:hover {
   background: #67ad97; /* More contrast */
+}
+
+/* Modal styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  margin: 10% auto;
+  width: 50%;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.close-btn {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 /* Animation */
