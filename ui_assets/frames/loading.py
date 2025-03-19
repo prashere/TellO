@@ -48,3 +48,10 @@ class LoadingFrame(tk.Frame):
         self.canvas.itemconfig(self.arc, start=self.angle)
         # Call animate_spinner again after 100ms
         self.after(100, self.animate_spinner)
+
+    def on_show(self):
+        """Called when this frame is shown. Wait 5-6 seconds then switch to Storytelling."""
+        # Optionally, perform any pre-initialization or loading tasks here.
+        # After a delay, automatically switch to the next frame.
+        delay_ms = 5000  # 6000ms = 6 seconds delay
+        self.after(delay_ms, lambda: self.controller.next_frame("Loading"))
