@@ -39,8 +39,9 @@ class StorytellingEmotionFrame(tk.Frame):
     def on_show(self):
         """Called when the frame is shown. Start video & storytelling."""
         self.start_video()
-        # self.controller.run_storytelling(self) 
-        threading.Thread(target=self.controller.run_storytelling, args=(self,), daemon=True).start()
+        # self.controller.run_storytelling(self)
+        threading.Thread(target=self.controller.run_storytelling,
+                         args=(self,), daemon=True).start()
 
     def start_video(self):
         """Start the video capture if it isn't running yet."""
@@ -50,16 +51,28 @@ class StorytellingEmotionFrame(tk.Frame):
             self.update_video()
 
     def update_video(self):
-        """Continuously update the video feed within the 250x150 frame."""
+        """Continuously update the video feed with flipping and quality retention."""
         if self.video_running and self.cap:
             ret, frame = self.cap.read()
             if ret:
-                frame = cv2.resize(frame, (250, 150))
+                frame = cv2.flip(frame, 1)  # Flip horizontally
+
+                # Retain aspect ratio while resizing (target width = 250)
+                height, width, _ = frame.shape
+                aspect_ratio = height / width
+                new_width = 250
+                # Maintain aspect ratio
+                new_height = int(new_width * aspect_ratio)
+
+                frame = cv2.resize(frame, (new_width, new_height),
+                                   interpolation=cv2.INTER_LINEAR)
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
                 img = Image.fromarray(frame)
                 img_tk = ImageTk.PhotoImage(image=img)
                 self.video_label.img_tk = img_tk  # Prevent garbage collection
                 self.video_label.config(image=img_tk)
+
             self.after(30, self.update_video)
 
     def pause_video(self):
