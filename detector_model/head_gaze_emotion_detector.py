@@ -155,18 +155,24 @@ class VideoProcessor:
             landmarks = self.face_analyzer.get_landmarks(gray, face)
 
             # Get head pose
-            rotation_vector = self.face_analyzer.get_head_pose(landmarks, frame_resized.shape)
+            rotation_vector = self.face_analyzer.get_head_pose(
+                landmarks, frame_resized.shape)
             if rotation_vector is not None:
-                yaw, pitch, _ = self.face_analyzer.rotation_vector_to_euler_angles(rotation_vector)
-                self.horizontal_label = self.face_analyzer.get_horizontal_movement_label(yaw)
-                self.vertical_label = self.face_analyzer.get_vertical_movement_label(pitch)
+                yaw, pitch, _ = self.face_analyzer.rotation_vector_to_euler_angles(
+                    rotation_vector)
+                self.horizontal_label = self.face_analyzer.get_horizontal_movement_label(
+                    yaw)
+                self.vertical_label = self.face_analyzer.get_vertical_movement_label(
+                    pitch)
 
             # Get gaze direction
-            self.gaze_direction = self.face_analyzer.get_gaze_direction(frame_resized)
+            self.gaze_direction = self.face_analyzer.get_gaze_direction(
+                frame_resized)
 
             # Get emotion every self.emotion_update_interval frames
             if self.frame_count % self.emotion_update_interval == 0:
-                emotion, score = self.emotion_analyzer.detect_emotion(frame_resized)
+                emotion, score = self.emotion_analyzer.detect_emotion(
+                    frame_resized)
                 self.last_emotion = emotion
                 self.last_score = score
 
