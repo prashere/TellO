@@ -156,7 +156,7 @@ class StateUpdater:
 # NEW FUNCTION
 # ----------------------------------------------------------
 
-    def update_state_from_story(mode, child_response):
+    def update_state_from_story(self, mode, child_response):
         """
         Update the state based on the storytelling context.
 
@@ -211,18 +211,25 @@ class StateUpdater:
             # A higher ratio indicates a more varied vocabulary.
             vocabulary_usage = VocabularyUsage.HIGH if unique_ratio > 0.5 else VocabularyUsage.MEDIUM
 
+            # Detect WH-questions
+            wh_words = {"who", "what", "when", "where", "why", "how", "which"}
+            first_word = words[0].lower() if words else ""
+            # True if a WH-word is at the start
+            wh_question_detected = first_word in wh_words
+
             # Create the full state for INTERACTION mode.
             new_state = State(mode, engagement, emotional_state,
                               response_quality, prompt_necessity,
-                              response_length, vocabulary_usage)
+                              response_length, vocabulary_usage,
+                              wh_question_detected)  # Include WH-question detection
         else:
             # For narration mode, fewer attributes are needed.
             new_state = State(mode, engagement, emotional_state)
 
         return new_state
+# ----------------------------------------------------------
+# ----------------------------------------------------------
 
-# ----------------------------------------------------------
-# ----------------------------------------------------------
 
     def maybe_update(self):
         current_time = time.time()
