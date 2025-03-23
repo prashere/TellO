@@ -1,80 +1,281 @@
+
 {
-    "prompts": [
-      {
-        "id": "G01",
-        "category": "Greeting",
-        "text": "Hello there! What’s your name?"
-      },
-      {
-        "id": "G02",
-        "category": "Greeting",
-        "text": "Hi, friend! Welcome to TellO!"
-      },
-      {
-        "id": "G03",
-        "category": "Greeting",
-        "text": "It’s great to see you! Are you ready to have fun?"
-      },
-      {
-        "id": "A01",
-        "category": "Activity Instructions",
-        "text": "Let’s start with a fun story. Are you ready?"
-      },
-      {
-        "id": "A02",
-        "category": "Activity Instructions",
-        "text": "Can you tell me what you think will happen next?"
-      },
-      {
-        "id": "A03",
-        "category": "Activity Instructions",
-        "text": "Now it’s your turn! Can you answer this question?"
-      },
-      {
-        "id": "S01",
-        "category": "Storytelling",
-        "text": "Once upon a time, there was a little animal. Do you want to hear more?"
-      },
-      {
-        "id": "S02",
-        "category": "Storytelling",
-        "text": "What did you like most about the story?"
-      },
-      {
-        "id": "S03",
-        "category": "Storytelling",
-        "text": "Let’s talk about the story. Who was your favorite character?"
-      },
-      {
-        "id": "E01",
-        "category": "Encouragement",
-        "text": "Great job! You’re so smart!"
-      },
-      {
-        "id": "E02",
-        "category": "Encouragement",
-        "text": "Wow! You’re doing amazing!"
-      },
-      {
-        "id": "E03",
-        "category": "Encouragement",
-        "text": "You’re doing great! Keep going!"
-      },
-      {
-        "id": "C01",
-        "category": "Closure",
-        "text": "Thank you for joining today! See you next time!"
-      },
-      {
-        "id": "C02",
-        "category": "Closure",
-        "text": "Bye-bye! Don’t forget to smile!"
-      },
-      {
-        "id": "C03",
-        "category": "Closure",
-        "text": "You did awesome today! See you soon!"
-      }
-    ]
-  }
-  
+  "prompts": [
+    {
+      "id": "G01",
+      "category": "Greeting",
+      "text": "Hi there, friend! I’m your story buddy. Let’s have fun!"
+    },
+    {
+      "id": "G02",
+      "category": "Greeting",
+      "text": "Hello! I’m so happy to see you today!"
+    },
+    {
+      "id": "G03",
+      "category": "Greeting",
+      "text": "Hey, friend! Are you ready for a fun story time?"
+    },
+    {
+      "id": "G04",
+      "category": "Greeting",
+      "text": "Hi! I can’t wait to share a story with you!"
+    },
+    {
+      "id": "G05",
+      "category": "Greeting",
+      "text": "Hello, little star! Let’s play and learn together!"
+    },
+    {
+      "id": "G06",
+      "category": "Greeting",
+      "text": "Hey there! I’m here to tell you an exciting story!"
+    },
+    {
+      "id": "I01",
+      "category": "Getting to Know You",
+      "text": "What is your name, friend?"
+    },
+    {
+      "id": "I02",
+      "category": "Getting to Know You",
+      "text": "How old are you? I’d love to know!"
+    },
+    {
+      "id": "I03",
+      "category": "Getting to Know You",
+      "text": "Can you tell me one fun thing about you?"
+    },
+    {
+      "id": "I04",
+      "category": "Getting to Know You",
+      "text": "What is your favorite color or toy?"
+    },
+    {
+      "id": "I05",
+      "category": "Getting to Know You",
+      "text": "Do you like to sing or dance? Tell me!"
+    },
+    {
+      "id": "I06",
+      "category": "Getting to Know You",
+      "text": "What do you like to do for fun?"
+    },
+    {
+      "id": "A01",
+      "category": "Activity Interaction",
+      "text": "Let’s start a fun game. What do you think will happen next?"
+    },
+    {
+      "id": "A02",
+      "category": "Activity Interaction",
+      "text": "It’s story time! Can you tell me your idea for the next part?"
+    },
+    {
+      "id": "A03",
+      "category": "Activity Interaction",
+      "text": "I’m listening. Can you share a little story about your day?"
+    },
+    {
+      "id": "A04",
+      "category": "Activity Interaction",
+      "text": "Show me your happy face! Let’s smile together!"
+    },
+    {
+      "id": "A05",
+      "category": "Activity Interaction",
+      "text": "Tell me one cool thing you did today!"
+    },
+    {
+      "id": "A06",
+      "category": "Activity Interaction",
+      "text": "I’d love to hear a fun idea from you!"
+    },
+    {
+      "id": "R01",
+      "category": "Clarification",
+      "text": "Oops, I didn’t catch that. Can you say it again, please?"
+    },
+    {
+      "id": "R02",
+      "category": "Clarification",
+      "text": "I’m not sure I got it. Could you tell me one more time?"
+    },
+    {
+      "id": "R03",
+      "category": "Clarification",
+      "text": "Let’s try again. Can you explain that in a fun way?"
+    },
+    {
+      "id": "R04",
+      "category": "Clarification",
+      "text": "Hmm, can you say it in a different way for me?"
+    },
+    {
+      "id": "R05",
+      "category": "Clarification",
+      "text": "I want to understand you. Could you speak a bit slower?"
+    },
+    {
+      "id": "R06",
+      "category": "Clarification",
+      "text": "Can you say that again? I’m all ears!"
+    },
+    {
+      "id": "E01",
+      "category": "Encouragement",
+      "text": "Wow, you did an awesome job!"
+    },
+    {
+      "id": "E02",
+      "category": "Encouragement",
+      "text": "Great work! I’m so proud of you!"
+    },
+    {
+      "id": "E03",
+      "category": "Encouragement",
+      "text": "That’s amazing! Keep it up, friend!"
+    },
+    {
+      "id": "E04",
+      "category": "Encouragement",
+      "text": "You’re a star! Your ideas are so cool!"
+    },
+    {
+      "id": "E05",
+      "category": "Encouragement",
+      "text": "Keep going, you’re doing fantastic!"
+    },
+    {
+      "id": "E06",
+      "category": "Encouragement",
+      "text": "I love your energy! Let’s keep having fun!"
+    },
+    {
+      "id": "S01",
+      "category": "Silent Interaction",
+      "text": "It’s your turn now! Tell me something fun!"
+    },
+    {
+      "id": "S02",
+      "category": "Silent Interaction",
+      "text": "I’d love to hear your voice. Can you say something?"
+    },
+    {
+      "id": "S03",
+      "category": "Silent Interaction",
+      "text": "Don’t be shy, friend! I’m listening to you!"
+    },
+    {
+      "id": "S04",
+      "category": "Silent Interaction",
+      "text": "You can share your thoughts whenever you’re ready."
+    },
+    {
+      "id": "S05",
+      "category": "Silent Interaction",
+      "text": "It’s okay to be quiet, but I’m here if you want to talk!"
+    },
+    {
+      "id": "S06",
+      "category": "Silent Interaction",
+      "text": "Your ideas are special! Can you share one with me?"
+    },
+    
+    {
+      "id": "C01",
+      "category": "Closure",
+      "text": "Thank you for a fun time! See you next story!"
+    },
+    {
+      "id": "C02",
+      "category": "Closure",
+      "text": "Goodbye, friend! Keep smiling and be happy!"
+    },
+    {
+      "id": "C03",
+      "category": "Closure",
+      "text": "It was great talking with you. See you soon!"
+    },
+    {
+      "id": "C04",
+      "category": "Closure",
+      "text": "Bye-bye! I can’t wait for our next adventure together!"
+    },
+    {
+      "id": "C05",
+      "category": "Closure",
+      "text": "Thank you for sharing your ideas. Have a lovely day!"
+    },
+    {
+      "id": "C06",
+      "category": "Closure",
+      "text": "Take care, friend! I’ll be waiting for our next story time!"
+    },
+    {
+      "id": "T01",
+      "category": "Tello Introduction",
+      "text": "Hi, I am Tello! I love stories and fun. What is your name?"
+    },
+    {
+      "id": "T02",
+      "category": "Tello Introduction",
+      "text": "Hello! I am your story friend, Tello. Let’s play and learn together!"
+    },
+    {
+      "id": "T03",
+      "category": "Tello Introduction",
+      "text": "Hey there! My name is Tello. I tell stories and ask fun questions!"
+    },
+    {
+      "id": "T04",
+      "category": "Tello Introduction",
+      "text": "I am Tello, your talking friend! Do you like stories?"
+    },
+    {
+      "id": "T05",
+      "category": "Tello Introduction",
+      "text": "Hi! My name is Tello. I love to listen and talk to you!"
+    },
+    {
+      "id": "T06",
+      "category": "Tello Introduction",
+      "text": "Hello, friend! I am Tello. Are you ready for some fun?"
+    },
+    {
+      "id": "WH01",
+      "category": "WH-Question Handling",
+      "text": "Oh! You asked a great question. Let me think!"
+    },
+    {
+      "id": "WH02",
+      "category": "WH-Question Handling",
+      "text": "Wait a second, I will tell you again!"
+    },
+    {
+      "id": "WH03",
+      "category": "WH-Question Handling",
+      "text": "Let me say that in a simple way!"
+    },
+    {
+      "id": "WH04",
+      "category": "WH-Question Handling",
+      "text": "That’s a good question! Here is my answer."
+    },
+    {
+      "id": "WH05",
+      "category": "WH-Question Handling",
+      "text": "Hmm, let me repeat that for you!"
+    },
+    {
+      "id": "WH06",
+      "category": "WH-Question Handling",
+      "text": "I like your question! Listen carefully, here it is again."
+    },
+    {
+      "id": "WH07",
+      "category": "WH-Question Handling",
+      "text": "Let me make it easy for you. Listen!"
+    }
+  ]
+}
