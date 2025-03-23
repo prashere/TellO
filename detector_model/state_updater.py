@@ -167,7 +167,7 @@ class StateUpdater:
         Returns:
           State: An updated state object reflecting the current interaction.
         """
-        # Determine Engagement Level based on the response length when in interaction mode.
+        # Determine Engagement Level based on response length when in INTERACTION mode.
         if mode == Mode.INTERACTION:
             words = child_response.split()
             if len(words) >= 10:
@@ -180,8 +180,7 @@ class StateUpdater:
             # For narration, assume a medium engagement by default.
             engagement = EngagementLevel.MEDIUM
 
-        # For now, we set the emotional state to NEUTRAL.
-        # Later, you might integrate sentiment analysis on child_response to adjust this.
+        # Default emotional state (can be improved with sentiment analysis).
         emotional_state = EmotionalState.NEUTRAL
 
         if mode == Mode.INTERACTION:
@@ -194,9 +193,6 @@ class StateUpdater:
             else:
                 response_quality = ResponseQuality.LOW
 
-            # Determine if a prompt is necessary (e.g., if response is too short).
-            prompt_necessity = PromptNecessity.YES if num_words < 5 else PromptNecessity.NO
-
             # Categorize Response Length.
             if num_words < 5:
                 response_length = ResponseLength.SHORT
@@ -205,10 +201,9 @@ class StateUpdater:
             else:
                 response_length = ResponseLength.LONG
 
-            # Evaluate Vocabulary Usage using a simple unique/total words ratio.
+            # Evaluate Vocabulary Usage using a unique/total words ratio.
             words = child_response.split()
             unique_ratio = len(set(words)) / len(words) if words else 0.0
-            # A higher ratio indicates a more varied vocabulary.
             vocabulary_usage = VocabularyUsage.HIGH if unique_ratio > 0.5 else VocabularyUsage.MEDIUM
 
             # Detect WH-questions
@@ -216,6 +211,12 @@ class StateUpdater:
             first_word = words[0].lower() if words else ""
             # True if a WH-word is at the start
             wh_question_detected = first_word in wh_words
+
+            # Determine if a prompt is necessary
+            if wh_question_detected or engagement == EngagementLevel.LOW:
+                prompt_necessity = PromptNecessity.YES
+            else:
+                prompt_necessity = PromptNecessity.NO
 
             # Create the full state for INTERACTION mode.
             new_state = State(mode, engagement, emotional_state,
@@ -227,9 +228,9 @@ class StateUpdater:
             new_state = State(mode, engagement, emotional_state)
 
         return new_state
-# ----------------------------------------------------------
-# ----------------------------------------------------------
 
+# ----------------------------------------------------------
+# ----------------------------------------------------------
 
     def maybe_update(self):
         current_time = time.time()
