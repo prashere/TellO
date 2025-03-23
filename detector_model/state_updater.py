@@ -187,11 +187,11 @@ class StateUpdater:
             # Evaluate Response Quality based on the number of words.
             num_words = len(child_response.split())
             if num_words >= 15:
-                response_quality = ResponseQuality.HIGH
+                response_quality = ResponseQuality.STRONG
             elif num_words >= 5:
                 response_quality = ResponseQuality.AVERAGE
             else:
-                response_quality = ResponseQuality.LOW
+                response_quality = ResponseQuality.WEAK
 
             # Categorize Response Length.
             if num_words < 5:
