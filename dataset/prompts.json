@@ -272,10 +272,36 @@
       "category": "WH-Question Handling",
       "text": "I like your question! Listen carefully, here it is again."
     },
+   
     {
-      "id": "WH07",
-      "category": "WH-Question Handling",
-      "text": "Let me make it easy for you. Listen!"
+      "id": "ME01",
+      "category": "Motivation",
+      "text": "Hey, don’t give up! You can do this!"
+    },
+    {
+      "id": "ME02",
+      "category": "Motivation",
+      "text": "Come on, let’s do this together! It will be fun!"
+    },
+    {
+      "id": "ME03",
+      "category": "Motivation",
+      "text": "You are doing great! Just try a little more!"
+    },
+    {
+      "id": "ME04",
+      "category": "Motivation",
+      "text": "I know you can do it! Let’s go!"
+    },
+    {
+      "id": "ME05",
+      "category": "Motivation",
+      "text": "Let’s make this fun! Wanna try again?"
+    },
+    {
+      "id": "ME06",
+      "category": "Motivation",
+      "text": "You are so close! Give it one more try!"
     }
   ]
 }
