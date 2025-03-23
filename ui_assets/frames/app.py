@@ -20,6 +20,8 @@ from story_handler.prompt import PromptManager
 # Assuming modularized functions
 from .speech_text import speak_text, listen_for_child_response
 
+from detector_model.state_updater import StateUpdater
+
 # Colors and Fonts
 SOFT_BLUE = "#add8e6"
 WHITE = "#ffffff"
@@ -46,6 +48,8 @@ class App(tk.Tk):
         self.load_images()
         self.create_frames()
         self.show_frame("TeacherVerification")
+
+        self.state_updater = StateUpdater(update_interval=2)
 
     def load_images(self):
         """Load and resize images for UI."""
@@ -112,7 +116,29 @@ class App(tk.Tk):
         while sentence:
             sentence_count += 1
 
-            # Update Image in UI
+            # Get the updated state from the StorytellingEmotionFrame
+            # Assuming StorytellingEmotionFrame is sending the detected emotions, gaze, and head pose
+            print("Getting detected state from StorytellingEmotionFrame",
+                  storytelling_frame.get_head_pose())
+            horizontal, vertical = storytelling_frame.get_head_pose()  # Get head pose
+            print("Head Pose:", horizontal, vertical)
+            gaze = storytelling_frame.get_gaze()  # Get gaze direction
+            print("Gaze Direction:", gaze)
+            # Get emotion and confidence
+            emotion_idx, emotion_conf = storytelling_frame.get_emotion()
+            print("Emotion:", emotion_idx, emotion_conf)
+
+            # Add these readings to the state updater
+            self.state_updater.add_reading(
+                horizontal, vertical, gaze, emotion_idx, emotion_conf)
+
+            # Update state based on detected features
+            updated_state = self.state_updater.maybe_update()  # Get the updated state
+            print("............................................")
+            print("Updated State:", updated_state)
+            print("............................................")
+
+            # Update Image in UI (story-related)
             image_file = self.story.get_current_image()
             if image_file:
                 storytelling_frame.load_story_image(
@@ -142,3 +168,8 @@ class App(tk.Tk):
 
         # Move to the next UI frame
         storytelling_frame.end_storytelling()
+
+    def update_storytelling_state(self, detected_state):
+        """Update state in response to detected emotions, gaze, and head pose."""
+        print("Updated Storytelling State:", detected_state)
+        # Here, you can use `detected_state` to update a state manager, log data, or adjust the RL system.
