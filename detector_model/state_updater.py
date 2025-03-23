@@ -26,6 +26,7 @@ EMOTION_MAPPING = {
     "Surprise": 6
 }
 
+
 class StateUpdater:
     def __init__(self, update_interval=60):
         # Buffers to store sensor outputs during the window
@@ -34,10 +35,10 @@ class StateUpdater:
         self.gaze_buffer = deque(maxlen=100)
         self.emotion_buffer = deque(maxlen=100)
         self.emotion_conf_buffer = deque(maxlen=100)
-        
+
         self.last_update_time = time.time()
         self.update_interval = update_interval  # seconds
-        
+
     def add_reading(self, horizontal, vertical, gaze, emotion, emotion_conf):
         try:
             self.head_horizontal_buffer.append(horizontal)
@@ -47,13 +48,17 @@ class StateUpdater:
             self.emotion_conf_buffer.append(emotion_conf)
         except Exception as e:
             print("Error in add_reading:", e)
-    
+
     def aggregate_head_pose(self):
         try:
-            horizontal_values = [HEAD_POSE_MAPPING[pose] for pose in self.head_horizontal_buffer if pose in HEAD_POSE_MAPPING]
-            vertical_values = [HEAD_POSE_MAPPING[pose] for pose in self.head_vertical_buffer if pose in HEAD_POSE_MAPPING]
-            horizontal_mode = Counter(horizontal_values).most_common(1)[0][0] if horizontal_values else HEAD_POSE_MAPPING["Front"]
-            vertical_mode = Counter(vertical_values).most_common(1)[0][0] if vertical_values else HEAD_POSE_MAPPING["Front"]
+            horizontal_values = [HEAD_POSE_MAPPING[pose]
+                                 for pose in self.head_horizontal_buffer if pose in HEAD_POSE_MAPPING]
+            vertical_values = [HEAD_POSE_MAPPING[pose]
+                               for pose in self.head_vertical_buffer if pose in HEAD_POSE_MAPPING]
+            horizontal_mode = Counter(horizontal_values).most_common(
+                1)[0][0] if horizontal_values else HEAD_POSE_MAPPING["Front"]
+            vertical_mode = Counter(vertical_values).most_common(
+                1)[0][0] if vertical_values else HEAD_POSE_MAPPING["Front"]
             return horizontal_mode, vertical_mode
         except Exception as e:
             print("Error in aggregate_head_pose:", e)
@@ -77,9 +82,10 @@ class StateUpdater:
             counts = Counter(self.emotion_buffer)
             most_common_emotion, _ = counts.most_common(1)[0]
             # Filter out any None values from confidence
-            confs = [conf for emo, conf in zip(self.emotion_buffer, self.emotion_conf_buffer) if emo == most_common_emotion and conf is not None]
+            confs = [conf for emo, conf in zip(
+                self.emotion_buffer, self.emotion_conf_buffer) if emo == most_common_emotion and conf is not None]
             avg_conf = statistics.mean(confs) if confs else 0.0
-            return EMOTION_MAPPING.get(most_common_emotion, 4), avg_conf 
+            return EMOTION_MAPPING.get(most_common_emotion, 4), avg_conf
         except Exception as e:
             print("Error in aggregate_emotion:", e)
             return 4, 0.0
@@ -88,16 +94,20 @@ class StateUpdater:
         try:
             horizontal, vertical = self.aggregate_head_pose()
             gaze = self.aggregate_gaze()
-            emotion_idx, emotion_conf = self.aggregate_emotion()  # Returns numeric emotion index and confidence
+            # Returns numeric emotion index and confidence
+            emotion_idx, emotion_conf = self.aggregate_emotion()
         except Exception as e:
             print("Error during state aggregation:", e)
-            horizontal, vertical, gaze, emotion_idx, emotion_conf = HEAD_POSE_MAPPING["Front"], HEAD_POSE_MAPPING["Front"], 0, 4, 0.0
+            horizontal, vertical, gaze, emotion_idx, emotion_conf = HEAD_POSE_MAPPING[
+                "Front"], HEAD_POSE_MAPPING["Front"], 0, 4, 0.0
 
         try:
             # Map emotion index to EmotionalState enum
             emotion_list = list(EMOTION_MAPPING.keys())
-            emotion_name = emotion_list[emotion_idx] if emotion_idx in range(len(emotion_list)) else "Neutral"
-            emotional_state = getattr(EmotionalState, emotion_name.upper(), EmotionalState.NEUTRAL)
+            emotion_name = emotion_list[emotion_idx] if emotion_idx in range(
+                len(emotion_list)) else "Neutral"
+            emotional_state = getattr(
+                EmotionalState, emotion_name.upper(), EmotionalState.NEUTRAL)
         except Exception as e:
             print("Error mapping emotion:", e)
             emotional_state = EmotionalState.NEUTRAL
@@ -116,7 +126,8 @@ class StateUpdater:
 
         try:
             # Determine Mode based on gaze
-            mode = Mode.INTERACTION if gaze != GAZE_MAPPING.get("Looking center", 0) else Mode.NARRATION
+            mode = Mode.INTERACTION if gaze != GAZE_MAPPING.get(
+                "Looking center", 0) else Mode.NARRATION
         except Exception as e:
             print("Error determining mode:", e)
             mode = Mode.NARRATION
@@ -135,14 +146,15 @@ class StateUpdater:
                                   prompt_necessity, response_length, vocabulary_usage)
         except Exception as e:
             print("Error creating state object:", e)
-            new_state = State(Mode.NARRATION, EngagementLevel.MEDIUM, EmotionalState.NEUTRAL)
-        
+            new_state = State(
+                Mode.NARRATION, EngagementLevel.MEDIUM, EmotionalState.NEUTRAL)
+
         print("Updated State:", new_state)
         return new_state
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # NEW FUNCTION
-#----------------------------------------------------------
+# ----------------------------------------------------------
 
     def update_state_from_story(mode, child_response):
         """
@@ -209,9 +221,8 @@ class StateUpdater:
 
         return new_state
 
-#----------------------------------------------------------
-#----------------------------------------------------------
-
+# ----------------------------------------------------------
+# ----------------------------------------------------------
 
     def maybe_update(self):
         current_time = time.time()
@@ -228,9 +239,8 @@ class StateUpdater:
         return None
 
 
-
 if __name__ == "__main__":
-    updater = StateUpdater(update_interval=60)  # update state every 60 seconds
+    updater = StateUpdater(update_interval=10)  # update state every 60 seconds
     while True:
         # In your main loop, after processing sensor data from your detector:
         # For example, assume you have the following variables updated by your sensor code:
