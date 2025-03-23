@@ -208,9 +208,10 @@ class StateUpdater:
 
             # Detect WH-questions
             wh_words = {"who", "what", "when", "where", "why", "how", "which"}
-            first_word = words[0].lower() if words else ""
-            # True if a WH-word is at the start
-            wh_question_detected = first_word in wh_words
+            # first_word = words[0].lower() if words else ""
+            # wh_question_detected = first_word in wh_words
+            wh_question_detected = any(
+                word.lower() in wh_words for word in words)
 
             # Determine if a prompt is necessary
             if wh_question_detected or engagement == EngagementLevel.LOW:
