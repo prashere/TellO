@@ -21,6 +21,7 @@ from story_handler.prompt import PromptManager
 from .speech_text import speak_text, listen_for_child_response
 
 from detector_model.state_updater import StateUpdater
+from rl_framework.state import Mode
 
 # Colors and Fonts
 SOFT_BLUE = "#add8e6"
@@ -95,81 +96,184 @@ class App(tk.Tk):
         }
         self.show_frame(next_frames[current_frame])
 
-    def run_storytelling(self, storytelling_frame):
-        """Runs the storytelling process inside the UI frame."""
-        # 1. Greeting
-        greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
-        greeting_text = greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!"
-        speak_text(greeting_text)
-        storytelling_frame.load_story_image(
-            "ui_assets/Images/py_img/teacher.png")  # Default start image
-        time.sleep(1)
+    # def run_storytelling(self, storytelling_frame):
+    #     """Runs the storytelling process inside the UI frame."""
+    #     # 1. Greeting
+    #     greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
+    #     greeting_text = greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!"
+    #     speak_text(greeting_text)
+    #     storytelling_frame.load_story_image(
+    #         "ui_assets/Images/py_img/teacher.png")  # Default start image
+    #     time.sleep(1)
 
-        # 2. Inform about the story
-        speak_text("Now I will tell you a story.")
-        time.sleep(1)
+    #     # 2. Inform about the story
+    #     speak_text("Now I will tell you a story.")
+    #     time.sleep(1)
 
-        # 3. Start the story
-        sentence = self.story.start_story()
-        sentence_count = 0
+    #     # 3. Start the story
+    #     sentence = self.story.start_story()
+    #     sentence_count = 0
 
-        while sentence:
-            sentence_count += 1
+    #     while sentence:
+    #         sentence_count += 1
 
-            # Get the updated state from the StorytellingEmotionFrame
-            # Assuming StorytellingEmotionFrame is sending the detected emotions, gaze, and head pose
-            print("Getting detected state from StorytellingEmotionFrame",
-                  storytelling_frame.get_head_pose())
-            horizontal, vertical = storytelling_frame.get_head_pose()  # Get head pose
-            print("Head Pose:", horizontal, vertical)
-            gaze = storytelling_frame.get_gaze()  # Get gaze direction
-            print("Gaze Direction:", gaze)
-            # Get emotion and confidence
-            emotion_idx, emotion_conf = storytelling_frame.get_emotion()
-            print("Emotion:", emotion_idx, emotion_conf)
+    #         # Get the updated state from the StorytellingEmotionFrame
+    #         # Assuming StorytellingEmotionFrame is sending the detected emotions, gaze, and head pose
+    #         print("Getting detected state from StorytellingEmotionFrame",
+    #               storytelling_frame.get_head_pose())
+    #         horizontal, vertical = storytelling_frame.get_head_pose()  # Get head pose
+    #         print("Head Pose:", horizontal, vertical)
+    #         gaze = storytelling_frame.get_gaze()  # Get gaze direction
+    #         print("Gaze Direction:", gaze)
+    #         # Get emotion and confidence
+    #         emotion_idx, emotion_conf = storytelling_frame.get_emotion()
+    #         print("Emotion:", emotion_idx, emotion_conf)
 
-            # Add these readings to the state updater
-            self.state_updater.add_reading(
-                horizontal, vertical, gaze, emotion_idx, emotion_conf)
+    #         # Add these readings to the state updater
+    #         self.state_updater.add_reading(
+    #             horizontal, vertical, gaze, emotion_idx, emotion_conf)
 
-            # Update state based on detected features
-            updated_state = self.state_updater.maybe_update()  # Get the updated state
-            print("............................................")
-            print("Updated State:", updated_state)
-            print("............................................")
+    #         # Update state based on detected features
+    #         updated_state = self.state_updater.maybe_update()  # Get the updated state
+    #         print("............................................")
+    #         print("Updated State:", updated_state)
+    #         print("............................................")
 
-            # Update Image in UI (story-related)
-            image_file = self.story.get_current_image()
-            if image_file:
-                storytelling_frame.load_story_image(
-                    "dataset/story_corpus/img/" + image_file)
+    #         # Update Image in UI (story-related)
+    #         image_file = self.story.get_current_image()
+    #         if image_file:
+    #             storytelling_frame.load_story_image(
+    #                 "dataset/story_corpus/img/" + image_file)
 
-            # Speak the sentence
-            speak_text(sentence["Text"])
-            time.sleep(1)
+    #         # Speak the sentence
+    #         speak_text(sentence["Text"])
+    #         time.sleep(1)
 
-            # Interaction every 2 sentences
-            if sentence_count % 2 == 0:
-                interaction_prompt = sentence.get(
-                    "InteractionPrompt", "What do you think?")
-                speak_text(interaction_prompt)
-                child_response = listen_for_child_response(timeout=2)
-                print("Child's response:", child_response)
-                speak_text("Alright, that's good.")
-                time.sleep(1)
+    #         # Interaction every 2 sentences
+    #         if sentence_count % 2 == 0:
+    #             interaction_prompt = sentence.get(
+    #                 "InteractionPrompt", "What do you think?")
+    #             speak_text(interaction_prompt)
+    #             child_response = listen_for_child_response(
+    #                 timeout=10)  # Timeout for listening changes here
+    #             print("Child's response:", child_response)
+    #             speak_text("Alright, that's good.")
+    #             time.sleep(1)
 
-            # Get next sentence
-            sentence = self.story.get_next_sentence()
+    #         # Get next sentence
+    #         sentence = self.story.get_next_sentence()
 
-        # 4. End storytelling
-        closure_prompt = self.prompt_manager.get_random_prompt("Closure")
-        closure_text = closure_prompt["text"] if closure_prompt else "Goodbye! See you next time!"
-        speak_text(closure_text)
+    #     # 4. End storytelling
+    #     closure_prompt = self.prompt_manager.get_random_prompt("Closure")
+    #     closure_text = closure_prompt["text"] if closure_prompt else "Goodbye! See you next time!"
+    #     speak_text(closure_text)
 
-        # Move to the next UI frame
-        storytelling_frame.end_storytelling()
+    #     # Move to the next UI frame
+    #     storytelling_frame.end_storytelling()
 
     def update_storytelling_state(self, detected_state):
         """Update state in response to detected emotions, gaze, and head pose."""
         print("Updated Storytelling State:", detected_state)
         # Here, you can use `detected_state` to update a state manager, log data, or adjust the RL system.
+
+    def run_storytelling(self, storytelling_frame):
+        """Runs the RL-driven storytelling process inside the UI frame."""
+        # 1. Greeting & Self-Introduction
+        greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
+        greeting_text = greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!"
+        speak_text(greeting_text)
+
+        # Self-introduction as Tello
+        speak_text("I am Tello, your friendly storytelling robot.")
+        storytelling_frame.load_story_image(
+            "ui_assets/Images/py_img/teacher.png")  # Default start image
+        time.sleep(1)
+
+        # 2. Initial Interaction: Ask the child how they are and their name
+        speak_text("Hello, how are you? What is your name?")
+        # Switch mode explicitly to INTERACTION for this prompt
+        initial_response = listen_for_child_response(timeout=10)
+        print("Initial interaction response:", initial_response)
+
+        # Update state based on this initial interaction
+        # (Assuming update_state_from_story() processes the child's reply)
+        initial_state = self.state_updater.update_state_from_story(
+            Mode.INTERACTION, 
+            initial_response)
+        print("State after initial interaction:", initial_state)
+        speak_text("Alright, that's good.")
+        time.sleep(1)
+
+        # 3. Inform about the Story
+        speak_text("Now I will tell you a story.")
+        time.sleep(1)
+
+        # 4. Storytelling Loop
+        sentence = self.story.start_story()
+        sentence_count = 0
+        current_state = initial_state  # Start with state from initial interaction
+
+        while sentence:
+            sentence_count += 1
+
+            # Update the state from sensor data after each sentence
+            # Retrieve sensor readings from the storytelling frame
+            horizontal, vertical = storytelling_frame.get_head_pose()
+            gaze = storytelling_frame.get_gaze()
+            emotion_idx, emotion_conf = storytelling_frame.get_emotion()
+            # Add sensor readings
+            self.state_updater.add_reading(
+                horizontal, vertical, gaze, emotion_idx, emotion_conf)
+            updated_state = self.state_updater.maybe_update()
+            if updated_state is not None:
+                current_state = updated_state
+                print("Aggregated State after sentence:", current_state)
+
+            # Update the image in UI (if available)
+            image_file = self.story.get_current_image()
+            if image_file:
+                storytelling_frame.load_story_image(
+                    "dataset/story_corpus/img/" + image_file)
+
+            # Narrate the sentence
+            speak_text(sentence["Text"])
+            time.sleep(1)
+
+            # Interaction Prompt every 2 sentences
+            if sentence_count % 2 == 0:
+                interaction_prompt = sentence.get(
+                    "InteractionPrompt", "What do you think?")
+                speak_text(interaction_prompt)
+                # Explicitly set mode to INTERACTION for the prompt phase
+                current_state.mode = Mode.INTERACTION
+                child_response = listen_for_child_response(timeout=10)
+                print("Child's response:", child_response)
+                # Update state based on child's interaction response
+                new_state = self.state_updater.update_state_from_story(
+                    Mode.INTERACTION, child_response)
+                if new_state is not None:
+                    current_state = new_state
+                    print("Updated State after interaction:", current_state)
+                speak_text("Alright, that's good.")
+                time.sleep(1)
+
+            # Get the next sentence
+            sentence = self.story.get_next_sentence()
+
+        # 5. End Storytelling
+        closure_prompt = self.prompt_manager.get_random_prompt("Closure")
+        closure_text = closure_prompt["text"] if closure_prompt else "Goodbye! See you next time!"
+        speak_text(closure_text)
+
+        # Update state one last time (for closure)
+        horizontal, vertical = storytelling_frame.get_head_pose()
+        gaze = storytelling_frame.get_gaze()
+        emotion_idx, emotion_conf = storytelling_frame.get_emotion()
+        self.state_updater.add_reading(
+            horizontal, vertical, gaze, emotion_idx, emotion_conf)
+        final_state = self.state_updater.maybe_update()
+        if final_state is not None:
+            print("Final Aggregated State:", final_state)
+
+        # Move to the next UI frame
+        storytelling_frame.end_storytelling()
