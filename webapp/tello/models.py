@@ -64,3 +64,21 @@ class StudentVocabulary(models.Model):
 
     def __str__(self):
         return f"{self.student.studentname} - {self.word.word}"
+
+
+class StudentReport(models.Model):
+    student = models.ForeignKey('Student', on_delete=models.CASCADE)
+    story_id = models.IntegerField()  
+    vocab_score = models.FloatField()
+    structure_sim_score = models.FloatField()
+    response_length = models.FloatField()
+    avg_engagement = models.FloatField()
+    final_score = models.FloatField()
+    prompt_interaction_ratio = models.FloatField()
+    prompt_interaction_count = models.IntegerField()
+    # Optional field for additional insights
+    feedback_notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Report for {self.student.studentname} - Story {self.story_id}"
