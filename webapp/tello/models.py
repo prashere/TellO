@@ -25,3 +25,42 @@ class Student(models.Model):
 
     def __str__(self):
         return self.studentname
+
+
+class VocabularyCategory(models.Model):
+    """
+    Represents categories like Nouns, Verbs, Adjectives, etc.
+    """
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class VocabularyWord(models.Model):
+    """
+    Represents individual words belonging to a category.
+    """
+    word = models.CharField(max_length=50, unique=True)
+    category = models.ForeignKey(
+        VocabularyCategory, on_delete=models.CASCADE, related_name="words")
+
+    def __str__(self):
+        return self.word
+
+
+class StudentVocabulary(models.Model):
+    """
+    Stores vocabulary words learned by each student.
+    """
+    student = models.ForeignKey(
+        "Student", on_delete=models.CASCADE, related_name="vocabulary")
+    word = models.ForeignKey(
+        VocabularyWord, on_delete=models.CASCADE, related_name="learned_by")
+
+    class Meta:
+        # Prevent duplicate words for a student
+        unique_together = ('student', 'word')
+
+    def __str__(self):
+        return f"{self.student.studentname} - {self.word.word}"
