@@ -1,7 +1,7 @@
 import random
-from state import *
-from q_learning import *
-from actions import *
+from .state import *
+from .q_learning import *
+from .actions import *
 
 class Environment:
     def __init__(self, q_learning: QLearning):
@@ -138,28 +138,28 @@ class Environment:
             print()
 
 
-# Example initialization of the Q-learning agent
-actions = [Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.SIMPLE, lexical_type=LexicalType.KNOWN),
-           Action(action_type="Clarification", clarification_type=ClarificationType.SENTENCE_REPETITION)]
+# # Example initialization of the Q-learning agent
+# actions = [Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.SIMPLE, lexical_type=LexicalType.KNOWN),
+#            Action(action_type="Clarification", clarification_type=ClarificationType.SENTENCE_REPETITION)]
 
-q_learning_agent = QLearning(actions)
+# q_learning_agent = QLearning(actions)
 
-# Initialize the environment with the Q-learning agent
-env = Environment(q_learning_agent)
+# # Initialize the environment with the Q-learning agent
+# env = Environment(q_learning_agent)
 
-# Define initial state for INTERACTION mode (simulating a real interaction scenario)
-initial_state = State(
-    mode=Mode.INTERACTION,
-    engagement_level=EngagementLevel.MEDIUM,
-    emotional_state=EmotionalState.HAPPY,
-    response_quality=ResponseQuality.AVERAGE,
-    prompt_necessity=PromptNecessity.YES,  # Example scenario where a prompt is needed
-    response_length=ResponseLength.MEDIUM,
-    vocabulary_usage=VocabularyUsage.MEDIUM
-)
+# # Define initial state for INTERACTION mode (simulating a real interaction scenario)
+# initial_state = State(
+#     mode=Mode.INTERACTION,
+#     engagement_level=EngagementLevel.MEDIUM,
+#     emotional_state=EmotionalState.HAPPY,
+#     response_quality=ResponseQuality.AVERAGE,
+#     prompt_necessity=PromptNecessity.YES,  # Example scenario where a prompt is needed
+#     response_length=ResponseLength.MEDIUM,
+#     vocabulary_usage=VocabularyUsage.MEDIUM
+# )
 
-# Run an episode of interaction in the environment
-print("\n--- Running Interaction Mode Episode ---\n")
-env.run_episode(initial_state, num_steps=5)  # You can adjust num_steps as needed
+# # Run an episode of interaction in the environment
+# print("\n--- Running Interaction Mode Episode ---\n")
+# env.run_episode(initial_state, num_steps=5)  # You can adjust num_steps as needed
 
-# Running multiple episodes could help observe how the system adapts over time with rewards and state transitions
+# # Running multiple episodes could help observe how the system adapts over time with rewards and state transitions

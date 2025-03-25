@@ -39,6 +39,8 @@ class StateUpdater:
         self.last_update_time = time.time()
         self.update_interval = update_interval  # seconds
 
+        self.current_state = None
+
     def add_reading(self, horizontal, vertical, gaze, emotion, emotion_conf):
         try:
             self.head_horizontal_buffer.append(horizontal)
@@ -150,6 +152,7 @@ class StateUpdater:
                 Mode.NARRATION, EngagementLevel.MEDIUM, EmotionalState.NEUTRAL)
 
         print("Updated State:", new_state)
+        self.current_state = new_state
         return new_state
 
 # ----------------------------------------------------------
@@ -227,7 +230,7 @@ class StateUpdater:
         else:
             # For narration mode, fewer attributes are needed.
             new_state = State(mode, engagement, emotional_state)
-
+        self.current_state = new_state
         return new_state
 
 # ----------------------------------------------------------
@@ -246,6 +249,9 @@ class StateUpdater:
             self.emotion_conf_buffer.clear()
             return new_state
         return None
+
+    def get_current_state(self):
+        return self.current_state
 
 
 if __name__ == "__main__":

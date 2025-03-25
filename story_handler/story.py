@@ -1,5 +1,6 @@
 import json
 
+
 class Story:
     def __init__(self, json_data):
         """
@@ -14,10 +15,13 @@ class Story:
         self.target_age = json_data.get("TargetAgeGroup", "Unknown")
         self.narrative_arc = json_data.get("NarrativeArc", {})
         self.vocabulary = json_data.get("Vocabulary", {})
-        self.sentences = {s["SentenceID"]: s for s in json_data.get("Sentences", [])}
+        self.sentences = {s["SentenceID"]
+            : s for s in json_data.get("Sentences", [])}
 
-        self._all_sentence_ids = sum(self.narrative_arc.values(), [])  # Flattened list of sentence IDs
-        self._current_index = 0 if self._all_sentence_ids else None  # Track the current position
+        # Flattened list of sentence IDs
+        self._all_sentence_ids = sum(self.narrative_arc.values(), [])
+        # Track the current position
+        self._current_index = 0 if self._all_sentence_ids else None
 
     def get_sentence(self, sentence_id):
         """
@@ -76,7 +80,8 @@ class Story:
         Get the interaction prompt for the current sentence.
         """
         if self._current_index is not None:
-            sentence = self.get_sentence(self._all_sentence_ids[self._current_index])
+            sentence = self.get_sentence(
+                self._all_sentence_ids[self._current_index])
             return sentence.get("InteractionPrompt", "")
         return ""
 
@@ -85,7 +90,8 @@ class Story:
         Get fun questions related to the current sentence.
         """
         if self._current_index is not None:
-            sentence = self.get_sentence(self._all_sentence_ids[self._current_index])
+            sentence = self.get_sentence(
+                self._all_sentence_ids[self._current_index])
             return sentence.get("FunQuestions", [])
         return []
 
@@ -111,9 +117,25 @@ class Story:
         Get the related image for the current sentence.
         """
         if self._current_index is not None:
-            sentence = self.get_sentence(self._all_sentence_ids[self._current_index])
+            sentence = self.get_sentence(
+                self._all_sentence_ids[self._current_index])
             return sentence.get("RelatedImage", "")
         return ""
+
+    def get_vocabulary_info(self):
+        """
+        Check if the current sentence contains a vocabulary word.
+        :return: A tuple (bool, word, definition) if vocabulary is present, otherwise (False, None, None).
+        """
+        if self._current_index is not None:
+            sentence = self.get_sentence(
+                self._all_sentence_ids[self._current_index])
+            if sentence.get("IsVocabularyPresent", False):
+                for word in self.vocabulary.keys():
+                    if word.lower() in sentence["Text"].lower():
+                        return True, word, self.vocabulary[word]
+        return False, None, None
+
 
 # Example Usage:
 if __name__ == "__main__":
