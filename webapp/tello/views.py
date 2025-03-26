@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from tello.models import Teacher, Student
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
 
 
 # Create your views here.
@@ -30,6 +33,25 @@ def teacher_login(request):
                 request, "Invalid username or password. Please try again.")
 
     return render(request, "login.html")  # Render login page again if failed
+
+
+@api_view(['POST'])
+def teacher_login_api(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        if hasattr(user, "teacher"):  # Check if user has a teacher profile
+            return Response({
+                "message": "Login successful",
+                "teacher_id": user.teacher.teacherid
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "You are not registered as a teacher."}, status=status.HTTP_403_FORBIDDEN)
+    else:
+        return Response({"message": "Invalid username or password."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @login_required
@@ -63,6 +85,16 @@ def add_student(request):
 def teacher_dashboard(request):
     students = Student.objects.all()  # Fetch all students from DB
     return render(request, "dashboard.html", {"students": students})
+
+
+@api_view(["GET"])
+def get_students_for_teacher(request, teacher_id):
+    """API to fetch students assigned to a specific teacher"""
+    teacher = get_object_or_404(Teacher, teacherid=teacher_id)
+    students = Student.objects.filter(
+        assignedteacher=teacher).values("studentid", "studentname")
+
+    return Response({"students": list(students)}, status=status.HTTP_200_OK)
 
 
 # def login(request):

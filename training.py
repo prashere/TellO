@@ -32,4 +32,5 @@ trainer.evaluate(num_trials=10)
 print("\nSaving trained Q-table...\n")
 trainer.q_learning.save_q_table()
 
-print("\n🎉 Training and evaluation complete! Ready for deployment! 🚀")
+print("\n Training and evaluation complete! Ready for deployment! \n")
+   
