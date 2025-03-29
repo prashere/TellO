@@ -76,6 +76,8 @@ def add_student(request):
                 assignedteacher=request.user.teacher,
             )
             student.save()
+            # Initialize the student's vocabulary
+            student.initialize_vocabulary()
             messages.success(request, "Student added successfully!")
             return redirect("dashboard")  # Redirect to dashboard after success
         else:
@@ -227,8 +229,9 @@ def logout_teacher(request):
 def report_detail(request, report_id):
     report = get_object_or_404(StudentReport, id=report_id)
     # Get all sessions for the student in chronological order.
-    sessions = StorySession.objects.filter(student=report.story_session.student).order_by('date')
-    
+    sessions = StorySession.objects.filter(
+        student=report.story_session.student).order_by('date')
+
     # Create chart_data list: each item is a dict with date and final_score.
     chart_data = []
     for session in sessions:
