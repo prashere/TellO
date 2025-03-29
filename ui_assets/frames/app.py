@@ -124,12 +124,36 @@ class App(tk.Tk):
     def run_storytelling(self, storytelling_frame):
         """Runs the RL-driven storytelling process inside the UI frame."""
 
-        # Tracking storage
-        all_states = []  # Store all states till the end
+        # Initialize tracking variables
+        all_states = []
         total_prompts_given = 0
         total_prompts_answered = 0
 
-        # 1. Greeting & Self-Introduction
+        # Step 1: Greeting & Introduction
+        self.perform_greeting()
+
+        # Step 2: Initial Interaction with the child
+        total_prompts_given, total_prompts_answered = self.initial_interaction(
+            storytelling_frame, total_prompts_given, total_prompts_answered, all_states)
+
+        # Step 3: Inform about the story and start storytelling loop
+        speak_text("Now I will tell you a story.")
+        time.sleep(1)
+        self.storytelling_loop(
+            storytelling_frame, all_states, total_prompts_given, total_prompts_answered)
+
+        # Step 4: Ask for Child's Understanding
+        final_understanding_text = self.collect_child_understanding()
+
+        # Step 5: Closure
+        self.perform_closure(storytelling_frame, all_states)
+
+        # Step 6: Generate and Save Evaluation Report
+        self.generate_and_save_report(
+            final_understanding_text, all_states, total_prompts_given, total_prompts_answered)
+
+    def perform_greeting(self):
+        """Handles greeting and introduction."""
         greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
         speak_text(
             greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!")
@@ -139,127 +163,135 @@ class App(tk.Tk):
         speak_text(
             intro_prompt["text"] if intro_prompt else "I am TellO, your friendly storytelling robot.")
 
+    def initial_interaction(self, storytelling_frame, total_prompts_given, total_prompts_answered, all_states):
+        """Initial interaction where TellO asks for the child's name and how they are."""
         storytelling_frame.load_story_image(
             "ui_assets/Images/py_img/teacher.png")
         time.sleep(1)
 
-        # 2. Initial Interaction: Ask the child how they are
         intro_interaction_prompt = self.prompt_manager.get_random_prompt(
             "Getting to Know You")
         speak_text(
             intro_interaction_prompt["text"] if intro_interaction_prompt else "Hello, how are you? What is your name?")
 
-        total_prompts_given += 1  # Tracking prompt count
+        total_prompts_given += 1
         initial_response = listen_for_child_response(timeout=10)
 
         if initial_response.strip():
-            total_prompts_answered += 1  # Tracking answered prompt count
+            total_prompts_answered += 1
 
         current_state = self.state_updater.update_state_from_story(
             Mode.INTERACTION, initial_response)
-        all_states.append(current_state)  # Store state history
+        all_states.append(current_state)
 
-        # Encouragement after response
         encouragement_prompt = self.prompt_manager.get_random_prompt(
             "Encouragement")
         speak_text(
             encouragement_prompt["text"] if encouragement_prompt else "Alright, that's good.")
         time.sleep(1)
 
-        # 3. Inform about the Story
-        speak_text("Now I will tell you a story.")
-        time.sleep(1)
+        return total_prompts_given, total_prompts_answered
 
-        # 4. Storytelling Loop
-        sentence = self.story.start_story()  # Start story
-        while sentence:  # Keep looping while sentences are available
+    def storytelling_loop(self, storytelling_frame, all_states, total_prompts_given, total_prompts_answered):
+        """Handles the storytelling loop with RL-driven decisions."""
+        sentence = self.story.start_story()
 
-            # Update state from sensor data
-            horizontal, vertical = storytelling_frame.get_head_pose()
-            gaze = storytelling_frame.get_gaze()
-            emotion_idx, emotion_conf = storytelling_frame.get_emotion()
-            self.state_updater.add_reading(
-                horizontal, vertical, gaze, emotion_idx, emotion_conf)
+        while sentence:
+            # Update engagement state
+            self.update_engagement_state(storytelling_frame, all_states)
 
-            # Store state
-            all_states.append(self.state_updater.get_current_state())
-
-            # Update the image in UI (if available)
-            image_file = self.story.get_current_image()
-            if image_file:
-                storytelling_frame.load_story_image(
-                    "dataset/story_corpus/img/" + image_file)
+            # Update UI with image
+            self.update_story_image(storytelling_frame)
 
             # Narrate the sentence
             speak_text(sentence["Text"])
             time.sleep(1)
 
-            # *** RL Decision: What to do next? ***
-            chosen_action = self.q_learning_agent.get_best_action(
-                current_state)
+            # RL-based decision-making
+            total_prompts_given, total_prompts_answered = self.handle_rl_decision(
+                storytelling_frame, all_states, total_prompts_given, total_prompts_answered)
 
-            if chosen_action.action_type == "No-Intervention":
-                print("RL Decision: Continue narration.")
-
-            elif chosen_action.action_type == "Clarification":
-                speak_text("Do you understand this part?")
-                total_prompts_given += 1
-
-                child_response = listen_for_child_response(timeout=10)
-
-                if child_response.strip():
-                    total_prompts_answered += 1
-
-                current_state = self.state_updater.update_state_from_story(
-                    Mode.INTERACTION, child_response)
-                all_states.append(current_state)
-
-            elif chosen_action.action_type == "Lexical-Syntactic":
-                vocab_present, word, definition = self.story.get_vocabulary_info()
-
-                if vocab_present:
-                    speak_text(
-                        f"Let me tell you the meaning of the word '{word}'. It means {definition}.")
-                else:
-                    fun_questions = self.story.get_fun_questions()
-                    if fun_questions:
-                        selected_question = random.choice(fun_questions)
-                        speak_text(selected_question)
-                        total_prompts_given += 1
-
-                        child_response = listen_for_child_response(timeout=10)
-
-                        if child_response.strip():
-                            total_prompts_answered += 1
-
-                        current_state = self.state_updater.update_state_from_story(
-                            Mode.INTERACTION, child_response)
-                        all_states.append(current_state)
-
-            # Update Q-table based on reward
-            reward = self.environment.get_reward(current_state, chosen_action)
-            self.q_learning_agent.update_q_value(
-                current_state, chosen_action, reward, current_state)
-
-            # **FIXED: Always move to the next sentence**
+            # Move to the next sentence
             sentence = self.story.get_next_sentence()
 
-        # 5. Before Closure: Ask for Child's Understanding
+    def update_engagement_state(self, storytelling_frame, all_states):
+        """Updates the state based on head pose, gaze, and emotions."""
+        horizontal, vertical = storytelling_frame.get_head_pose()
+        gaze = storytelling_frame.get_gaze()
+        emotion_idx, emotion_conf = storytelling_frame.get_emotion()
+
+        self.state_updater.add_reading(
+            horizontal, vertical, gaze, emotion_idx, emotion_conf)
+        all_states.append(self.state_updater.get_current_state())
+
+    def update_story_image(self, storytelling_frame):
+        """Updates the UI with the current story image."""
+        image_file = self.story.get_current_image()
+        if image_file:
+            storytelling_frame.load_story_image(
+                "dataset/story_corpus/img/" + image_file)
+
+    def handle_rl_decision(self, storytelling_frame, all_states, total_prompts_given, total_prompts_answered):
+        """Handles RL-based decision making for interaction."""
+        current_state = self.state_updater.get_current_state()
+        chosen_action = self.q_learning_agent.get_best_action(current_state)
+
+        if chosen_action.action_type == "No-Intervention":
+            print("RL Decision: Continue narration.")
+
+        elif chosen_action.action_type == "Clarification":
+            total_prompts_given += 1
+            speak_text("Do you understand this part?")
+            response = listen_for_child_response(timeout=10)
+
+            if response.strip():
+                total_prompts_answered += 1
+
+            self.update_interaction_state(response, all_states)
+
+        elif chosen_action.action_type == "Lexical-Syntactic":
+            total_prompts_given, total_prompts_answered = self.handle_lexical_syntactic_action(
+                all_states, total_prompts_given, total_prompts_answered)
+
+        return total_prompts_given, total_prompts_answered
+
+    def handle_lexical_syntactic_action(self, all_states, total_prompts_given, total_prompts_answered):
+        """Handles vocabulary explanations and fun questions."""
+        vocab_present, word, definition = self.story.get_vocabulary_info()
+
+        if vocab_present:
+            speak_text(
+                f"Let me tell you the meaning of the word '{word}'. It means {definition}.")
+        else:
+            fun_questions = self.story.get_fun_questions()
+            if fun_questions:
+                selected_question = random.choice(fun_questions)
+                speak_text(selected_question)
+                total_prompts_given += 1
+
+                response = listen_for_child_response(timeout=10)
+                if response.strip():
+                    total_prompts_answered += 1
+
+                self.update_interaction_state(response, all_states)
+
+        return total_prompts_given, total_prompts_answered
+
+    def collect_child_understanding(self):
+        """Collects the final understanding of the child after storytelling."""
         speak_text("Can you tell me what you understood about the story?")
 
-        # Stop listening after 3 long silences (10 seconds each)
-        max_silence_repeats = 3
         silence_count = 0
-        start_time = time.time()  # Track total listening time
-        listening_duration = 120  # Max listening time: 2 minutes
         final_understanding = []
+        start_time = time.time()
+        max_listening_time = 120
 
-        while time.time() - start_time < listening_duration:
+        while time.time() - start_time < max_listening_time:
             response = listen_for_child_response(timeout=10)
 
             if not response.strip():
                 silence_count += 1
-                if silence_count >= max_silence_repeats:
+                if silence_count >= 3:
                     speak_text("I didn't hear anything, let's continue.")
                     break
                 else:
@@ -267,48 +299,46 @@ class App(tk.Tk):
             else:
                 silence_count = 0
                 words = response.split()
-
-                if len(words) < 3:
-                    speak_text("Okay, I see. Please continue.")
-                else:
+                if len(words) >= 3:
                     final_understanding.append(response)
 
-        final_understanding_text = " ".join(final_understanding)
-        print("Child's understanding:", final_understanding_text)
+        return " ".join(final_understanding)
 
-        # Store final state
-        all_states.append(self.state_updater.get_current_state())
-
-        # 6. Closure
+    def perform_closure(self, storytelling_frame, all_states):
+        """Handles the closure of the storytelling session."""
         closure_prompt = self.prompt_manager.get_random_prompt("Closure")
         speak_text(
             closure_prompt["text"] if closure_prompt else "Goodbye! See you next time!")
 
-        # Final state update
-        horizontal, vertical = storytelling_frame.get_head_pose()
-        gaze = storytelling_frame.get_gaze()
-        emotion_idx, emotion_conf = storytelling_frame.get_emotion()
-        self.state_updater.add_reading(
-            horizontal, vertical, gaze, emotion_idx, emotion_conf)
-
-        all_states.append(self.state_updater.get_current_state())
-
+        self.update_engagement_state(storytelling_frame, all_states)
         storytelling_frame.end_storytelling()
 
+    def generate_and_save_report(self, final_understanding_text, all_states, total_prompts_given, total_prompts_answered):
+        """Generates the evaluation report and saves it."""
         evaluation_report = self.evaluator.evaluate(
-            final_understanding_text,
-            all_states,
-            prompts_given=total_prompts_given,
-            prompts_answered=total_prompts_answered)
+            final_understanding_text, all_states, total_prompts_given, total_prompts_answered)
 
-        # Save the session data to the database
+        self.save_report_to_db(evaluation_report, total_prompts_answered)
+        # self.print_evaluation_summary(evaluation_report)
+
+    def update_interaction_state(self, response, all_states):
+        """Updates the state based on the child's response."""
+        current_state = self.state_updater.update_state_from_story(
+            Mode.INTERACTION, response)
+        all_states.append(current_state)  # Store the updated state
+        return current_state
+
+    def save_report_to_db(self, evaluation_report, total_prompts_answered):
+        """Saves the evaluation report to the database via an API request."""
+
         if not hasattr(self, 'session_id') or not self.session_id:
             print("Error: Session ID not found. Report not saved.")
             return
 
-        # Prepare API data
-        # Update if using a different port
+        # API URL (update if needed)
         api_url = "http://127.0.0.1:8000/api/create-student-report/"
+
+        # Prepare report data
         report_data = {
             "session_id": self.session_id,
             "vocab_score": evaluation_report["vocabulary"],
@@ -333,31 +363,3 @@ class App(tk.Tk):
 
         except requests.exceptions.RequestException as e:
             print(f"API Request Failed: {str(e)}")
-
-        # Print Evaluation Summary
-        print("\n📊 Evaluation Report:")
-        print(
-            f"🟢 Vocabulary Score: {evaluation_report['vocabulary'] * 100:.2f}%")
-        print(
-            f"📖 Structure Similarity Score: {evaluation_report['structure'] * 100:.2f}%")
-        print(
-            f"✍️ Response Length Score: {evaluation_report['length'] * 100:.2f}%")
-        print(
-            f"📈 Average Engagement: {evaluation_report['average_engagement']:.2f}")
-        print(f"🏆 Final Score: {evaluation_report['final_score']:.2f}%")
-        print(
-            f"📊 Prompt Interaction Ratio: {evaluation_report['prompt_interaction_ratio']}%")
-        print(
-            f"📌 Mode Counts: {evaluation_report['state_summary']['mode_counts']}")
-
-        print("\n✅ Session Data Successfully Evaluated.\n")
-
-        # Print statistics
-        print("\n--- Storytelling Summary ---")
-        print("Total prompts given:", total_prompts_given)
-        print("Total prompts answered:", total_prompts_answered)
-        print("Final Understanding:", final_understanding_text)
-        print("Final States Recorded:", len(all_states))
-        print("....................................")
-        for state in all_states:
-            print(state)
