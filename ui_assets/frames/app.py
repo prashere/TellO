@@ -4,6 +4,7 @@ import json
 import time
 from PIL import Image, ImageTk
 import cv2
+import requests
 
 from ui_assets.evaluator import ResponseEvaluator
 
@@ -66,6 +67,11 @@ class App(tk.Tk):
         self.q_learning_agent.load_q_table()
         self.evaluator = ResponseEvaluator(self.story)
 
+        self.selected_student_id = None
+        self.story_id = None
+        self.session_start_time = None
+        self.session_id = None
+
     def load_images(self):
         """Load and resize images for UI."""
         self.logo_img = ImageTk.PhotoImage(
@@ -114,8 +120,6 @@ class App(tk.Tk):
         """Update state in response to detected emotions, gaze, and head pose."""
         # print("Updated Storytelling State:", detected_state)
         # Here, you can use `detected_state` to update a state manager, log data, or adjust the RL system.
-
-   
 
     def run_storytelling(self, storytelling_frame):
         """Runs the RL-driven storytelling process inside the UI frame."""
@@ -292,10 +296,43 @@ class App(tk.Tk):
         storytelling_frame.end_storytelling()
 
         evaluation_report = self.evaluator.evaluate(
-            final_understanding_text, 
-            all_states, 
-            prompts_given=total_prompts_given, 
+            final_understanding_text,
+            all_states,
+            prompts_given=total_prompts_given,
             prompts_answered=total_prompts_answered)
+
+        # Save the session data to the database
+        if not hasattr(self, 'session_id') or not self.session_id:
+            print("Error: Session ID not found. Report not saved.")
+            return
+
+        # Prepare API data
+        # Update if using a different port
+        api_url = "http://127.0.0.1:8000/api/create-student-report/"
+        report_data = {
+            "session_id": self.session_id,
+            "vocab_score": evaluation_report["vocabulary"],
+            "structure_sim_score": evaluation_report["structure"],
+            "response_length": evaluation_report["length"],
+            "avg_engagement": evaluation_report["average_engagement"],
+            "final_score": evaluation_report["final_score"],
+            "prompt_interaction_ratio": evaluation_report["prompt_interaction_ratio"],
+            "prompt_interaction_count": total_prompts_answered,
+            "feedback_notes": "Automatically generated report"
+        }
+
+        try:
+            response = requests.post(api_url, json=report_data)
+            response_data = response.json()
+
+            if response.status_code == 201:
+                print(
+                    f"Report successfully saved! Report ID: {response_data['report_id']}")
+            else:
+                print(f"Error saving report: {response_data}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"API Request Failed: {str(e)}")
 
         # Print Evaluation Summary
         print("\n📊 Evaluation Report:")

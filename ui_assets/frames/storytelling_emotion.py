@@ -1,11 +1,14 @@
 import threading
 import time
 import tkinter as tk
+from tkinter import messagebox
 from PIL import Image, ImageTk
 import cv2
+import requests
 from ui_assets.constants import SOFT_PINK, DARK_TEXT, FONT, TITLE_FONT, SOFT_BLUE
 # Import detectors
 from detector_model.head_gaze_emotion_detector import FaceAnalyzer, EmotionAnalyzer
+import datetime
 
 
 class StorytellingEmotionFrame(tk.Frame):
@@ -61,6 +64,8 @@ class StorytellingEmotionFrame(tk.Frame):
         self.start_video()
         threading.Thread(target=self.controller.run_storytelling,
                          args=(self,), daemon=True).start()
+        self.controller.session_start_time = datetime.datetime.now().isoformat()
+        self.controller.story_id = 4
 
     def start_video(self):
         """Start the video capture and analysis thread."""
@@ -174,4 +179,24 @@ class StorytellingEmotionFrame(tk.Frame):
     def end_storytelling(self):
         """Stop video feed and move to the next frame."""
         self.pause_video()
+        end_time = datetime.datetime.now().isoformat()
+        payload = {
+            "student_id": self.controller.selected_student_id,
+            "story_id": self.controller.story_id,
+            "start_time": self.controller.session_start_time,
+            "end_time": end_time
+        }
+        print('Payload ::', payload)
+        url = "http://127.0.0.1:8000/api/create-story-session/"
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 201:
+                messagebox.showinfo(
+                    "Session Saved", "Story session has been recorded.")
+                self.controller.session_id = response.json().get("session_id")
+            else:
+                messagebox.showerror(
+                    "Error", "Failed to record the story session.")
+        except requests.exceptions.RequestException as e:
+            messagebox.showerror("Error", f"Server Error: {e}")
         self.controller.next_frame("Storytelling")

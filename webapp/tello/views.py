@@ -1,8 +1,9 @@
+import dateutil
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
-from tello.models import Teacher, Student
+from tello.models import StorySession, StudentReport, Teacher, Student
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -25,7 +26,8 @@ def teacher_login(request):
                 # Store teacher ID in session
                 request.session["teacher_id"] = user.teacher.teacherid
                 messages.success(request, "Login successful!")
-                return redirect("add")  # Redirect to student addition page
+                # Redirect to student addition page
+                return redirect("dashboard")
             else:
                 messages.error(request, "You are not registered as a teacher.")
         else:
@@ -82,6 +84,7 @@ def add_student(request):
     return render(request, "student_addition.html")
 
 
+@login_required
 def teacher_dashboard(request):
     students = Student.objects.all()  # Fetch all students from DB
     return render(request, "dashboard.html", {"students": students})
@@ -97,8 +100,92 @@ def get_students_for_teacher(request, teacher_id):
     return Response({"students": list(students)}, status=status.HTTP_200_OK)
 
 
-# def login(request):
-#     return render(request, 'login.html')
+@api_view(["POST"])
+def create_story_session(request):
+    """
+    Expects JSON with:
+      - student_id: ID of the student
+      - story_id: Story identifier (not a FK)
+      - start_time: ISO formatted datetime string
+      - end_time: ISO formatted datetime string
+    """
+    data = request.data
+    try:
+        student_id = data["student_id"]
+        story_id = data["story_id"]
+        start_time = dateutil.parser.isoparse(data["start_time"])
+        end_time = dateutil.parser.isoparse(data["end_time"])
+    except KeyError:
+        return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({"error": f"Invalid datetime format: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    student = get_object_or_404(Student, pk=student_id)
+
+    session = StorySession.objects.create(
+        student=student,
+        story_id=story_id,
+        start_time=start_time,
+        end_time=end_time
+    )
+    # The save() in StorySession will calculate the duration
+    return Response({"message": "Session created", "session_id": session.id}, status=status.HTTP_201_CREATED)
+
+
+@api_view(["POST"])
+def create_student_report(request):
+    """
+    Expects JSON with:
+      - session_id: ID of the StorySession
+      - vocab_score: float
+      - structure_sim_score: float
+      - response_length: float
+      - avg_engagement: float
+      - final_score: float
+      - prompt_interaction_ratio: float
+      - prompt_interaction_count: int
+      - feedback_notes: (optional) string
+    """
+    data = request.data
+    try:
+        session_id = data["session_id"]
+        vocab_score = float(data["vocab_score"])
+        structure_sim_score = float(data["structure_sim_score"])
+        response_length = float(data["response_length"])
+        avg_engagement = float(data["avg_engagement"])
+        final_score = float(data["final_score"])
+        prompt_interaction_ratio = float(data["prompt_interaction_ratio"])
+        prompt_interaction_count = int(data["prompt_interaction_count"])
+        feedback_notes = data.get("feedback_notes", "")
+
+    except KeyError as e:
+        return Response({"error": f"Missing required field: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+    except ValueError:
+        return Response({"error": "Invalid data type in request"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Ensure StorySession exists
+    story_session = get_object_or_404(StorySession, pk=session_id)
+
+    # Create and save the StudentReport
+    report = StudentReport.objects.create(
+        story_session=story_session,
+        vocab_score=vocab_score,
+        structure_sim_score=structure_sim_score,
+        response_length=response_length,
+        avg_engagement=avg_engagement,
+        final_score=final_score,
+        prompt_interaction_ratio=prompt_interaction_ratio,
+        prompt_interaction_count=prompt_interaction_count,
+        feedback_notes=feedback_notes
+    )
+
+    return Response(
+        {
+            "message": "Student report created successfully",
+            "report_id": report.id
+        },
+        status=status.HTTP_201_CREATED
+    )
 
 
 def add(request):
@@ -111,3 +198,49 @@ def report(request):
 
 def dashboard(request):
     return render(request, 'dashboard.html')
+
+
+def report_list(request):
+    reports = StudentReport.objects.select_related(
+        'story_session__student').all()
+
+    report_data = [
+        {
+            'id': report.id,
+            'student_id': report.story_session.student.studentcode,
+            'student_name': report.story_session.student.studentname,
+            'created_at': report.created_at
+        }
+        for report in reports
+    ]
+
+    return render(request, 'report_list.html', {'reports': report_data})
+
+
+def logout_teacher(request):
+    """Logs out the user and redirects to the login page."""
+    logout(request)
+    return redirect('teacher_login')
+
+
+@login_required
+def report_detail(request, report_id):
+    report = get_object_or_404(StudentReport, id=report_id)
+    # Get all sessions for the student in chronological order.
+    sessions = StorySession.objects.filter(student=report.story_session.student).order_by('date')
+    
+    # Create chart_data list: each item is a dict with date and final_score.
+    chart_data = []
+    for session in sessions:
+        # Assuming there is one report per session; adjust if necessary.
+        session_report = session.reports.first()
+        if session_report:
+            chart_data.append({
+                'date': session.date.strftime("%Y-%m-%d"),
+                'final_score': session_report.final_score,
+            })
+
+    return render(request, 'report_detail.html', {
+        'report': report,
+        'chart_data': chart_data,
+    })

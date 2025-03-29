@@ -41,13 +41,18 @@ class StudentSelectionFrame(tk.Frame):
             response = requests.get(url)
             if response.status_code == 200:
                 student_data = response.json().get("students", [])
-                self.students = [student["studentname"]
+
+                # Store student ID and name together as tuples
+                self.students = [(student["studentid"], student["studentname"])
                                  for student in student_data]
 
                 if self.students:
-                    self.student_dropdown["values"] = self.students
+                    # Extract only names for the dropdown display
+                    self.student_dropdown["values"] = [
+                        name for _, name in self.students]
+
                     # Set default selection
-                    self.selected_student.set(self.students[0])
+                    self.selected_student.set(self.students[0][1])
                 else:
                     self.student_dropdown["values"] = ["No students found"]
                     self.selected_student.set("No students found")
@@ -58,11 +63,23 @@ class StudentSelectionFrame(tk.Frame):
 
     def confirm_selection(self):
         """Proceed only if a valid student is selected."""
-        selected_student = self.selected_student.get()
-        if selected_student == "No students found" or not selected_student:
+        selected_student_name = self.selected_student.get()
+
+        if selected_student_name == "No students found" or not selected_student_name:
             messagebox.showwarning("Warning", "Please select a valid student.")
             return
 
+        # Retrieve student ID dynamically from the stored (ID, Name) tuples
+        selected_student_id = next(
+            (sid for sid, name in self.students if name == selected_student_name), None)
+
+        if not selected_student_id:
+            messagebox.showerror("Error", "Selected student ID not found.")
+            return
+
+        # Store selected student ID in the controller for further use
+        self.controller.selected_student_id = selected_student_id
+
         messagebox.showinfo("Selection Confirmed",
-                            f"Selected Student: {selected_student}")
+                            f"Selected Student: {selected_student_name}")
         self.controller.next_frame("StudentSelection")  # Proceed to next frame

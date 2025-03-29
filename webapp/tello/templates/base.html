@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}TellO{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/d3acb3ae7f.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {% block links %} {% endblock %}
+  </head>
+  <body>
+    <header style="margin-bottom: 0">
+      <div class="header-container">
+        <!-- Logo Section -->
+        <div class="logo">
+          <h1>TellO</h1>
+        </div>
+
+        <!-- User Profile Section -->
+        <div class="user-profile">
+          <i class="fas fa-user-circle" style="font-size: 2rem"></i>
+          <span>{{ user.username }}</span>
+          <div class="dropdown">
+            <button onclick="toggleDropdown()">▼</button>
+            <div id="logoutDropdown" class="dropdown-content">
+              <a href="{% url 'logout' %}">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>{% block content %}{% endblock %}</main>
+
+    <script>
+      function toggleDropdown() {
+        const dropdown = document.getElementById("logoutDropdown");
+        dropdown.style.display =
+          dropdown.style.display === "block" ? "none" : "block";
+      }
+    </script>
+  </body>
+</html>

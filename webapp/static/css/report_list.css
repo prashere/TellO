@@ -1,0 +1,108 @@
+/* General Styling */
+.body-container {
+  font-family: "Comic Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #b8e0d2, #fad6a5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #4a4a4a;
+}
+
+.dashboard-container {
+  width: 90%;
+  max-width: 900px;
+  background: white;
+  padding: 25px 35px;
+  border-radius: 15px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 2.2rem;
+}
+
+/* Search Bar */
+#searchBar {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 1.2rem;
+  border: 2px solid #6bb197;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.3s;
+}
+
+#searchBar:focus {
+  border-color: #4a9dd1;
+}
+
+/* Report List */
+.report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Report Card */
+.report-card {
+  background: #f0f4f8;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.report-card p {
+  font-size: 1.4rem;
+}
+
+.report-card:hover {
+  background: #d7ece8;
+  transform: scale(1.02);
+}
+
+/* View Button */
+.view-btn {
+  display: block;
+  background: #74b5e3;
+  color: white;
+  margin: 10px 0px;
+  padding: 0px 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.view-btn:hover {
+  background: #4a9dd1;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %} {% block links %}
+<link rel="stylesheet" href="/static/css/report_list.css" />
+{% endblock %} {% load static %} {% block content %}
+<div class="body-container">
+  <div class="dashboard-container">
+    <header
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <h1>Student Reports</h1>
+      <div style="position: relative; display: flex; align-items: center">
+        <i
+          class="fas fa-search"
+          style="
+            position: absolute;
+            left: 10px;
+            top: 40%;
+            font-size: 1.3rem;
+            color: gray;
+          "
+        >
+        </i>
+        <input
+          type="text"
+          id="searchBar"
+          placeholder="Search by name..."
+          onkeyup="filterReports()"
+          style="
+            padding: 15px 12px;
+            padding-left: 45px; /* Push text right so it doesn’t overlap icon */
+            font-size: 1.2rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            width: 200px;
+          "
+        />
+      </div>
+    </header>
+
+    <main>
+      <section class="report-list">
+        {% if reports %} {% for report in reports %}
+        <div class="report-card" data-name="{{ report.student_name }}">
+          <p><strong>Code:</strong> {{ report.student_id }}</p>
+          <p><strong>Name:</strong> {{ report.student_name }}</p>
+          <p><strong>Date:</strong> {{ report.created_at|date:"d M Y" }}</p>
+          <button class="view-btn" onclick="viewReport('{{ report.id }}')">
+            View
+          </button>
+        </div>
+        {% endfor %} {% else %}
+        <p>No reports available yet.</p>
+        {% endif %}
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  function filterReports() {
+    let input = document.getElementById("searchBar").value.toLowerCase();
+    let reports = document.querySelectorAll(".report-card");
+
+    reports.forEach((card) => {
+      let name = card.getAttribute("data-name").toLowerCase();
+      card.style.display = name.includes(input) ? "block" : "none";
+    });
+  }
+
+  function viewReport(reportId) {
+    window.location.href = `/reports/${reportId}`;
+  }
+</script>
+{% endblock %}

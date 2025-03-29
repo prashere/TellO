@@ -1,76 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Teacher Dashboard</title>
-    <link rel="stylesheet" href="/static/css/dashboard.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="dashboard-container">
-      <header>
-        <h1>Teacher Dashboard</h1>
-      </header>
+{% extends 'base.html' %} {% block links %}
+<link rel="stylesheet" href="/static/css/dashboard.css" />
+{% endblock %} {% load static %} {% block content %}
+<div class="body-container">
+  <div class="dashboard-container">
+    <header>
+      <h1>Teacher Dashboard</h1>
+    </header>
+    {% if messages %} 
+    {% for message in messages %} 
+    {% if message.tags == "success" %}
+    <script>
+      alert("{{ message }}");
+    </script>
+    {% endif %} 
+    {% endfor %} 
+    {% endif %}
+    <main>
+      <section class="student-list">
+        <h2>Student List</h2>
 
-      <main>
-        <section class="student-list">
-          <h2>Student List</h2>
-
-          {% if students %} {% for student in students %}
-          <div class="student-card">
-            <p class="student-name">{{ student.studentname }}</p>
-            <div class="actions">
-              <button
-                class="view-btn"
-                onclick="openModal('{{ student.studentname }}', '{{ student.studentage }}', '{{ student.studentgrade }}','{{ student.studentcode }}')"
-              >
-                View
-              </button>
-              <button class="edit-btn">Edit</button>
-              <button class="delete-btn">Delete</button>
-            </div>
-          </div>
-          {% endfor %} {% else %}
-          <p>No students added yet!</p>
-          {% endif %}
-        </section>
-
-        <!-- Hidden Modal -->
-        <div id="studentModal" class="modal">
-          <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2>Student Details</h2>
-            <p><strong>Student Code:</strong> <span id="modalStudentCode"></span></p>
-            <p><strong>Name:</strong> <span id="modalStudentName"></span></p>
-            <p><strong>Age:</strong> <span id="modalStudentAge"></span></p>
-            <p><strong>Grade:</strong> <span id="modalStudentGrade"></span></p>
+        {% if students %} {% for student in students %}
+        <div class="student-card">
+          <p class="student-name">{{ student.studentname }}</p>
+          <div class="actions">
+            <button
+              class="view-btn"
+              onclick="openModal('{{ student.studentname }}', '{{ student.studentage }}', '{{ student.studentgrade }}','{{ student.studentcode }}')"
+            >
+              View
+            </button>
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
           </div>
         </div>
+        {% endfor %} {% else %}
+        <p>No students added yet!</p>
+        {% endif %}
+      </section>
 
-        <section class="actions-panel">
-          <h2>Actions</h2>
-          <button class="add-student-btn">Add New Student</button>
-          <a href="" class="report-link">View Reports</a>
-        </section>
-      </main>
-    </div>
+      <!-- Hidden Modal -->
+      <div id="studentModal" class="modal">
+        <div class="modal-content">
+          <span class="close-btn" onclick="closeModal()">&times;</span>
+          <h2>Student Details</h2>
+          <p>
+            <strong>Student Code:</strong> <span id="modalStudentCode"></span>
+          </p>
+          <p><strong>Name:</strong> <span id="modalStudentName"></span></p>
+          <p><strong>Age:</strong> <span id="modalStudentAge"></span></p>
+          <p><strong>Grade:</strong> <span id="modalStudentGrade"></span></p>
+        </div>
+      </div>
 
-    <script>
-      function openModal(name, age, grade,studentCode) {
-        document.getElementById("modalStudentName").innerText = name;
-        document.getElementById("modalStudentAge").innerText = age;
-        document.getElementById("modalStudentCode").innerText = studentCode;
-        document.getElementById("modalStudentGrade").innerText = grade;
-        document.getElementById("studentModal").style.display = "block";
-      }
+      <section class="actions-panel">
+        <h2>Actions</h2>
+        <button
+          class="add-student-btn"
+          onclick="window.location.href='{% url 'add' %}'"
+        >
+          Add New Student
+        </button>
+        <a href="{% url 'report_list'%}" class="report-link">View Reports</a>
+      </section>
+    </main>
+  </div>
+</div>
 
-      function closeModal() {
-        document.getElementById("studentModal").style.display = "none";
-      }
-    </script>
-  </body>
-</html>
+<script>
+  function openModal(name, age, grade, studentCode) {
+    document.getElementById("modalStudentName").innerText = name;
+    document.getElementById("modalStudentAge").innerText = age;
+    document.getElementById("modalStudentCode").innerText = studentCode;
+    document.getElementById("modalStudentGrade").innerText = grade;
+    document.getElementById("studentModal").style.display = "block";
+  }
+
+  function closeModal() {
+    document.getElementById("studentModal").style.display = "none";
+  }
+</script>
+{% endblock %}

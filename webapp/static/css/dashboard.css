@@ -1,5 +1,5 @@
 /* General Styling */
-body {
+.body-container {
   font-family: "Comic Neue", sans-serif;
   margin: 0;
   padding: 0;
@@ -7,7 +7,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   color: #4a4a4a;
 }
 
@@ -31,6 +32,7 @@ a {
   border-radius: 15px;
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
   animation: fadeIn 1s ease-in-out;
+  margin: 30px 0;
 }
 
 header {
