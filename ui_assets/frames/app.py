@@ -121,6 +121,9 @@ class App(tk.Tk):
         # print("Updated Storytelling State:", detected_state)
         # Here, you can use `detected_state` to update a state manager, log data, or adjust the RL system.
 
+    # ..................................................................................
+    # Storytelling Process
+    # ..................................................................................
     def run_storytelling(self, storytelling_frame):
         """Runs the RL-driven storytelling process inside the UI frame."""
 

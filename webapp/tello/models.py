@@ -28,6 +28,16 @@ class Student(models.Model):
     def __str__(self):
         return self.studentname
 
+    def initialize_vocabulary(self):
+        """
+        Populates a new student's vocabulary with all words from the master vocabulary list.
+        """
+        master_words = VocabularyWord.objects.filter(is_master=True)
+        student_vocab_entries = [
+            StudentVocabulary(student=self, word=word, is_master=True) for word in master_words
+        ]
+        StudentVocabulary.objects.bulk_create(student_vocab_entries)
+
 
 class VocabularyCategory(models.Model):
     """
@@ -46,6 +56,7 @@ class VocabularyWord(models.Model):
     word = models.CharField(max_length=50, unique=True)
     category = models.ForeignKey(
         VocabularyCategory, on_delete=models.CASCADE, related_name="words")
+    is_master = models.BooleanField(default=False)
 
     def __str__(self):
         return self.word
@@ -59,13 +70,16 @@ class StudentVocabulary(models.Model):
         "Student", on_delete=models.CASCADE, related_name="vocabulary")
     word = models.ForeignKey(
         VocabularyWord, on_delete=models.CASCADE, related_name="learned_by")
+    date_learned = models.DateTimeField(auto_now_add=True)
+    is_master = models.BooleanField(default=True)
 
     class Meta:
         # Prevent duplicate words for a student
         unique_together = ('student', 'word')
 
     def __str__(self):
-        return f"{self.student.studentname} - {self.word.word}"
+        status = "Mastered" if self.is_master else "Newly Learned"
+        return f"{self.student.studentname} - {self.word.word} ({status})"
 
 
 class StorySession(models.Model):

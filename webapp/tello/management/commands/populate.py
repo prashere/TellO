@@ -95,7 +95,8 @@ class Command(BaseCommand):
             for word in category_data["Words"]:
                 # Check if word already exists before inserting
                 if not VocabularyWord.objects.filter(word=word).exists():
-                    VocabularyWord.objects.create(word=word, category=category)
+                    VocabularyWord.objects.create(
+                        word=word, category=category, is_master=True)
 
         self.stdout.write(self.style.SUCCESS(
             "Vocabulary list successfully populated!"))
