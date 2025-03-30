@@ -1,16 +1,25 @@
+import json
 import dateutil
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
-from tello.models import StorySession, StudentReport, Teacher, Student
+from tello.models import StorySession, StudentReport, StudentVocabulary, Teacher, Student, VocabularyCategory, VocabularyWord
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+from nltk.corpus import stopwords
 
+import nltk
+nltk.download('stopwords')
+english_stopwords = set(stopwords.words('english'))
 
 # Create your views here.
+
+
 def teacher_login(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -204,7 +213,7 @@ def dashboard(request):
 
 def report_list(request):
     reports = StudentReport.objects.select_related(
-        'story_session__student').all()
+        'story_session__student').all().order_by('-created_at')
 
     report_data = [
         {
@@ -247,3 +256,72 @@ def report_detail(request, report_id):
         'report': report,
         'chart_data': chart_data,
     })
+
+
+@csrf_exempt
+def add_student_vocabulary(request):
+    """
+    API Endpoint to add newly learned words to a student's vocabulary.
+    Also updates the StorySession's learned_words field.
+    """
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            student_id = data.get("student_id")
+            session_id = data.get("session_id")
+            words = data.get("words", [])
+
+            if not student_id or not session_id or not words:
+                return JsonResponse({"error": "Invalid data"}, status=400)
+
+            # Fetch student and session objects
+            student = Student.objects.get(studentid=student_id)
+            session = StorySession.objects.get(id=session_id, student=student)
+
+            # Ensure "New" category exists
+            new_category, _ = VocabularyCategory.objects.get_or_create(
+                name="New")
+
+            added_words = []
+            for word in words:
+                word = word.lower()  # Normalize to lowercase
+
+                # Skip stopwords
+                if word in english_stopwords:
+                    continue
+
+                # Skip if it's a master vocabulary word
+                if VocabularyWord.objects.filter(word__iexact=word, is_master=True).exists():
+                    continue
+
+                # Add the word if it's truly new
+                vocab_word, created = VocabularyWord.objects.get_or_create(
+                    word=word, defaults={
+                        "category": new_category, "is_master": False}
+                )
+
+                # Link to student's vocabulary if not already present
+                if not StudentVocabulary.objects.filter(student=student, word=vocab_word).exists():
+                    StudentVocabulary.objects.create(
+                        student=student, word=vocab_word)
+
+                # Add to StorySession's learned_words if not already linked
+                if vocab_word not in session.learned_words.all():
+                    session.learned_words.add(vocab_word)
+
+                added_words.append(word)
+
+            return JsonResponse({
+                "message": "Words added successfully",
+                "added_words": added_words
+            }, status=201)
+
+        except Student.DoesNotExist:
+            return JsonResponse({"error": "Student not found"}, status=404)
+        except StorySession.DoesNotExist:
+            return JsonResponse({"error": "Story session not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)

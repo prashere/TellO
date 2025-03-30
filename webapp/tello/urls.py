@@ -16,4 +16,6 @@ urlpatterns = [
          name="create_student_report"),
     path("report_list/", views.report_list, name="report_list"),
     path('logout/', views.logout_teacher, name='logout'),
+    path('api/add-student-vocabulary/', views.add_student_vocabulary,
+         name='add_student_vocabulary'),
 ]
