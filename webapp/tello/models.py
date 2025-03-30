@@ -95,6 +95,10 @@ class StorySession(models.Model):
     duration = models.DurationField(null=True, blank=True)  # Auto-calculated
     date = models.DateField(auto_now_add=True)
 
+    learned_words = models.ManyToManyField(
+        VocabularyWord, blank=True, related_name="learned_in_sessions"
+    )
+
     def save(self, *args, **kwargs):
         if self.start_time and self.end_time:
             self.duration = self.end_time - self.start_time
