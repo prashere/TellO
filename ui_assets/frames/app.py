@@ -321,6 +321,8 @@ class App(tk.Tk):
         evaluation_report = self.evaluator.evaluate(
             final_understanding_text, all_states, total_prompts_given, total_prompts_answered)
 
+        self.update_vocabulary_from_understanding(
+            final_understanding_text, self.selected_student_id, self.session_id)
         self.save_report_to_db(evaluation_report, total_prompts_answered)
         # self.print_evaluation_summary(evaluation_report)
 
@@ -366,3 +368,42 @@ class App(tk.Tk):
 
         except requests.exceptions.RequestException as e:
             print(f"API Request Failed: {str(e)}")
+
+    def save_words_to_db(self, student_id, session_id, new_words):
+        """
+        Sends newly learned words to the backend API to update the student's vocabulary.
+        """
+        if not new_words:
+            print("No new words to save.")
+            return
+
+        api_url = "http://127.0.0.1:8000/api/add-student-vocabulary/"
+
+        # Prepare data for the API request
+        data = {
+            "student_id": student_id,
+            "session_id": session_id,
+            # Convert set to list for JSON serialization
+            "words": list(new_words)
+        }
+
+        try:
+            response = requests.post(api_url, json=data)
+            response_data = response.json()
+
+            if response.status_code == 201:
+                print(
+                    f"Words successfully saved: {response_data['added_words']}")
+            else:
+                print(f"Error saving words: {response_data}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"API Request Failed: {str(e)}")
+
+    def update_vocabulary_from_understanding(self, final_understanding_text, student_id, session_id):
+        """
+        Sends the child's retelling words to the API for processing.
+        """
+        words = set(final_understanding_text.split()
+                    )  # Convert to set to avoid duplicates
+        self.save_words_to_db(student_id, session_id, words)
