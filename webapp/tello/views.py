@@ -237,24 +237,34 @@ def logout_teacher(request):
 @login_required
 def report_detail(request, report_id):
     report = get_object_or_404(StudentReport, id=report_id)
-    # Get all sessions for the student in chronological order.
     sessions = StorySession.objects.filter(
-        student=report.story_session.student).order_by('date')
+        student=report.story_session.student
+    ).order_by('date')
 
-    # Create chart_data list: each item is a dict with date and final_score.
     chart_data = []
+    current_index = None
+
     for session in sessions:
-        # Assuming there is one report per session; adjust if necessary.
-        session_report = session.reports.first()
-        if session_report:
+        # Loop through all reports for the session
+        session_reports = session.reports.all()
+        for report_item in session_reports:
             chart_data.append({
                 'date': session.date.strftime("%Y-%m-%d"),
-                'final_score': session_report.final_score,
+                'final_score': report_item.final_score,
             })
+            # Set current_index based on the position of the current report in the chart_data list.
+            if report_item.id == report.id:
+                current_index = len(chart_data) - 1
+
+    # Fallback: if no matching report was found but there is at least one report,
+    # default to the first one so that the dot is red.
+    if current_index is None and chart_data:
+        current_index = 0
 
     return render(request, 'report_detail.html', {
         'report': report,
         'chart_data': chart_data,
+        'current_index': current_index,
     })
 
 

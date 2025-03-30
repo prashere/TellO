@@ -1,15 +1,15 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block links %}
+{% extends 'base.html' %} {% load static %} {% block links %}
 <link rel="stylesheet" href="{% static 'css/report_detail.css' %}" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-{% endblock %}
-{% block content %}
+{% endblock %} {% block content %}
 <div class="dashboard">
   <!-- Report Header -->
   <div class="report-header">
     <h1>Progress Report of {{ report.story_session.student.studentname }}</h1>
-    <p>Story ID: {{ report.story_session.story_id }} | Date: {{ report.created_at|date:"d M Y" }}</p>
+    <p>
+      Story ID: {{ report.story_session.story_id }} | Date: {{
+      report.created_at|date:"d M Y" }}
+    </p>
   </div>
 
   <!-- Metrics Cards -->
@@ -61,10 +61,10 @@
 
 <script>
   // Chart data passed from backend
+  const currentIndex = {{ current_index|default:0 }};
   const chartData = {{ chart_data|safe }};
   const labels = chartData.map(item => item.date);
   const scores = chartData.map(item => item.final_score);
-  const currentIndex = chartData.length - 1;
 
   const ctx = document.getElementById('progressChart').getContext('2d');
   const progressChart = new Chart(ctx, {
