@@ -7,8 +7,7 @@
   <div class="report-header">
     <h1>Progress Report of {{ report.story_session.student.studentname }}</h1>
     <p>
-      Story ID: {{ report.story_session.story_id }} | Date: {{
-      report.created_at|date:"d M Y" }}
+      Story ID: {{ report.story_session.story_id }} | Date: {{ report.created_at|date:"d M Y" }}
     </p>
   </div>
 
@@ -57,6 +56,20 @@
     <h2>Progress Over Time</h2>
     <canvas id="progressChart"></canvas>
   </div>
+</div>
+
+<!-- Learned Vocabulary Section -->
+<div class="learned-words-panel">
+  <button class="toggle-btn" onclick="toggleLearnedWords()">
+    See New Learned Vocabulary
+  </button>
+  <ul id="learnedWordsList" class="hidden">
+    {% for word in learned_words %}
+    <li>{{ word.word }}</li>
+    {% empty %}
+    <li>No new words learned in this session.</li>
+    {% endfor %}
+  </ul>
 </div>
 
 <script>
@@ -108,5 +121,10 @@
           }
       }
   });
+
+  function toggleLearnedWords() {
+    var list = document.getElementById("learnedWordsList");
+    list.classList.toggle("hidden");
+  }
 </script>
 {% endblock %}

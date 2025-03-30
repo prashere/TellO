@@ -256,6 +256,8 @@ def report_detail(request, report_id):
             if report_item.id == report.id:
                 current_index = len(chart_data) - 1
 
+    learned_words = report.story_session.learned_words.filter(is_master=False)
+
     # Fallback: if no matching report was found but there is at least one report,
     # default to the first one so that the dot is red.
     if current_index is None and chart_data:
@@ -265,6 +267,7 @@ def report_detail(request, report_id):
         'report': report,
         'chart_data': chart_data,
         'current_index': current_index,
+        'learned_words': learned_words,
     })
 
 
