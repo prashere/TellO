@@ -1,6 +1,5 @@
 import json
 
-
 class Story:
     def __init__(self, json_data):
         """
@@ -18,9 +17,7 @@ class Story:
         self.sentences = {s["SentenceID"]
             : s for s in json_data.get("Sentences", [])}
 
-        # Flattened list of sentence IDs
         self._all_sentence_ids = sum(self.narrative_arc.values(), [])
-        # Track the current position
         self._current_index = 0 if self._all_sentence_ids else None
 
     def get_sentence(self, sentence_id):
@@ -137,20 +134,3 @@ class Story:
         return False, None, None
 
 
-# Example Usage:
-if __name__ == "__main__":
-    filename = 'dataset/story_corpus/stories/easy/story2.json'
-    with open(filename, "r", encoding="utf-8") as file:
-        story_data = json.load(file)
-
-    story = Story(story_data)
-    print("Story Summary:", story.get_story_summary())
-
-    sentence = story.start_story()
-    while sentence:
-        print("\nNarration:", sentence["Text"])
-        print("Prompt:", story.get_interaction_prompt())
-        print("Fun Questions:", story.get_fun_questions())
-        print("Image:", story.get_current_image())
-        print("Progress:", story.get_story_progress(), "%")
-        sentence = story.get_next_sentence()

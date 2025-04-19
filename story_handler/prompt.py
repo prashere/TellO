@@ -57,16 +57,4 @@ class PromptManager:
             return random.choice(prompts)
         return None
 
-# Example Usage:
-if __name__ == "__main__":
-    # Load JSON data (replace with actual file path if needed)
-    filename = 'dataset/prompts.json'
-    with open(filename, "r", encoding="utf-8") as file:
-        prompt_data = json.load(file)
 
-    prompt_manager = PromptManager(prompt_data)
-
-    # Fetch and print examples
-    print("Random Greeting Prompt:", prompt_manager.get_random_prompt("Greeting"))
-    print("All Encouragement Prompts:", prompt_manager.get_prompts_by_category("Encouragement"))
-    print("Specific Prompt by ID (E02):", prompt_manager.get_prompt_by_id("E02"))
