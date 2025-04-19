@@ -59,6 +59,10 @@ class StorytellingEmotionFrame(tk.Frame):
         self.last_emotion = "Neutral"
         self.last_emotion_confidence = 0.0
 
+        # self.controller.serial_conn = init_serial()
+        # if self.controller.serial_conn is None:
+            # print("ESP32 not detected. Check connections!")
+
     def on_show(self):
         """Called when the frame is shown. Start video & storytelling."""
         self.start_video()

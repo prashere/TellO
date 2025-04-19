@@ -1,6 +1,7 @@
 # Initialize Text-to-Speech (TTS)
 import json
 import queue
+import threading
 import time
 import pyttsx3
 import os
@@ -8,16 +9,33 @@ import sounddevice as sd
 
 import vosk
 
-
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)  # Adjust index for desired voice
 engine.setProperty('rate', 200)
 engine.setProperty('volume', 1.0)
 
+
+# Create a queue for speech tasks
+speech_queue = queue.Queue()
+
+def speech_loop():
+    while True:
+        text = speech_queue.get()
+        if text is None:
+            break
+        print("Speaking:", text)
+        engine.say(text)
+        engine.runAndWait()
+        print("Finished:", text)
+        speech_queue.task_done()
+
+speech_thread = threading.Thread(target=speech_loop, daemon=True)
+speech_thread.start()
+
 def speak_text(text):
-    engine.say(text)
-    engine.runAndWait()
+    print("Queued:", text)
+    speech_queue.put(text)
 
 # -----------------------------------
 # Initialize Speech-to-Text (STT) using Vosk

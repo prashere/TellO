@@ -12,9 +12,12 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from nltk.corpus import stopwords
+from nltk.corpus import words as nltk_words
+
 
 import nltk
 nltk.download('stopwords')
+nltk.download('words')
 english_stopwords = set(stopwords.words('english'))
 
 # Create your views here.
@@ -296,12 +299,18 @@ def add_student_vocabulary(request):
             new_category, _ = VocabularyCategory.objects.get_or_create(
                 name="New")
 
+            valid_english_words = set(nltk_words.words())  # Load valid words
             added_words = []
+
             for word in words:
-                word = word.lower()  # Normalize to lowercase
+                word = word.lower().strip()  # Normalize to lowercase and strip spaces
 
                 # Skip stopwords
                 if word in english_stopwords:
+                    continue
+
+                # Skip if not a valid English word
+                if word not in valid_english_words:
                     continue
 
                 # Skip if it's a master vocabulary word

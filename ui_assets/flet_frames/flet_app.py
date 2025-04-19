@@ -1,51 +1,42 @@
-import random
-import tkinter as tk
-import json
-import time
-from PIL import Image, ImageTk
-import cv2
+# app.py
+import flet as ft
 import requests
+import time
+import random
+import json
 
-from ui_assets.evaluator import ResponseEvaluator
+from .login import build_teacher_verification_frame
+from .std_selection import build_student_selection_frame
+from .instructions import build_guidelines_frame as guidelines_frame_external
+from .instructions import build_loading_frame as loading_frame_external
+from .storytelling import build_storytelling_frame
+from .end import build_end_session_frame
+from .storytelling import StorytellingEmotionFrame
 
-# Import UI Frames
-from .teacher_verification import TeacherVerificationFrame
-from .student_selection import StudentSelectionFrame
-from .storytelling_emotion import StorytellingEmotionFrame
-from .end_session import EndSessionFrame
-from .guidelines import GuidelinesFrame
-from .loading import LoadingFrame
-
-# Import Story and Prompts
 from story_handler.story import Story
 from story_handler.prompt import PromptManager
-
-# Import TTS & STT Functions
-# Assuming modularized functions
-from ..flet_frames.speech_text import speak_text, listen_for_child_response
-
-from detector_model.state_updater import StateUpdater
 
 from rl_framework.state import EngagementLevel, Mode, PromptNecessity
 from rl_framework.q_learning import QLearning
 from rl_framework.constant_actions import get_all_actions
 from rl_framework.environment import Environment
+from .speech_text import listen_for_child_response
+from .triall import speak_text
 
-from serial_communication.robot_comm import execute_combo,init_serial
-# Colors and Fonts
-SOFT_BLUE = "#add8e6"
-WHITE = "#ffffff"
-
-all_actions = get_all_actions()
+from ui_assets.evaluator import ResponseEvaluator
+from detector_model.state_updater import StateUpdater
+from serial_communication.robot_comm import execute_combo, init_serial
 
 
-class App(tk.Tk):
-    def __init__(self):
-        super().__init__()
-
-        self.title("Child-Friendly Application")
-        self.geometry("1000x600")
-        self.resizable(False, False)
+class MyApp:
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.frames = {}
+        self.current_frame = None
+        self.teacher_id = None
+        self.username = None
+        self.create_frames()
+        all_actions = get_all_actions()
 
         # Load Story and Prompts
         with open("dataset/story_corpus/stories/easy/story3.json", "r", encoding="utf-8") as f:
@@ -54,13 +45,6 @@ class App(tk.Tk):
         with open("dataset/prompts.json", "r", encoding="utf-8") as f:
             self.prompt_manager = PromptManager(json.load(f))
 
-        self.frames = {}
-        self.current_frame = None
-
-        self.load_images()
-        self.create_frames()
-        self.show_frame("TeacherVerification")
-
         self.state_updater = StateUpdater(update_interval=2)
 
         self.q_learning_agent = QLearning(all_actions)
@@ -68,46 +52,44 @@ class App(tk.Tk):
         self.q_learning_agent.load_q_table()
         self.evaluator = ResponseEvaluator(self.story)
 
+        self.student_name_id_map = None
         self.selected_student_id = None
         self.story_id = None
         self.session_start_time = None
         self.session_id = None
-        self.serial_conn = init_serial()
+        self.state = "idle"
+        # self.serial_conn = init_serial()
 
-    def load_images(self):
-        """Load and resize images for UI."""
-        self.logo_img = ImageTk.PhotoImage(
-            Image.open("ui_assets/Images/py_img/teacher.png").resize((300, 220)))
-        self.user_icon = ImageTk.PhotoImage(
-            Image.open("ui_assets/Images/py_img/user.png").resize((30, 30)))
-        self.password_icon = ImageTk.PhotoImage(
-            Image.open("ui_assets/Images/py_img/password.png").resize((30, 30)))
+    # def build_student_selection_frame(self):
+    #     return build_student_selection_frame(self)
 
     def create_frames(self):
-        """Create and initialize UI frames."""
-        container = tk.Frame(self, bg=WHITE)
-        container.pack(fill="both", expand=True)
-
-        self.frames["TeacherVerification"] = TeacherVerificationFrame(
-            container, self)
-        self.frames["StudentSelection"] = StudentSelectionFrame(
-            container, self)
-        self.frames["Storytelling"] = StorytellingEmotionFrame(container, self)
-        self.frames["EndSession"] = EndSessionFrame(container, self)
-        self.frames["Guidelines"] = GuidelinesFrame(container, self)
-        self.frames["Loading"] = LoadingFrame(container, self)
+        self.frames["TeacherVerification"] = build_teacher_verification_frame(
+            self)
+        self.frames["StudentSelection"] = build_student_selection_frame(self)
+        self.frames["Guidelines"] = self.build_guidelines_frame()
+        self.frames["Loading"] = self.build_loading_frame()
+        self.frames["Storytelling"] = build_storytelling_frame(self)
+        # self.page.controls.append(self.frames["Storytelling"])
+        # self.frames["Storytelling"].on_mount()
+        # self.page.update()
+        self.frames["EndSession"] = build_end_session_frame(self)
+        self.stack = ft.Stack(controls=list(self.frames.values()), expand=True)
+        self.page.add(self.stack)
+        self.show_frame("TeacherVerification")
 
     def show_frame(self, frame_name):
-        """Switch between frames and call on_show if available."""
-        if self.current_frame:
-            self.current_frame.pack_forget()
-        self.current_frame = self.frames[frame_name]
-        self.current_frame.pack(fill="both", expand=True)
-        if hasattr(self.current_frame, "on_show"):
-            self.current_frame.on_show()
+        for name, frame in self.frames.items():
+            frame.visible = (name == frame_name)
+        self.current_frame = frame_name
+        self.page.update()
+        frame_obj = self.frames[frame_name]
+        if hasattr(frame_obj, "on_mount") and callable(getattr(frame_obj, "on_mount", None)):
+            frame_obj.on_mount()
+        if hasattr(frame_obj, "on_show") and callable(getattr(frame_obj, "on_show", None)):
+            frame_obj.on_show()
 
-    def next_frame(self, current_frame):
-        """Navigate to the next frame."""
+    def next_frame(self):
         next_frames = {
             "TeacherVerification": "StudentSelection",
             "StudentSelection": "Guidelines",
@@ -116,16 +98,29 @@ class App(tk.Tk):
             "Storytelling": "EndSession",
             "EndSession": "TeacherVerification",
         }
-        self.show_frame(next_frames[current_frame])
+        next_frame_name = next_frames.get(self.current_frame)
+        if next_frame_name:
+            self.show_frame(next_frame_name)
 
-    def update_storytelling_state(self, detected_state):
-        """Update state in response to detected emotions, gaze, and head pose."""
-        # print("Updated Storytelling State:", detected_state)
-        # Here, you can use `detected_state` to update a state manager, log data, or adjust the RL system.
+    # Dummy screens for now
+    def build_student_selection_frame(self):
+        return ft.Container(ft.Text("Student Selection Page"), visible=False)
 
-    # ..................................................................................
-    # Storytelling Process
-    # ..................................................................................
+    def build_guidelines_frame(self):
+        return guidelines_frame_external(self)
+
+    def build_loading_frame(self):
+        temp = loading_frame_external(self)
+        self.next_frame()
+        return temp
+
+    # def build_storytelling_frame(self):
+    #     return StorytellingEmotionFrame(self)
+    #     # return ft.Container(ft.Text("Storytelling Page"), visible=False)
+
+    # def build_end_session_frame(self):
+    #     return ft.Container(ft.Text("End Session Page"), visible=False)
+
     def run_storytelling(self, storytelling_frame):
         """Runs the RL-driven storytelling process inside the UI frame."""
 
@@ -133,6 +128,10 @@ class App(tk.Tk):
         all_states = []
         total_prompts_given = 0
         total_prompts_answered = 0
+
+        storytelling_frame.load_story_image(
+            "ui_assets/Images/py_img/robot_hello.jpg")
+        time.sleep(1)
 
         # Step 1: Greeting & Introduction
         self.perform_greeting()
@@ -157,42 +156,58 @@ class App(tk.Tk):
         self.generate_and_save_report(
             final_understanding_text, all_states, total_prompts_given, total_prompts_answered)
 
+    # def perform_greeting(self):
+    #     print("Inside greeting")
+    #     """Handles greeting and introduction."""
+    #     greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
+    #     # execute_combo(self.serial_conn, "intro")
+    #     speak_text(
+    #         greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!")
+    #     # execute_combo(self.serial_conn, "narration")
+    #     time.sleep(1)
+    #     intro_prompt = self.prompt_manager.get_random_prompt(
+    #         "Tello Introduction")
+    #     # execute_combo(self.serial_conn, "agree")
+    #     speak_text(
+    #         intro_prompt["text"] if intro_prompt else "I am TellO, your friendly storytelling robot.")
+    #     # execute_combo(self.serial_conn, "narration")
+
     def perform_greeting(self):
-        """Handles greeting and introduction."""
         greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
-        execute_combo(self.serial_conn, "intro")
+        # Queue the greeting and get its event
         speak_text(
             greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!")
-        execute_combo(self.serial_conn, "narration")
-        time.sleep(1)
+        # Wait until the greeting is spoken before proceeding.
+
         intro_prompt = self.prompt_manager.get_random_prompt(
             "Tello Introduction")
-        execute_combo(self.serial_conn, "agree")
+        # Queue the introduction and get its event
         speak_text(
             intro_prompt["text"] if intro_prompt else "I am TellO, your friendly storytelling robot.")
-        execute_combo(self.serial_conn, "narration")
-    
+        # Wait until the introduction is spoken.
 
     def initial_interaction(self, storytelling_frame, total_prompts_given, total_prompts_answered, all_states):
+        print("Inside getting to know you")
         """Initial interaction where TellO asks for the child's name and how they are."""
-        storytelling_frame.load_story_image(
-            "ui_assets/Images/py_img/teacher.png")
-        time.sleep(1)
 
         intro_interaction_prompt = self.prompt_manager.get_random_prompt(
             "Getting to Know You")
-        execute_combo(self.serial_conn, "disagree")
+        # execute_combo(self.serial_conn, "disagree")
         speak_text(
             intro_interaction_prompt["text"] if intro_interaction_prompt else "Hello, how are you? What is your name?")
-        execute_combo(self.serial_conn, "listening")
+        self.state = "listening"
+        # execute_combo(self.serial_conn, "listening")
         total_prompts_given += 1
         initial_response = listen_for_child_response(timeout=10)
+        self.state = "idle"
         count = 0
 
         # Reprompt if no response initially
         while not initial_response.strip() and count < 1:
             speak_text("I didn't hear you, please say it again.")
+            self.state = "listening"
             initial_response = listen_for_child_response(timeout=10)
+            self.state = "idle"
             count += 1
 
         if initial_response.strip():
@@ -203,16 +218,17 @@ class App(tk.Tk):
 
             encouragement_prompt = self.prompt_manager.get_random_prompt(
                 "Encouragement")
-            execute_combo(self.serial_conn, "encouragement")
+            # execute_combo(self.serial_conn, "encouragement")
             speak_text(
                 encouragement_prompt["text"] if encouragement_prompt else "Alright, that's good.")
         else:
-            execute_combo(self.serial_conn, "encouragement")
+            # execute_combo(self.serial_conn, "encouragement")
             speak_text("That's okay, let's move forward together!")
-            current_state = self.state_updater.update_state_from_story(Mode.NARRATION, "")
+            current_state = self.state_updater.update_state_from_story(
+                Mode.NARRATION, "")
             all_states.append(current_state)
 
-        execute_combo(self.serial_conn, "narration")
+        # execute_combo(self.serial_conn, "narration")
         time.sleep(1)
         return total_prompts_given, total_prompts_answered
 
@@ -229,12 +245,12 @@ class App(tk.Tk):
 
             # Narrate the sentence
             speak_text(sentence["Text"])
-            current_sentence = sentence["Text"] 
+            current_sentence = sentence["Text"]
             time.sleep(1)
 
             # RL-based decision-making
             total_prompts_given, total_prompts_answered = self.handle_rl_decision(
-                storytelling_frame, all_states, total_prompts_given, total_prompts_answered,current_sentence)
+                storytelling_frame, all_states, total_prompts_given, total_prompts_answered, current_sentence)
 
             # Move to the next sentence
             sentence = self.story.get_next_sentence()
@@ -256,7 +272,7 @@ class App(tk.Tk):
             storytelling_frame.load_story_image(
                 "dataset/story_corpus/img/" + image_file)
 
-    def handle_rl_decision(self, storytelling_frame, all_states, total_prompts_given, total_prompts_answered,current_sentence):
+    def handle_rl_decision(self, storytelling_frame, all_states, total_prompts_given, total_prompts_answered, current_sentence):
         """Handles RL-based decision making for interaction."""
         current_state = self.state_updater.get_current_state()
         chosen_action = self.q_learning_agent.get_best_action(current_state)
@@ -275,30 +291,33 @@ class App(tk.Tk):
         #     self.update_interaction_state(response, all_states)
         elif chosen_action.action_type == "Clarification":
             total_prompts_given += 1
-            execute_combo(self.serial_conn, "agree")
+            # execute_combo(self.serial_conn, "agree")
             speak_text("Do you understand this part?")
+            self.state = "listening"
             response = listen_for_child_response(timeout=10)
+            self.state = "idle"
 
             if response.strip():
                 total_prompts_answered += 1
                 response_lower = response.strip().lower()
 
                 # Check for negative/confused responses
-                negative_keywords = ["no", "none", "i don't", "not really", "don't understand", "confused"]
+                negative_keywords = ["no", "none", "i don't",
+                                     "not really", "don't understand", "confused"]
                 if any(neg in response_lower for neg in negative_keywords):
-                    execute_combo(self.serial_conn, "motivation")
+                    # execute_combo(self.serial_conn, "motivation")
                     speak_text("No worries, let me repeat that part.")
-                    execute_combo(self.serial_conn, "narration")
-                    speak_text(current_sentence)  # Assuming current_sentence holds the last narrated sentence
+                    # execute_combo(self.serial_conn, "narration")
+                    # Assuming current_sentence holds the last narrated sentence
+                    speak_text(current_sentence)
                 else:
-                    execute_combo(self.serial_conn, "encouragement")
+                    # execute_combo(self.serial_conn, "encouragement")
                     speak_text("Great! Let's continue.")
             else:
-                execute_combo(self.serial_conn, "motivation")
+                # execute_combo(self.serial_conn, "motivation")
                 speak_text("Okay, let's move to the next part.")
-            execute_combo(self.serial_conn, "narration")
+            # execute_combo(self.serial_conn, "narration")
             self.update_interaction_state(response, all_states)
-
 
         elif chosen_action.action_type == "Lexical-Syntactic":
             total_prompts_given, total_prompts_answered = self.handle_lexical_syntactic_action(
@@ -326,36 +345,43 @@ class App(tk.Tk):
             fun_questions = self.story.get_fun_questions()
             if fun_questions:
                 selected_question = random.choice(fun_questions)
-                execute_combo(self.serial_conn, "prompt")
+                # execute_combo(self.serial_conn, "prompt")
                 speak_text(selected_question)
+                self.state = "listening"
                 total_prompts_given += 1
 
                 response = listen_for_child_response(timeout=10)
+                self.state = "idle"
                 count = 0
                 while not response.strip() and count < 1:
-                    execute_combo(self.serial_conn, "listening")
+                    # execute_combo(self.serial_conn, "listening")
                     speak_text("I didn't hear you, please say it again.")
+                    self.state = "listening"
                     response = listen_for_child_response(timeout=10)
+                    self.state = "idle"
                     count += 1
 
                 if response.strip():
                     total_prompts_answered += 1
-                    execute_combo(self.serial_conn, "encouragement")
+                    self.state = "idle"
+                    # execute_combo(self.serial_conn, "encouragement")
                     speak_text(self.prompt_manager.get_random_prompt(
                         "Encouragement")["text"] if self.prompt_manager.get_random_prompt("Encouragement") else "That's great!")
                 if count == 1:
-                    execute_combo(self.serial_conn, "disagree")
-                    speak_text("Okay, let's move on to the next part of the story.")
-                execute_combo(self.serial_conn, "narration")
+                    # execute_combo(self.serial_conn, "disagree")
+                    speak_text(
+                        "Okay, let's move on to the next part of the story.")
+                # execute_combo(self.serial_conn, "narration")
                 self.update_interaction_state(response, all_states)
 
         return total_prompts_given, total_prompts_answered
 
     def collect_child_understanding(self):
         """Collects the final understanding of the child after storytelling."""
-        execute_combo(self.serial_conn, "prompt")
+        # execute_combo(self.serial_conn, "prompt")
         speak_text("Can you tell me what you understood about the story?")
-        execute_combo(self.serial_conn, "listening")
+        self.state = "listening"
+        # execute_combo(self.serial_conn, "listening")
 
         silence_count = 0
         final_understanding = []
@@ -364,15 +390,18 @@ class App(tk.Tk):
 
         while time.time() - start_time < max_listening_time:
             response = listen_for_child_response(timeout=10)
+            self.state = "idle"
 
             if not response.strip():
                 silence_count += 1
                 if silence_count >= 3:
                     speak_text("I didn't hear anything, let's continue.")
+                    self.state = "idle"
                     break
                 else:
-                    execute_combo(self.serial_conn, "motivation")
+                    # execute_combo(self.serial_conn, "motivation")
                     speak_text("C'mon, you can do it!")
+                    self.state = "listening"
             else:
                 silence_count = 0
                 words = response.split()
@@ -384,10 +413,10 @@ class App(tk.Tk):
     def perform_closure(self, storytelling_frame, all_states):
         """Handles the closure of the storytelling session."""
         closure_prompt = self.prompt_manager.get_random_prompt("Closure")
-        execute_combo(self.serial_conn, "outro")
+        # execute_combo(self.serial_conn, "outro")
         speak_text(
             closure_prompt["text"] if closure_prompt else "Goodbye! See you next time!")
-        execute_combo(self.serial_conn, "shutdown")
+        # execute_combo(self.serial_conn, "shutdown")
         self.update_engagement_state(storytelling_frame, all_states)
         storytelling_frame.end_storytelling()
 
@@ -482,3 +511,8 @@ class App(tk.Tk):
         words = set(final_understanding_text.split()
                     )  # Convert to set to avoid duplicates
         self.save_words_to_db(student_id, session_id, words)
+
+    def update_storytelling_state(self, detected_state):
+        """Update state in response to detected emotions, gaze, and head pose."""
+        # print("Updated Storytelling State:", detected_state)
+        # Here, you can use `detected_state` to update a state manager, log data, or adjust the RL system

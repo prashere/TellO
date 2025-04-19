@@ -251,6 +251,7 @@ class StateUpdater:
         return None
 
     def get_current_state(self):
+        print("Current State:", self.current_state)
         return self.current_state
 
 
