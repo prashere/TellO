@@ -32,7 +32,6 @@ class Environment:
             VocabularyUsage.HIGH: 1.0
         }[state.vocabulary_usage] if state.mode == Mode.INTERACTION else 0  # Only applies in INTERACTION mode
 
-        # Emotional state consideration
         emotional_penalty = 0
         if state.emotional_state == EmotionalState.ANGER:
             emotional_penalty = -0.2  # Penalty if the child is angry (because frustration may rise with complexity)
@@ -80,11 +79,9 @@ class Environment:
             new_prompt_necessity = random.choice(list(PromptNecessity))
             new_response_length = random.choice(list(ResponseLength))
 
-            # Probabilistic update of vocabulary_usage based on action's lexical type
             if action.action_type == "Lexical-Syntactic":
                 rand = random.random()
 
-                # Introduce bias towards LOW vocabulary usage, especially early on
                 if state.vocabulary_usage == VocabularyUsage.LOW:
                     if rand < 0.7:
                         new_vocab_usage = VocabularyUsage.LOW
@@ -138,28 +135,3 @@ class Environment:
             print()
 
 
-# # Example initialization of the Q-learning agent
-# actions = [Action(action_type="Lexical-Syntactic", complexity=SentenceComplexity.SIMPLE, lexical_type=LexicalType.KNOWN),
-#            Action(action_type="Clarification", clarification_type=ClarificationType.SENTENCE_REPETITION)]
-
-# q_learning_agent = QLearning(actions)
-
-# # Initialize the environment with the Q-learning agent
-# env = Environment(q_learning_agent)
-
-# # Define initial state for INTERACTION mode (simulating a real interaction scenario)
-# initial_state = State(
-#     mode=Mode.INTERACTION,
-#     engagement_level=EngagementLevel.MEDIUM,
-#     emotional_state=EmotionalState.HAPPY,
-#     response_quality=ResponseQuality.AVERAGE,
-#     prompt_necessity=PromptNecessity.YES,  # Example scenario where a prompt is needed
-#     response_length=ResponseLength.MEDIUM,
-#     vocabulary_usage=VocabularyUsage.MEDIUM
-# )
-
-# # Run an episode of interaction in the environment
-# print("\n--- Running Interaction Mode Episode ---\n")
-# env.run_episode(initial_state, num_steps=5)  # You can adjust num_steps as needed
-
-# # Running multiple episodes could help observe how the system adapts over time with rewards and state transitions
