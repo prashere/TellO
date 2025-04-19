@@ -133,7 +133,6 @@ class VideoProcessor:
         self.frame_count = 0
         self.emotion_update_interval = 15  # Run emotion detection every 15 frames
 
-        # Initialize latest detected state variables
         self.horizontal_label = None
         self.vertical_label = None
         self.gaze_direction = None

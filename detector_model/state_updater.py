@@ -96,7 +96,6 @@ class StateUpdater:
         try:
             horizontal, vertical = self.aggregate_head_pose()
             gaze = self.aggregate_gaze()
-            # Returns numeric emotion index and confidence
             emotion_idx, emotion_conf = self.aggregate_emotion()
         except Exception as e:
             print("Error during state aggregation:", e)
@@ -104,7 +103,6 @@ class StateUpdater:
                 "Front"], HEAD_POSE_MAPPING["Front"], 0, 4, 0.0
 
         try:
-            # Map emotion index to EmotionalState enum
             emotion_list = list(EMOTION_MAPPING.keys())
             emotion_name = emotion_list[emotion_idx] if emotion_idx in range(
                 len(emotion_list)) else "Neutral"
@@ -115,7 +113,6 @@ class StateUpdater:
             emotional_state = EmotionalState.NEUTRAL
 
         try:
-            # Determine Engagement Level
             if emotion_conf > 0.6:
                 engagement = EngagementLevel.HIGH
             elif horizontal in [HEAD_POSE_MAPPING.get("Left"), HEAD_POSE_MAPPING.get("Right"), HEAD_POSE_MAPPING.get("Down")]:
@@ -127,14 +124,12 @@ class StateUpdater:
             engagement = EngagementLevel.MEDIUM
 
         try:
-            # Determine Mode based on gaze
             mode = Mode.INTERACTION if gaze != GAZE_MAPPING.get(
                 "Looking center", 0) else Mode.NARRATION
         except Exception as e:
             print("Error determining mode:", e)
             mode = Mode.NARRATION
 
-        # Set default interaction values if needed
         response_quality = ResponseQuality.AVERAGE
         prompt_necessity = PromptNecessity.NO
         response_length = ResponseLength.MEDIUM
@@ -170,7 +165,6 @@ class StateUpdater:
         Returns:
           State: An updated state object reflecting the current interaction.
         """
-        # Determine Engagement Level based on response length when in INTERACTION mode.
         if mode == Mode.INTERACTION:
             words = child_response.split()
             if len(words) >= 10:
@@ -180,14 +174,11 @@ class StateUpdater:
             else:
                 engagement = EngagementLevel.LOW
         else:
-            # For narration, assume a medium engagement by default.
             engagement = EngagementLevel.MEDIUM
 
-        # Default emotional state (can be improved with sentiment analysis).
         emotional_state = EmotionalState.NEUTRAL
 
         if mode == Mode.INTERACTION:
-            # Evaluate Response Quality based on the number of words.
             num_words = len(child_response.split())
             if num_words >= 15:
                 response_quality = ResponseQuality.STRONG
@@ -228,7 +219,6 @@ class StateUpdater:
                               response_length, vocabulary_usage,
                               wh_question_detected)  # Include WH-question detection
         else:
-            # For narration mode, fewer attributes are needed.
             new_state = State(mode, engagement, emotional_state)
         self.current_state = new_state
         return new_state
@@ -241,7 +231,6 @@ class StateUpdater:
         if current_time - self.last_update_time >= self.update_interval:
             new_state = self.update_state()
             self.last_update_time = current_time
-            # Optionally, clear the buffers after updating the state
             self.head_horizontal_buffer.clear()
             self.head_vertical_buffer.clear()
             self.gaze_buffer.clear()
@@ -255,34 +244,3 @@ class StateUpdater:
         return self.current_state
 
 
-if __name__ == "__main__":
-    updater = StateUpdater(update_interval=10)  # update state every 60 seconds
-    while True:
-        # In your main loop, after processing sensor data from your detector:
-        # For example, assume you have the following variables updated by your sensor code:
-        # detected_horizontal: the horizontal head pose label ("Left", "Front", etc.)
-        # detected_vertical: the vertical head pose label ("Up", "Down", etc.)
-        # detected_gaze: gaze status ("Looking left", "Looking center", etc.)
-        # detected_emotion: emotion string (e.g., "Happy", "Sad", etc.)
-        # detected_emotion_conf: confidence score (e.g., 0.85)
-        # These values come from your current code (the one you pasted above).
-
-        # For demonstration, let's assume:
-        detected_horizontal = "Left"
-        detected_vertical = "Up"
-        detected_gaze = "Looking left"
-        detected_emotion = "Happy"
-        detected_emotion_conf = 0.90
-        print("here")
-        # Add the current sensor readings to the buffers
-        updater.add_reading(detected_horizontal, detected_vertical,
-                            detected_gaze, detected_emotion, detected_emotion_conf)
-
-        # Call maybe_update periodically (e.g., every frame)
-        state = updater.maybe_update()
-        if state is not None:
-            # Do something with the new state, like feed it to your RL agent or log it.
-            pass
-
-        # Sleep or wait for the next frame (simulate frame rate)
-        time.sleep(1)
