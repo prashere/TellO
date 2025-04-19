@@ -20,8 +20,6 @@ nltk.download('stopwords')
 nltk.download('words')
 english_stopwords = set(stopwords.words('english'))
 
-# Create your views here.
-
 
 def teacher_login(request):
     if request.method == "POST":
@@ -84,11 +82,9 @@ def add_student(request):
                 studentcode=student_code,
                 studentgrade=student_grade,
                 additional_notes=student_notes,
-                # Link the student to the logged-in teacher
                 assignedteacher=request.user.teacher,
             )
             student.save()
-            # Initialize the student's vocabulary
             student.initialize_vocabulary()
             messages.success(request, "Student added successfully!")
             return redirect("dashboard")  # Redirect to dashboard after success
@@ -100,7 +96,7 @@ def add_student(request):
 
 @login_required
 def teacher_dashboard(request):
-    students = Student.objects.all()  # Fetch all students from DB
+    students = Student.objects.all() 
     return render(request, "dashboard.html", {"students": students})
 
 
@@ -142,7 +138,6 @@ def create_story_session(request):
         start_time=start_time,
         end_time=end_time
     )
-    # The save() in StorySession will calculate the duration
     return Response({"message": "Session created", "session_id": session.id}, status=status.HTTP_201_CREATED)
 
 
@@ -177,7 +172,6 @@ def create_student_report(request):
     except ValueError:
         return Response({"error": "Invalid data type in request"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Ensure StorySession exists
     story_session = get_object_or_404(StorySession, pk=session_id)
 
     # Create and save the StudentReport
@@ -248,7 +242,6 @@ def report_detail(request, report_id):
     current_index = None
 
     for session in sessions:
-        # Loop through all reports for the session
         session_reports = session.reports.all()
         for report_item in session_reports:
             chart_data.append({
@@ -261,7 +254,6 @@ def report_detail(request, report_id):
 
     learned_words = report.story_session.learned_words.filter(is_master=False)
 
-    # Fallback: if no matching report was found but there is at least one report,
     # default to the first one so that the dot is red.
     if current_index is None and chart_data:
         current_index = 0
