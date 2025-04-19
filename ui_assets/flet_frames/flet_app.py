@@ -1,4 +1,3 @@
-# app.py
 import flet as ft
 import requests
 import time
@@ -11,7 +10,6 @@ from .instructions import build_guidelines_frame as guidelines_frame_external
 from .instructions import build_loading_frame as loading_frame_external
 from .storytelling import build_storytelling_frame
 from .end import build_end_session_frame
-from .storytelling import StorytellingEmotionFrame
 
 from story_handler.story import Story
 from story_handler.prompt import PromptManager
@@ -60,8 +58,6 @@ class MyApp:
         self.state = "idle"
         # self.serial_conn = init_serial()
 
-    # def build_student_selection_frame(self):
-    #     return build_student_selection_frame(self)
 
     def create_frames(self):
         self.frames["TeacherVerification"] = build_teacher_verification_frame(
@@ -70,9 +66,6 @@ class MyApp:
         self.frames["Guidelines"] = self.build_guidelines_frame()
         self.frames["Loading"] = self.build_loading_frame()
         self.frames["Storytelling"] = build_storytelling_frame(self)
-        # self.page.controls.append(self.frames["Storytelling"])
-        # self.frames["Storytelling"].on_mount()
-        # self.page.update()
         self.frames["EndSession"] = build_end_session_frame(self)
         self.stack = ft.Stack(controls=list(self.frames.values()), expand=True)
         self.page.add(self.stack)
@@ -102,7 +95,6 @@ class MyApp:
         if next_frame_name:
             self.show_frame(next_frame_name)
 
-    # Dummy screens for now
     def build_student_selection_frame(self):
         return ft.Container(ft.Text("Student Selection Page"), visible=False)
 
@@ -114,12 +106,6 @@ class MyApp:
         self.next_frame()
         return temp
 
-    # def build_storytelling_frame(self):
-    #     return StorytellingEmotionFrame(self)
-    #     # return ft.Container(ft.Text("Storytelling Page"), visible=False)
-
-    # def build_end_session_frame(self):
-    #     return ft.Container(ft.Text("End Session Page"), visible=False)
 
     def run_storytelling(self, storytelling_frame):
         """Runs the RL-driven storytelling process inside the UI frame."""
@@ -155,22 +141,6 @@ class MyApp:
         # Step 6: Generate and Save Evaluation Report
         self.generate_and_save_report(
             final_understanding_text, all_states, total_prompts_given, total_prompts_answered)
-
-    # def perform_greeting(self):
-    #     print("Inside greeting")
-    #     """Handles greeting and introduction."""
-    #     greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
-    #     # execute_combo(self.serial_conn, "intro")
-    #     speak_text(
-    #         greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!")
-    #     # execute_combo(self.serial_conn, "narration")
-    #     time.sleep(1)
-    #     intro_prompt = self.prompt_manager.get_random_prompt(
-    #         "Tello Introduction")
-    #     # execute_combo(self.serial_conn, "agree")
-    #     speak_text(
-    #         intro_prompt["text"] if intro_prompt else "I am TellO, your friendly storytelling robot.")
-    #     # execute_combo(self.serial_conn, "narration")
 
     def perform_greeting(self):
         greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
@@ -280,15 +250,6 @@ class MyApp:
         if chosen_action.action_type == "No-Intervention":
             print("RL Decision: Continue narration.")
 
-        # elif chosen_action.action_type == "Clarification":
-        #     total_prompts_given += 1
-        #     speak_text("Do you understand this part?")
-        #     response = listen_for_child_response(timeout=10)
-
-        #     if response.strip():
-        #         total_prompts_answered += 1
-
-        #     self.update_interaction_state(response, all_states)
         elif chosen_action.action_type == "Clarification":
             total_prompts_given += 1
             # execute_combo(self.serial_conn, "agree")
@@ -308,7 +269,6 @@ class MyApp:
                     # execute_combo(self.serial_conn, "motivation")
                     speak_text("No worries, let me repeat that part.")
                     # execute_combo(self.serial_conn, "narration")
-                    # Assuming current_sentence holds the last narrated sentence
                     speak_text(current_sentence)
                 else:
                     # execute_combo(self.serial_conn, "encouragement")
@@ -434,7 +394,7 @@ class MyApp:
         """Updates the state based on the child's response."""
         current_state = self.state_updater.update_state_from_story(
             Mode.INTERACTION, response)
-        all_states.append(current_state)  # Store the updated state
+        all_states.append(current_state)  
         return current_state
 
     def save_report_to_db(self, evaluation_report, total_prompts_answered):
@@ -444,10 +404,10 @@ class MyApp:
             print("Error: Session ID not found. Report not saved.")
             return
 
-        # API URL (update if needed)
+        # API URL
         api_url = "http://127.0.0.1:8000/api/create-student-report/"
 
-        # Prepare report data
+        # Report Data
         report_data = {
             "session_id": self.session_id,
             "vocab_score": evaluation_report["vocabulary"],
@@ -483,11 +443,9 @@ class MyApp:
 
         api_url = "http://127.0.0.1:8000/api/add-student-vocabulary/"
 
-        # Prepare data for the API request
         data = {
             "student_id": student_id,
             "session_id": session_id,
-            # Convert set to list for JSON serialization
             "words": list(new_words)
         }
 

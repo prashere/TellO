@@ -1,5 +1,6 @@
-import asyncio
 import flet as ft
+import threading
+import time
 
 TITLE_FONT_SIZE = 30
 BODY_FONT_SIZE = 18
@@ -121,73 +122,8 @@ def build_guidelines_frame(app):
             spacing=15,
             expand=True
         ),
-        visible=False  # So it hides in the stack initially
+        visible=False  
     )
-
-
-# def build_loading_frame(app):
-#         progress = ft.ProgressBar(
-#             width=300, color=ft.colors.AMBER, bgcolor=ft.colors.BROWN_100)
-#         text = ft.Text("Loading......", size=20,
-#                        weight=ft.FontWeight.NORMAL, color=ft.colors.BROWN_600)
-
-#         mascot = ft.Image(
-#             src="https://i.pinimg.com/originals/20/5b/0f/205b0f55dc999a06b6d34ec78c8724bd.gif",
-#             width=400,
-#             height=300,
-#             fit=ft.ImageFit.CONTAIN,
-#         )
-
-#         async def bounce():
-#             while app.current_frame == "Loading":
-#                 for offset in [0, -10, 0, -5, 0]:
-#                     mascot.offset = ft.Offset(0, offset / 100)
-#                     app.page.update()
-#                     await asyncio.sleep(0.15)
-
-#         async def on_show():
-#             await bounce()
-
-#         centered_container = ft.Container(
-#             width=800,
-#             bgcolor=ft.colors.WHITE,
-#             border_radius=20,
-#             alignment=ft.alignment.center,
-#             shadow=ft.BoxShadow(
-#                 spread_radius=4,
-#                 blur_radius=10,
-#                 color=ft.colors.BLACK26,
-#                 offset=ft.Offset(0, 4),
-#             ),
-#             padding=30,
-#             content=ft.Column(
-#                 controls=[
-#                     mascot,
-#                     ft.Container(height=20),
-#                     progress,
-#                     ft.Container(height=10),
-#                     text
-#                 ],
-#                 alignment=ft.MainAxisAlignment.CENTER,
-#                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-#                 spacing=15,
-#             )
-#         )
-
-#         full_screen_center = ft.Container(
-#             expand=True,
-#             alignment=ft.alignment.center,
-#             content=centered_container,
-#             visible=False
-#         )
-
-#         full_screen_center.on_show = lambda: asyncio.create_task(on_show())
-
-#         return full_screen_center
-
-
-import threading
-import time
 
 def build_loading_frame(app):
     # Create components
@@ -245,6 +181,7 @@ def build_loading_frame(app):
             args=(app.frames["Storytelling"],), 
             daemon=True
         ).start()
+
         # This function runs in a separate thread so as not to block the UI.
         def switch_frame_after_delay():
             time.sleep(2)
@@ -252,7 +189,6 @@ def build_loading_frame(app):
             app.page.update()
         threading.Thread(target=switch_frame_after_delay, daemon=True).start()
 
-    # Attach the on_show handler
     full_screen_center.on_show = on_show_sync
 
     return full_screen_center

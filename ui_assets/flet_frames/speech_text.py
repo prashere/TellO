@@ -1,4 +1,3 @@
-# Initialize Text-to-Speech (TTS)
 import json
 import queue
 import threading
@@ -15,8 +14,6 @@ engine.setProperty('voice', voices[0].id)  # Adjust index for desired voice
 engine.setProperty('rate', 200)
 engine.setProperty('volume', 1.0)
 
-
-# Create a queue for speech tasks
 speech_queue = queue.Queue()
 
 def speech_loop():
@@ -37,7 +34,6 @@ def speak_text(text):
     print("Queued:", text)
     speech_queue.put(text)
 
-# -----------------------------------
 # Initialize Speech-to-Text (STT) using Vosk
 MODEL_PATH = "speech_work/Resources/vosk-model-small-en-us-0.15"
 if not os.path.exists(MODEL_PATH):
@@ -58,7 +54,7 @@ stream.start()
 def listen_for_child_response(timeout=60):
     """ Listen for the child's response using Vosk. """
     while not q.empty():
-        q.get()  # Clear queue before starting
+        q.get()  
     
     rec = vosk.KaldiRecognizer(model, samplerate)
     start_time = time.time()

@@ -4,16 +4,7 @@ def build_end_session_frame(app):
     def view_report(e):
         app.page.launch_url("http://127.0.0.1:8000/report_list/")
 
-    # def view_report(e):
-    #     dlg = ft.AlertDialog(
-    #         title=ft.Text("Report", size=20, weight=ft.FontWeight.BOLD),
-    #         content=ft.Text("Report opened!"),
-    #         actions=[ft.TextButton("OK", on_click=lambda e: dlg.close())],
-    #     )
-    #     app.page.dialog = dlg
-    #     dlg.open = True
-    #     app.page.update()
-
+    
     celebration_img = ft.Image(
         src="https://i.pinimg.com/originals/53/a0/ad/53a0ad64786c712c95c757714c38c8b4.gif",
         width=300,

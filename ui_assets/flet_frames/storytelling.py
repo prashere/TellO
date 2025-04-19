@@ -8,7 +8,6 @@ from io import BytesIO
 from PIL import Image
 import requests
 import flet as ft
-# Import your detectors. Ensure these paths and modules are correct.
 from detector_model.head_gaze_emotion_detector import FaceAnalyzer, EmotionAnalyzer
 
 
@@ -31,7 +30,6 @@ class StorytellingEmotionFrame(ft.Container):
         # Shared variable for the latest frame.
         self._latest_img_str = None
 
-        # Initialize analyzers
         predictor_path = "./detector_model/assets/shape_predictor_68_face_landmarks.dat"
         self.face_analyzer = FaceAnalyzer(predictor_path)
         self.emotion_analyzer = EmotionAnalyzer()
@@ -51,7 +49,6 @@ class StorytellingEmotionFrame(ft.Container):
         self.story_image = ft.Image(
             width=650, height=430, fit=ft.ImageFit.CONTAIN)
 
-        # Build the UI content for this container.
         self.content = self.build()
 
     def get_head_pose(self):
@@ -78,12 +75,12 @@ class StorytellingEmotionFrame(ft.Container):
                 except RuntimeError as e:
                     print("RuntimeError in monitor_app_state:", e)
                     break
-            time.sleep(0.5)  # check twice every second
+            time.sleep(0.5)  
 
     def build(self):
         # Color and style constants
-        BACKGROUND_COLOR = "#FFF7ED"  # Soft light orange background
-        WHITE_COLOR = "#FFFFFF"         # White for containers
+        BACKGROUND_COLOR = "#FFF7ED"  
+        WHITE_COLOR = "#FFFFFF"         
         TEXT_COLOR = "#333333"
 
         self.speak_status_container = ft.Container(
@@ -118,7 +115,6 @@ class StorytellingEmotionFrame(ft.Container):
             bgcolor=ft.colors.WHITE,  # Optional: background inside the border
         )
 
-        # Info row: Display info cards for emotion, head, and gaze.
         info_row = ft.Row(
             controls=[
                 self.status_text,
@@ -135,7 +131,6 @@ class StorytellingEmotionFrame(ft.Container):
             alignment=ft.MainAxisAlignment.CENTER,
         )
 
-        # Button row: Pause and End buttons.
         button_row = ft.Row(
             controls=[
                 ft.ElevatedButton(
@@ -168,7 +163,6 @@ class StorytellingEmotionFrame(ft.Container):
             ],
             horizontal_alignment="center",
         )
-        # Left container: vertically arrange the video card, info row, and button row.
         left_container = ft.Container(
             content=ft.Column(
                 controls=[
@@ -189,7 +183,6 @@ class StorytellingEmotionFrame(ft.Container):
             margin=ft.margin.only(left=20),
         )
 
-        # Main content row: Place the left (video) container and right (story image) container side by side.
         main_content_row = ft.Row(
             controls=[
                 left_container,
@@ -202,7 +195,6 @@ class StorytellingEmotionFrame(ft.Container):
 
         )
 
-        # Overall layout container with background color and padding
         return ft.Container(
             content=ft.Column(
                 controls=[
@@ -215,7 +207,6 @@ class StorytellingEmotionFrame(ft.Container):
             bgcolor=BACKGROUND_COLOR,
             expand=True,
             padding=20,
-            # Optional: add a shadow effect to the main content row
             shadow=ft.BoxShadow(blur_radius=10, spread_radius=1,
                                 color=ft.colors.GREY_400, offset=ft.Offset(2, 2)),
         )
@@ -257,12 +248,10 @@ class StorytellingEmotionFrame(ft.Container):
             threading.Thread(target=self.monitor_app_state,daemon=True).start()
             
     def update_video(self):
-        # Continuously capture frames and update _latest_img_str.
         while self.video_running and self.cap:
             ret, frame = self.cap.read()
             if ret:
                 frame = cv2.flip(frame, 1)
-                # Resize preserving aspect ratio (target width = 250)
                 height, width, _ = frame.shape
                 new_width = 250
                 aspect_ratio = height / width
@@ -275,7 +264,6 @@ class StorytellingEmotionFrame(ft.Container):
                 im.save(buffer, format="PNG")
                 img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
                 self._latest_img_str = img_str
-                # Try to update the UI on each frame.
                 try:
                     self.video_image.src_base64 = self._latest_img_str
                     self.page.update()

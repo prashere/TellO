@@ -24,7 +24,6 @@ def build_student_selection_frame(app):
         nonlocal teacher_id
         teacher_id = app.teacher_id
         username = app.username
-        # 💡 Welcome Message with username
 
         print("username :: ", username)
 
@@ -140,7 +139,6 @@ def build_student_selection_frame(app):
     def get_divider():
         return ft.Divider(height=1, thickness=2, color=Colors.GREY_300)
 
-    # Main card content layout
     content_card = ft.Container(
         content=ft.Column(
             [
