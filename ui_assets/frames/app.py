@@ -22,7 +22,7 @@ from story_handler.prompt import PromptManager
 
 # Import TTS & STT Functions
 # Assuming modularized functions
-from ..flet_frames.speech_text import speak_text, listen_for_child_response
+from .speech_text_org import speak_text, listen_for_child_response
 
 from detector_model.state_updater import StateUpdater
 
