@@ -49,6 +49,7 @@ def stt_callback(indata, frames, time_info, status):
 
 stream = sd.RawInputStream(samplerate=samplerate, blocksize=8000, dtype='int16',
                            channels=1, callback=stt_callback)
+print(sd.query_devices(sd.default.device[0]))
 stream.start()
 
 def listen_for_child_response(timeout=60):

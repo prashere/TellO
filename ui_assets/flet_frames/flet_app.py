@@ -186,7 +186,7 @@ class MyApp:
             "Getting to Know You")
         # execute_combo(self.serial_conn, "disagree")
         # speak_text(intro_interaction_prompt["text"] if intro_interaction_prompt else "Hello, how are you? What is your name?")
-        speak_and_execute_async(intro_interaction_prompt, "disagree", self.serial_conn)
+        speak_and_execute_async(intro_interaction_prompt["text"], "disagree", self.serial_conn)
         self.state = "listening"
         execute_combo(self.serial_conn, "listening")
         total_prompts_given += 1
