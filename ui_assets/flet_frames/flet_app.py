@@ -1,3 +1,4 @@
+import threading
 import flet as ft
 import requests
 import time
@@ -25,6 +26,21 @@ from ui_assets.evaluator import ResponseEvaluator
 from detector_model.state_updater import StateUpdater
 from serial_communication.robot_comm import execute_combo, init_serial
 
+
+def speak_and_execute_async(text, combo_name, ser):
+        # threading.Thread(target=speak_text, args=(text,), daemon=True).start()
+        # threading.Thread(target=execute_combo, args=(ser, combo_name), daemon=True).start()
+        t_speech = threading.Thread(target=speak_text, args=(text,))
+        # Thread for servo+expression combo
+        t_combo = threading.Thread(target=execute_combo, args=(ser, combo_name))
+    
+        # start both
+        t_speech.start()
+        t_combo.start()
+    
+        # (optionally) wait for both to finish
+        t_speech.join()
+        t_combo.join()
 
 class MyApp:
     def __init__(self, page: ft.Page):
@@ -56,7 +72,7 @@ class MyApp:
         self.session_start_time = None
         self.session_id = None
         self.state = "idle"
-        # self.serial_conn = init_serial()
+        self.serial_conn = init_serial()
 
 
     def create_frames(self):
@@ -105,6 +121,8 @@ class MyApp:
         temp = loading_frame_external(self)
         self.next_frame()
         return temp
+    
+    
 
 
     def run_storytelling(self, storytelling_frame):
@@ -127,7 +145,8 @@ class MyApp:
             storytelling_frame, total_prompts_given, total_prompts_answered, all_states)
 
         # Step 3: Inform about the story and start storytelling loop
-        speak_text("Now I will tell you a story.")
+        text = "Now I will tell you a story."
+        speak_and_execute_async(text, "intro", self.serial_conn)
         time.sleep(1)
         self.storytelling_loop(
             storytelling_frame, all_states, total_prompts_given, total_prompts_answered)
@@ -145,15 +164,18 @@ class MyApp:
     def perform_greeting(self):
         greeting_prompt = self.prompt_manager.get_random_prompt("Greeting")
         # Queue the greeting and get its event
-        speak_text(
-            greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!")
+        text = greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!"
+        # speak_text(greeting_prompt["text"] if greeting_prompt else "Hello, welcome to TellO!")
+        # execute_combo(self.serial_conn, "intro")
+        speak_and_execute_async(text, "intro", self.serial_conn)
         # Wait until the greeting is spoken before proceeding.
 
         intro_prompt = self.prompt_manager.get_random_prompt(
             "Tello Introduction")
         # Queue the introduction and get its event
-        speak_text(
-            intro_prompt["text"] if intro_prompt else "I am TellO, your friendly storytelling robot.")
+        # speak_text(intro_prompt["text"] if intro_prompt else "I am TellO, your friendly storytelling robot.")
+        text = intro_prompt["text"] if intro_prompt else "I am TellO, your friendly storytelling robot."
+        speak_and_execute_async(text, "prompt", self.serial_conn)
         # Wait until the introduction is spoken.
 
     def initial_interaction(self, storytelling_frame, total_prompts_given, total_prompts_answered, all_states):
@@ -163,10 +185,10 @@ class MyApp:
         intro_interaction_prompt = self.prompt_manager.get_random_prompt(
             "Getting to Know You")
         # execute_combo(self.serial_conn, "disagree")
-        speak_text(
-            intro_interaction_prompt["text"] if intro_interaction_prompt else "Hello, how are you? What is your name?")
+        # speak_text(intro_interaction_prompt["text"] if intro_interaction_prompt else "Hello, how are you? What is your name?")
+        speak_and_execute_async(intro_interaction_prompt, "disagree", self.serial_conn)
         self.state = "listening"
-        # execute_combo(self.serial_conn, "listening")
+        execute_combo(self.serial_conn, "listening")
         total_prompts_given += 1
         initial_response = listen_for_child_response(timeout=10)
         self.state = "idle"
@@ -174,7 +196,9 @@ class MyApp:
 
         # Reprompt if no response initially
         while not initial_response.strip() and count < 1:
-            speak_text("I didn't hear you, please say it again.")
+            # speak_text("I didn't hear you, please say it again.")
+            text = "I didn't hear you, please say it again."
+            speak_and_execute_async(text, "listening", self.serial_conn)
             self.state = "listening"
             initial_response = listen_for_child_response(timeout=10)
             self.state = "idle"
@@ -189,16 +213,20 @@ class MyApp:
             encouragement_prompt = self.prompt_manager.get_random_prompt(
                 "Encouragement")
             # execute_combo(self.serial_conn, "encouragement")
-            speak_text(
-                encouragement_prompt["text"] if encouragement_prompt else "Alright, that's good.")
+            # speak_text(encouragement_prompt["text"] if encouragement_prompt else "Alright, that's good.")
+            text = encouragement_prompt["text"] if encouragement_prompt else "Alright, that's good."
+            speak_and_execute_async(text, "encouragement", self.serial_conn)
+            
         else:
             # execute_combo(self.serial_conn, "encouragement")
-            speak_text("That's okay, let's move forward together!")
+            # speak_text("That's okay, let's move forward together!")
+            text = "That's okay, let's move forward together!"
+            speak_and_execute_async(text, "encouragement", self.serial_conn)
             current_state = self.state_updater.update_state_from_story(
                 Mode.NARRATION, "")
             all_states.append(current_state)
 
-        # execute_combo(self.serial_conn, "narration")
+        execute_combo(self.serial_conn, "narration")
         time.sleep(1)
         return total_prompts_given, total_prompts_answered
 
@@ -253,7 +281,9 @@ class MyApp:
         elif chosen_action.action_type == "Clarification":
             total_prompts_given += 1
             # execute_combo(self.serial_conn, "agree")
-            speak_text("Do you understand this part?")
+            # speak_text("Do you understand this part?")
+            text = "Do you understand this part?"
+            speak_and_execute_async(text, "agree", self.serial_conn)
             self.state = "listening"
             response = listen_for_child_response(timeout=10)
             self.state = "idle"
@@ -267,16 +297,25 @@ class MyApp:
                                      "not really", "don't understand", "confused"]
                 if any(neg in response_lower for neg in negative_keywords):
                     # execute_combo(self.serial_conn, "motivation")
-                    speak_text("No worries, let me repeat that part.")
+                    # speak_text("No worries, let me repeat that part.")
                     # execute_combo(self.serial_conn, "narration")
-                    speak_text(current_sentence)
+                    text = "No worries, let me repeat that part."
+                    speak_and_execute_async(text, "motivation", self.serial_conn)
+                    # speak_text(current_sentence)
+                    speak_and_execute_async(current_sentence, "narration", self.serial_conn)
+                    
                 else:
                     # execute_combo(self.serial_conn, "encouragement")
-                    speak_text("Great! Let's continue.")
+                    # speak_text("Great! Let's continue.")
+                    text = "Great! Let's continue."
+                    speak_and_execute_async(text, "encouragement", self.serial_conn)
             else:
                 # execute_combo(self.serial_conn, "motivation")
-                speak_text("Okay, let's move to the next part.")
-            # execute_combo(self.serial_conn, "narration")
+                # speak_text("Okay, let's move to the next part.")
+                text = "Okay, let's move to the next part."
+                speak_and_execute_async(text, "motivation", self.serial_conn)
+
+            execute_combo(self.serial_conn, "narration")
             self.update_interaction_state(response, all_states)
 
         elif chosen_action.action_type == "Lexical-Syntactic":
@@ -297,8 +336,9 @@ class MyApp:
 
         if vocab_present and word not in self.explained_words:
             # Explain the word only if it hasn't been explained before
-            speak_text(
-                f"Let me tell you the meaning of the word '{word}'. It means {definition}.")
+            # speak_text(f"Let me tell you the meaning of the word '{word}'. It means {definition}.")
+            text = f"Let me tell you the meaning of the word '{word}'. It means {definition}."
+            speak_and_execute_async(text, "prompt", self.serial_conn)
             self.explained_words.add(word)  # Mark word as explained
         else:
             # Proceed to fun questions if no new vocab word to explain
@@ -306,7 +346,8 @@ class MyApp:
             if fun_questions:
                 selected_question = random.choice(fun_questions)
                 # execute_combo(self.serial_conn, "prompt")
-                speak_text(selected_question)
+                # speak_text(selected_question)
+                speak_and_execute_async(selected_question, "prompt", self.serial_conn)
                 self.state = "listening"
                 total_prompts_given += 1
 
@@ -315,7 +356,9 @@ class MyApp:
                 count = 0
                 while not response.strip() and count < 1:
                     # execute_combo(self.serial_conn, "listening")
-                    speak_text("I didn't hear you, please say it again.")
+                    # speak_text("I didn't hear you, please say it again.")
+                    text = "I didn't hear you, please say it again."
+                    speak_and_execute_async(text, "listening", self.serial_conn)
                     self.state = "listening"
                     response = listen_for_child_response(timeout=10)
                     self.state = "idle"
@@ -325,13 +368,16 @@ class MyApp:
                     total_prompts_answered += 1
                     self.state = "idle"
                     # execute_combo(self.serial_conn, "encouragement")
-                    speak_text(self.prompt_manager.get_random_prompt(
-                        "Encouragement")["text"] if self.prompt_manager.get_random_prompt("Encouragement") else "That's great!")
+                    # speak_text(self.prompt_manager.get_random_prompt("Encouragement")["text"] if self.prompt_manager.get_random_prompt("Encouragement") else "That's great!")
+                    text = self.prompt_manager.get_random_prompt("Encouragement")["text"] if self.prompt_manager.get_random_prompt("Encouragement") else "That's great!"
+                    speak_and_execute_async(text, "encouragement", self.serial_conn)
                 if count == 1:
                     # execute_combo(self.serial_conn, "disagree")
-                    speak_text(
-                        "Okay, let's move on to the next part of the story.")
-                # execute_combo(self.serial_conn, "narration")
+                    # speak_text("Okay, let's move on to the next part of the story.")
+                    text = "Okay, let's move on to the next part of the story."
+                    speak_and_execute_async(text, "disagree", self.serial_conn)
+
+                execute_combo(self.serial_conn, "narration")
                 self.update_interaction_state(response, all_states)
 
         return total_prompts_given, total_prompts_answered
@@ -339,9 +385,11 @@ class MyApp:
     def collect_child_understanding(self):
         """Collects the final understanding of the child after storytelling."""
         # execute_combo(self.serial_conn, "prompt")
-        speak_text("Can you tell me what you understood about the story?")
+        # speak_text("Can you tell me what you understood about the story?")
+        text = "Can you tell me what you understood about the story?"
+        speak_and_execute_async(text, "motivation", self.serial_conn)
         self.state = "listening"
-        # execute_combo(self.serial_conn, "listening")
+        execute_combo(self.serial_conn, "listening")
 
         silence_count = 0
         final_understanding = []
@@ -355,12 +403,16 @@ class MyApp:
             if not response.strip():
                 silence_count += 1
                 if silence_count >= 3:
-                    speak_text("I didn't hear anything, let's continue.")
+                    # speak_text("I didn't hear anything, let's continue.")
+                    text = "I didn't hear anything, let's continue."
+                    speak_and_execute_async(text, "motivation", self.serial_conn)
                     self.state = "idle"
                     break
                 else:
                     # execute_combo(self.serial_conn, "motivation")
-                    speak_text("C'mon, you can do it!")
+                    # speak_text("C'mon, you can do it!")
+                    text = "C'mon, you can do it!"
+                    speak_and_execute_async(text, "motivation", self.serial_conn)
                     self.state = "listening"
             else:
                 silence_count = 0
@@ -368,15 +420,18 @@ class MyApp:
                 if len(words) >= 3:
                     final_understanding.append(response)
 
+        execute_combo(self.serial_conn, "narration")
         return " ".join(final_understanding)
 
     def perform_closure(self, storytelling_frame, all_states):
         """Handles the closure of the storytelling session."""
         closure_prompt = self.prompt_manager.get_random_prompt("Closure")
         # execute_combo(self.serial_conn, "outro")
-        speak_text(
-            closure_prompt["text"] if closure_prompt else "Goodbye! See you next time!")
+        # speak_text(closure_prompt["text"] if closure_prompt else "Goodbye! See you next time!")
         # execute_combo(self.serial_conn, "shutdown")
+        text = closure_prompt["text"] if closure_prompt else "Goodbye! See you next time!"
+        speak_and_execute_async(text, "outro", self.serial_conn)
+        execute_combo(self.serial_conn, "shutdown")
         self.update_engagement_state(storytelling_frame, all_states)
         storytelling_frame.end_storytelling()
 

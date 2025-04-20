@@ -236,7 +236,7 @@ class StorytellingEmotionFrame(ft.Container):
 
     def start_video(self):
         if not self.video_running:
-            self.cap = cv2.VideoCapture(0)
+            self.cap = cv2.VideoCapture(1)
             if not self.cap.isOpened():
                 print("Error: Unable to open webcam.")
                 return
