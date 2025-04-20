@@ -145,7 +145,7 @@ class MyApp:
             storytelling_frame, total_prompts_given, total_prompts_answered, all_states)
 
         # Step 3: Inform about the story and start storytelling loop
-        text = "Now I will tell you a story."
+        text = "It's time for a lovely story. Sit back and enjoy!"
         speak_and_execute_async(text, "intro", self.serial_conn)
         time.sleep(1)
         self.storytelling_loop(
@@ -312,7 +312,7 @@ class MyApp:
             else:
                 # execute_combo(self.serial_conn, "motivation")
                 # speak_text("Okay, let's move to the next part.")
-                text = "Okay, let's move to the next part."
+                text = "Now worries! Let's move forward."
                 speak_and_execute_async(text, "motivation", self.serial_conn)
 
             execute_combo(self.serial_conn, "narration")
@@ -374,7 +374,7 @@ class MyApp:
                 if count == 1:
                     # execute_combo(self.serial_conn, "disagree")
                     # speak_text("Okay, let's move on to the next part of the story.")
-                    text = "Okay, let's move on to the next part of the story."
+                    text = "Okay, let's move on then."
                     speak_and_execute_async(text, "disagree", self.serial_conn)
 
                 execute_combo(self.serial_conn, "narration")
@@ -411,7 +411,7 @@ class MyApp:
                 else:
                     # execute_combo(self.serial_conn, "motivation")
                     # speak_text("C'mon, you can do it!")
-                    text = "C'mon, you can do it!"
+                    text = "Give it a try, you're doing great!"
                     speak_and_execute_async(text, "motivation", self.serial_conn)
                     self.state = "listening"
             else:

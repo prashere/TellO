@@ -212,36 +212,39 @@
       "category": "Closure",
       "text": "Take care, friend! I’ll be waiting for our next story time!"
     },
-    {
-      "id": "T01",
-      "category": "Tello Introduction",
-      "text": "Hi, I am Tello! I love stories and fun. What is your name?"
-    },
-    {
-      "id": "T02",
-      "category": "Tello Introduction",
-      "text": "Hello! I am your story friend, Tello. Let’s play and learn together!"
-    },
-    {
-      "id": "T03",
-      "category": "Tello Introduction",
-      "text": "Hey there! My name is Tello. I tell stories and ask fun questions!"
-    },
-    {
-      "id": "T04",
-      "category": "Tello Introduction",
-      "text": "I am Tello, your talking friend! Do you like stories?"
-    },
-    {
-      "id": "T05",
-      "category": "Tello Introduction",
-      "text": "Hi! My name is Tello. I love to listen and talk to you!"
-    },
-    {
-      "id": "T06",
-      "category": "Tello Introduction",
-      "text": "Hello, friend! I am Tello. Are you ready for some fun?"
-    },
+    
+      {
+        "id": "T01",
+        "category": "Tello Introduction",
+        "text": "My name is Tello. I’m a friendly robot who loves to tell stories and play with you!"
+      },
+      {
+        "id": "T02",
+        "category": "Tello Introduction",
+        "text": "I’m Tello, your story friend. I like to talk, listen, and have fun with you!"
+      },
+      {
+        "id": "T03",
+        "category": "Tello Introduction",
+        "text": "You can call me Tello. I have many fun stories to share and games to play!"
+      },
+      {
+        "id": "T04",
+        "category": "Tello Introduction",
+        "text": "Tello is my name, and stories are my favorite! I’m so glad to be with you."
+      },
+      {
+        "id": "T05",
+        "category": "Tello Introduction",
+        "text": "I’m called Tello. I love playing with friends and telling happy stories all day!"
+      },
+      {
+        "id": "T06",
+        "category": "Tello Introduction",
+        "text": "Tello is here just for you. We will read, play, and smile together!"
+      },
+  
+    
     {
       "id": "WH01",
       "category": "WH-Question Handling",
