@@ -1,34 +1,45 @@
-# import cv2
+import cv2
+from detector_model.head_gaze_emotion_detector import VideoProcessor
 
-# # Open the default camera (0 is usually your built-in webcam)
-# cap = cv2.VideoCapture(1)
+# Path to your dlib's shape_predictor_68_face_landmarks.dat file
+predictor_path = "detector_model/assets/shape_predictor_68_face_landmarks.dat"
 
-# if not cap.isOpened():
-#     print("Cannot open camera")
-#     exit()
+# Initialize Video Processor
+video_processor = VideoProcessor(predictor_path)
 
-# while True:
-#     # Read a frame from the webcam
-#     ret, frame = cap.read()
+try:
+    while True:
+        frame = video_processor.process_frame()
+        frame = cv2.flip(frame, 1)  # Flip for mirror effect
+        if frame is None:
+            break
 
-#     # If frame is not read correctly, break the loop
-#     if not ret:
-#         print("Can't receive frame. Exiting ...")
-#         break
-#     flipped_frame = cv2.flip(frame, 1)
-    
-#     # Display the frame in a window named 'Live Video'
-#     cv2.imshow('Live Video', flipped_frame)
+        state = video_processor.get_latest_state()
 
-#     # Press 'q' to break the loop and close the window
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
+        # Draw bounding boxes and head pose
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = video_processor.face_analyzer.detect_faces(gray)
 
+        for face in faces:
+            x1, y1 = face.left(), face.top()
+            x2, y2 = face.right(), face.bottom()
 
+            # Draw yellow rectangle around face
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 255), 2)
 
-# # Release the camera and close all OpenCV windows
-# cap.release()
-# cv2.destroyAllWindows()
+            # Prepare head pose text (horizontal movement)
+            head_pose_text = state['horizontal'] if state['horizontal'] else "Unknown"
 
-from importlib.metadata import version
-print(version("flet"))
+            # Put head pose direction above the rectangle
+            cv2.putText(frame, head_pose_text, (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+
+        # Show the frame
+        cv2.imshow("Face, Head Pose Detection", frame)
+
+        # Exit on pressing 'q'
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+finally:
+    video_processor.release()

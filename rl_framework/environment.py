@@ -3,6 +3,7 @@ from .state import *
 from .q_learning import *
 from .actions import *
 
+
 class Environment:
     def __init__(self, q_learning: QLearning):
         """
@@ -34,9 +35,11 @@ class Environment:
 
         emotional_penalty = 0
         if state.emotional_state == EmotionalState.ANGER:
-            emotional_penalty = -0.2  # Penalty if the child is angry (because frustration may rise with complexity)
+            # Penalty if the child is angry (because frustration may rise with complexity)
+            emotional_penalty = -0.2
         elif state.emotional_state == EmotionalState.SURPRISE:
-            emotional_penalty = -0.1  # Mild penalty for surprise (suggests confusion)
+            # Mild penalty for surprise (suggests confusion)
+            emotional_penalty = -0.1
 
         # Penalty if a prompt is needed too frequently when engagement is low
         prompt_penalty = -0.2 if state.prompt_necessity == PromptNecessity.YES and state.engagement_level == EngagementLevel.LOW else 0
@@ -47,10 +50,12 @@ class Environment:
             if state.engagement_level == EngagementLevel.LOW:
                 clarification_bonus = 0.5  # Reward if clarification helps in low engagement situations
             else:
-                clarification_bonus = -0.3  # Penalize if clarification is used when engagement is high (over-prompting)
+                # Penalize if clarification is used when engagement is high (over-prompting)
+                clarification_bonus = -0.3
 
         # Combining all factors: Engagement + Learning + Emotional + Clarification + Prompt
-        total_reward = 0.5 * engagement_score + 0.5 * learning_score + emotional_penalty + clarification_bonus + prompt_penalty
+        total_reward = 0.5 * engagement_score + 0.5 * learning_score + \
+            emotional_penalty + clarification_bonus + prompt_penalty
 
         # Ensure rewards stay within reasonable bounds
         total_reward = max(-1.0, min(1.0, total_reward))
@@ -90,11 +95,11 @@ class Environment:
                 elif state.vocabulary_usage == VocabularyUsage.MEDIUM:
                     if rand < 0.4:
                         new_vocab_usage = VocabularyUsage.MEDIUM
-                    elif 0.4 < rand < 0.7 :
+                    elif 0.4 < rand < 0.7:
                         new_vocab_usage = VocabularyUsage.LOW
                     else:
                         new_vocab_usage = VocabularyUsage.HIGH
-                    
+
                 else:  # HIGH vocabulary usage
                     if rand < 0.7:
                         new_vocab_usage = VocabularyUsage.HIGH
@@ -115,8 +120,7 @@ class Environment:
                 response_length=new_response_length,
                 vocabulary_usage=new_vocab_usage,
                 wh_question_detected=new_wh_question
-        )
-
+            )
 
     def run_episode(self, initial_state: State, num_steps: int = 10):
         """
@@ -135,3 +139,24 @@ class Environment:
             print()
 
 
+# if __name__ == "__main__":
+#     q_learning = QLearning(actions=[
+#         Action("Lexical-Syntactic", SentenceComplexity.SIMPLE, LexicalType.KNOWN),
+#         Action("Lexical-Syntactic", SentenceComplexity.MODERATE, LexicalType.UNKNOWN),
+#         Action("Clarification", clarification_type=ClarificationType.VOCABULARY_EXPLANATION),
+#         Action("No-Intervention")
+#     ])
+
+#     env = Environment(q_learning)
+#     initial_state = State(
+#         mode=Mode.INTERACTION,
+#         engagement_level=EngagementLevel.MEDIUM,
+#         emotional_state=EmotionalState.HAPPY,
+#         response_quality=ResponseQuality.STRONG,
+#         prompt_necessity=PromptNecessity.NO,
+#         response_length=ResponseLength.SHORT,
+#         vocabulary_usage=VocabularyUsage.MEDIUM,
+#         wh_question_detected=False
+#     )
+
+#     env.run_episode(initial_state, num_steps=5)

@@ -4,7 +4,7 @@ import sounddevice as sd
 import vosk
 import json
 
-MODEL_PATH = "./Resources/vosk-model-small-en-us-0.15"
+MODEL_PATH = "speech_work/Resources/vosk-model-small-en-us-0.15"
 
 if not os.path.exists(MODEL_PATH):
     print("Model folder not found! Make sure you extracted it correctly.")

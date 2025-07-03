@@ -89,7 +89,7 @@ class StorySession(models.Model):
     """
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE, related_name="sessions")
-    story_id = models.IntegerField()  # Not a ForeignKey, as requested
+    story_id = models.IntegerField()  
     start_time = models.DateTimeField(default=now)
     end_time = models.DateTimeField(null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)  # Auto-calculated

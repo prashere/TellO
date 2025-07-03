@@ -68,6 +68,7 @@ def teacher_login_api(request):
 
 @login_required
 def add_student(request):
+    grades = ["Kindergarten", "JKG", "SKG", "1", "2"]
     if request.method == "POST":
         student_name = request.POST.get("student_name")
         student_age = request.POST.get("student_age")
@@ -91,8 +92,32 @@ def add_student(request):
         else:
             messages.error(request, "Please fill in all required fields.")
 
-    return render(request, "student_addition.html")
+    return render(request, 'student_addition.html', {'is_editing': False, 'grades': grades})
 
+@login_required
+def edit_student(request, student_code):
+    grades = ["Kindergarten", "JKG", "SKG", "1", "2"]
+    student = get_object_or_404(Student, studentcode=student_code)
+
+    if request.method == 'POST':
+        student.studentname = request.POST['student_name']
+        student.studentage = request.POST['student_age']
+        student.studentgrade = request.POST['student_grade']
+        student.studentnotes = request.POST.get('student_notes', '')
+        student.save()
+        return redirect('dashboard')
+
+    return render(request, 'student_addition.html', {
+        'student': student,
+        'is_editing': True,
+        'grades': grades,
+    })
+
+@login_required
+def delete_student(request, student_code):
+    student = get_object_or_404(Student, studentcode=student_code)
+    student.delete()
+    return redirect('dashboard') 
 
 @login_required
 def teacher_dashboard(request):
@@ -248,7 +273,6 @@ def report_detail(request, report_id):
                 'date': session.date.strftime("%Y-%m-%d"),
                 'final_score': report_item.final_score,
             })
-            # Set current_index based on the position of the current report in the chart_data list.
             if report_item.id == report.id:
                 current_index = len(chart_data) - 1
 

@@ -53,7 +53,7 @@ class MyApp:
         all_actions = get_all_actions()
 
         # Load Story and Prompts
-        with open("dataset/story_corpus/stories/easy/story3.json", "r", encoding="utf-8") as f:
+        with open("dataset/story_corpus/stories/easy/story4.json", "r", encoding="utf-8") as f:
             self.story = Story(json.load(f))
 
         with open("dataset/prompts.json", "r", encoding="utf-8") as f:
@@ -73,6 +73,7 @@ class MyApp:
         self.session_id = None
         self.state = "idle"
         self.serial_conn = init_serial()
+
 
 
     def create_frames(self):
@@ -296,17 +297,13 @@ class MyApp:
                 negative_keywords = ["no", "none", "i don't",
                                      "not really", "don't understand", "confused"]
                 if any(neg in response_lower for neg in negative_keywords):
-                    # execute_combo(self.serial_conn, "motivation")
-                    # speak_text("No worries, let me repeat that part.")
-                    # execute_combo(self.serial_conn, "narration")
+                   
                     text = "No worries, let me repeat that part."
                     speak_and_execute_async(text, "motivation", self.serial_conn)
                     # speak_text(current_sentence)
                     speak_and_execute_async(current_sentence, "narration", self.serial_conn)
                     
                 else:
-                    # execute_combo(self.serial_conn, "encouragement")
-                    # speak_text("Great! Let's continue.")
                     text = "Great! Let's continue."
                     speak_and_execute_async(text, "encouragement", self.serial_conn)
             else:

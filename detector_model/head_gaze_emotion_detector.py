@@ -129,7 +129,7 @@ class VideoProcessor:
     def __init__(self, predictor_path):
         self.face_analyzer = FaceAnalyzer(predictor_path)
         self.emotion_analyzer = EmotionAnalyzer()
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1)
         self.frame_count = 0
         self.emotion_update_interval = 15  # Run emotion detection every 15 frames
 

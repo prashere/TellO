@@ -6,6 +6,8 @@ urlpatterns = [
     path("api/teacher-login/", views.teacher_login_api, name="teacher_login_api"),
     path('dashboard/', views.teacher_dashboard, name='dashboard'),
     path('add/', views.add_student, name='add'),
+    path('edit/<str:student_code>/', views.edit_student, name='edit_student'),
+    path('delete/<str:student_code>/', views.delete_student, name='delete_student'),
     path('report/', views.report, name='home'),
     path('reports/<int:report_id>/', views.report_detail, name='report_detail'),
     path("api/get-students/<int:teacher_id>/",

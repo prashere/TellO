@@ -4,71 +4,40 @@
 <div class="body-container">
   <div class="form-container">
     <header>
-      <h1>Add New Student</h1>
-      <p>Fill in the details below to register a new student.</p>
+      <h1>{{ is_editing|yesno:"Edit Student,Add New Student" }}</h1>
+      <p>Fill in the details below to {{ is_editing|yesno:"edit the student.,register a new student." }}</p>
     </header>
-
-    <main>
-      <form action="{% url 'add' %}" method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="student-name">Student Name</label>
-          <input
-            type="text"
-            id="student-name"
-            name="student_name"
-            placeholder="Enter student name"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="student-age">Age</label>
-          <input
-            type="number"
-            id="student-age"
-            name="student_age"
-            placeholder="Enter age"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="student-code">Student Code</label>
-          <input
-            type="string"
-            id="student-code"
-            name="student_code"
-            placeholder="Enter student code"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="student-grade">Grade</label>
-          <select id="student-grade" name="student_grade" required>
-            <option value="" disabled selected>Select grade</option>
-            <option value="Kindergarten">Kindergarten</option>
-            <option value="JKG">JKG</option>
-            <option value="SKG">SKG</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="student-notes">Additional Notes</label>
-          <textarea
-            id="student-notes"
-            name="student_notes"
-            rows="4"
-            placeholder="Enter any special notes"
-          ></textarea>
-        </div>
-
-        <button type="submit" class="save-btn">Save Student</button>
-      </form>
-    </main>
-  </div>
-</div>
+    
+    <form action="{% if is_editing %}{% url 'edit_student' student.studentcode %}{% else %}{% url 'add' %}{% endif %}" method="POST">
+      {% csrf_token %}
+      
+      <label for="student-name">Student Name:</label>
+      <input type="text" id="student-name" name="student_name" placeholder="Enter student name"
+             value="{{ student.studentname|default_if_none:'' }}" required />
+      
+      <label for="student-age">Student Age:</label>
+      <input type="number" id="student-age" name="student_age" placeholder="Enter age"
+             value="{{ student.studentage|default_if_none:'' }}" required />
+    
+      <label for="student-code">Student Code:</label>
+      <input type="text" id="student-code" name="student_code" placeholder="Enter student code"
+             value="{{ student.studentcode|default_if_none:'' }}" {% if is_editing %}readonly{% endif %} required />
+    
+      <label for="student-grade">Student Grade:</label>
+             <select id="student-grade" name="student_grade" required>
+              <option value="" disabled {% if not student.studentgrade %}selected{% endif %}>Select grade</option>
+              {% for grade in grades %}
+                <option value="{{ grade }}" {% if student.studentgrade == grade %}selected{% endif %}>
+                  {{ grade }}
+                </option>
+              {% endfor %}
+            </select>
+    
+      <label for="student-notes">Student Notes:</label>
+      <textarea name="student_notes" rows="4">{{ student.studentnotes|default_if_none:'' }}</textarea>
+    
+      <button type="submit" class="save-btn">{{ is_editing|yesno:"Save Changes,Save Student" }}</button>
+    </form>
+  </div>  
+  </div>  
 {% endblock %}

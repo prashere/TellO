@@ -118,3 +118,59 @@ class State:
                            self.response_length.value, self.vocabulary_usage.value, 
                            self.wh_question_detected)
         return base
+
+
+# def test_state_emotion_engagement_update():
+#     print("Running Test 15: State object updates...")
+
+#     # Simulate 1: High engagement + Happy emotion in Narration Mode
+#     state1 = State(
+#         mode=Mode.NARRATION,
+#         engagement_level=EngagementLevel.HIGH,
+#         emotional_state=EmotionalState.HAPPY
+#     )
+#     assert state1.mode == Mode.NARRATION
+#     assert state1.engagement_level == EngagementLevel.HIGH
+#     assert state1.emotional_state == EmotionalState.HAPPY
+#     print("✔ State 1 passed.")
+
+#     # Simulate 2: Low engagement + Sad emotion in Interaction Mode with weak response
+#     state2 = State(
+#         mode=Mode.INTERACTION,
+#         engagement_level=EngagementLevel.LOW,
+#         emotional_state=EmotionalState.SAD,
+#         response_quality=ResponseQuality.WEAK,
+#         prompt_necessity=PromptNecessity.YES,
+#         response_length=ResponseLength.SHORT,
+#         vocabulary_usage=VocabularyUsage.LOW,
+#         wh_question_detected=False
+#     )
+#     assert state2.mode == Mode.INTERACTION
+#     assert state2.engagement_level == EngagementLevel.LOW
+#     assert state2.emotional_state == EmotionalState.SAD
+#     assert state2.response_quality == ResponseQuality.WEAK
+#     assert state2.prompt_necessity == PromptNecessity.YES
+#     assert state2.response_length == ResponseLength.SHORT
+#     assert state2.vocabulary_usage == VocabularyUsage.LOW
+#     assert not state2.wh_question_detected
+#     print("✔ State 2 passed.")
+
+#     # Simulate 3: Medium engagement + Surprise emotion with WH question
+#     state3 = State(
+#         mode=Mode.INTERACTION,
+#         engagement_level=EngagementLevel.MEDIUM,
+#         emotional_state=EmotionalState.SURPRISE,
+#         response_quality=ResponseQuality.AVERAGE,
+#         prompt_necessity=PromptNecessity.NO,
+#         response_length=ResponseLength.MEDIUM,
+#         vocabulary_usage=VocabularyUsage.MEDIUM,
+#         wh_question_detected=True
+#     )
+#     assert state3.wh_question_detected is True
+#     assert state3.response_quality == ResponseQuality.AVERAGE
+#     print("✔ State 3 passed.")
+
+#     print("✅ Test 15 Passed: Agent state reflects emotional and engagement changes correctly.\n")
+
+# # Run the test
+# test_state_emotion_engagement_update()
